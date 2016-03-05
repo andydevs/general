@@ -40,8 +40,15 @@ module Generic
 				@parts << string[0...match.begin(0)] << match
 				string = string[match.end(0)..-1]
 				
-				@indeces[match[:name].to_sym]  = @parts.length - 1
-				@defaults[match[:name].to_sym] = match[:default]
+				if @indeces.has_key? match[:name].to_sym
+					@indeces[match[:name].to_sym] << @parts.length - 1
+				else
+					@indeces[match[:name].to_sym] = [@parts.length - 1]
+				end
+
+				unless @defaults.has_key? match[:name].to_sym
+					@defaults[match[:name].to_sym] = match[:default]					
+				end
 			end
 			@parts << string
 		end
@@ -60,7 +67,9 @@ module Generic
 			applied_data = @defaults.merge data
 			applied_parts = @parts.clone
 			applied_data.each do |key, value|
-				applied_parts[@indeces[key]] = value
+				@indeces[key].each do |index|
+					applied_parts[index] = value					
+				end
 			end
 			return applied_parts.join
 		end

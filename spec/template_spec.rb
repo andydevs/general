@@ -2,10 +2,14 @@ require "spec_require"
 
 describe Generic::GTemplate do
 	before :all do
-		@template = Generic::GTemplate.new "Hello, my name is @(name: Gordon Ramsay), and I like @(food: Cat Food)!"
+		@template = Generic::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loves @(food: Cat Food)!"
+		@default_text      = "There once was a man named Gordon Ramsay. Gordon Ramsay loves Cat Food!"
+		@all_applied_text  = "There once was a man named Joe. Joe loves Joe's Shmoes!"
+		@name_applied_text = "There once was a man named Dog. Dog loves Cat Food!"
+		@food_applied_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loves his own fucking food!"
 		@data = {name: "Joe", food: "Joe's Shmoes"}
 		@name = "Dog"
-		@food = "my own fucking food"
+		@food = "his own fucking food"
 	end
 
 	describe "#new" do
@@ -17,25 +21,25 @@ describe Generic::GTemplate do
 	describe "#apply" do
 		context "With no data" do
 			it "Returns the template with the default data applied" do
-				expect(@template.apply).to eql "Hello, my name is Gordon Ramsay, and I like Cat Food!"
+				expect(@template.apply).to eql @default_text
 			end
 		end
 
 		context "With all data" do
 			it "Returns the template with the given data applied" do
-				expect(@template.apply(@data)).to eql "Hello, my name is Joe, and I like Joe's Shmoes!"
+				expect(@template.apply(@data)).to eql @all_applied_text
 			end
 		end
 
 		context "With only name given" do
 			it "Returns the template with the given name and default food applied" do
-				expect(@template.apply(name: @name)).to eql "Hello, my name is Dog, and I like Cat Food!"
+				expect(@template.apply(name: @name)).to eql @name_applied_text
 			end
 		end
 
 		context "With only food given" do
 			it "Returns the template with the default name and given food applied" do
-				expect(@template.apply(food: @food)).to eql "Hello, my name is Gordon Ramsay, and I like my own fucking food!"
+				expect(@template.apply(food: @food)).to eql @food_applied_text
 			end
 		end
 	end
