@@ -1,16 +1,16 @@
 require "spec_require"
 
-describe Generic::Template do
+describe Generic::GTemplate do
 	before :all do
-		@template = Generic::Template.new "Hello, my name is @(name: Gordon Ramsay), and I like @(food: Cat Food)!"
+		@template = Generic::GTemplate.new "Hello, my name is @(name: Gordon Ramsay), and I like @(food: Cat Food)!"
 		@data = {name: "Joe", food: "Joe's Shmoes"}
 		@name = "Dog"
 		@food = "my own fucking food"
 	end
 
 	describe "#new" do
-		it "Creates a new Template with the given template string" do
-			expect(@template).to be_an_instance_of Generic::Template
+		it "Creates a new GTemplate with the given template string" do
+			expect(@template).to be_an_instance_of Generic::GTemplate
 		end
 	end
 

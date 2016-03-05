@@ -23,11 +23,11 @@ module Generic
 	#
 	# Author: Anshul Kharbanda
 	# Created: 3 - 4 - 2016
-	class Template
+	class GTemplate
 		# Regular expression that matches placeholders
 		PLACEHOLDER = /@\((?<name>[a-zA-Z]\w*) *(\: *(?<default>[^\t\n\r\f]*?))?\)/
 
-		# Creates a Template with the given template string
+		# Creates a GTemplate with the given template string
 		#
 		# Parameter: string - the string being converted to a template
 		def initialize string
@@ -35,8 +35,8 @@ module Generic
 			@indeces  = {}
 			@defaults = {}
 			
-			while Generic::Template::PLACEHOLDER =~ string
-				match = Generic::Template::PLACEHOLDER.match string
+			while Generic::GTemplate::PLACEHOLDER =~ string
+				match = Generic::GTemplate::PLACEHOLDER.match string
 				@parts << string[0...match.begin(0)] << match
 				string = string[match.end(0)..-1]
 				
@@ -53,7 +53,7 @@ module Generic
 
 		# Returns the template with the given data applied
 		#
-		# Parameter: data - the data to be applied (will be merged with defaults)
+		# Parameter: data - the data to be applied (merges with defaults)
 		#
 		# Return: the template with the given data applied
 		def apply data={}
