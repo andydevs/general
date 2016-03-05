@@ -16,11 +16,12 @@
 
 Gem::Specification.new do |spec|
 	spec.name        = "generic"
-	spec.version     = "1.1.0"
+	spec.version     = "1.1.1"
 	spec.license     = "GPL-3.0"
 	spec.summary     = "A templating system for ruby."
 	spec.description = "Generic is a templating system for ruby."
 	spec.authors     = ["Anshul Kharbanda"]
 	spec.email       = "akanshul97@gmail.com"
-	spec.files       = ["lib/template.rb"]
+	spec.files       = ["lib/template.rb",
+						"lib/file.rb"]
 end
