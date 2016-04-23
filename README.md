@@ -1,5 +1,10 @@
 # Generic
+
+## Overview
+
 Generic is a simple templating system in ruby. A generic template consists of regular text along with placeholders, which are defined as follows: `@(-name-)`. You can also specify default text as well like so: `@(-name-: -default text-)`.
+
+## Generic Templates
 
 Here's an exmple of a generic template text: `"Hello, I am @(name: Gordon Ramsay), and I like @(food: cat food)!"`
 
