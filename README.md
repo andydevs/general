@@ -34,7 +34,7 @@ string = template.apply food: "Joe's Schmoes"
 
 ## Generic Files
 
-You can also create generic file template from generic files (these are files with the extension .generic) by using the GFile class. For example, here's how you create a template file "example.txt" from the file "example.txt.generic"
+You can also create generic file template from a generic file (these are files with the extension .generic) by using the GFile class. For example, here's how you create a template file "example.txt" from the file "example.txt.generic"
 
 ```ruby
 file = Generic::GFile.new "example.txt"
