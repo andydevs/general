@@ -10,7 +10,7 @@ Here's an exmple of a generic template text: `"Hello, I am @(name: Gordon Ramsay
 
 To import the library, type `require 'generic'` as you would for any other gem.
 
-You can then create a generic template from a string within your ruby code using the Generic::GTemplate object:
+You can then create a generic template from a string within your ruby code using the GTemplate object:
 
 ```ruby
 template = Generic::GTemplate.new "Hello, I am @(name: Gordon Ramsay), and I like @(food: cat food)!"
