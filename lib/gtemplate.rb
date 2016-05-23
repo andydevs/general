@@ -25,7 +25,7 @@ module Generic
 	# Created: 3 - 4 - 2016
 	class GTemplate
 		# Regular expression that matches placeholders
-		PLACEHOLDER = /@\((?<name>[a-zA-Z]\w*) *(\: *(?<default>[^\t\n\r\f]*?))?\)/
+		PLACEHOLDER = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>[^\t\n\r\f]*?))?\)/
 
 		# Creates a GTemplate with the given template string
 		#

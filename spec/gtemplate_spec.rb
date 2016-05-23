@@ -6,10 +6,10 @@ describe Generic::GTemplate do
 		@default_text      = "There once was a man named Gordon Ramsay. Gordon Ramsay loves Cat Food!"
 		@all_applied_text  = "There once was a man named Joe. Joe loves Joe's Shmoes!"
 		@name_applied_text = "There once was a man named Dog. Dog loves Cat Food!"
-		@food_applied_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loves his own fucking food!"
+		@food_applied_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loves Denny's Fennies!"
 		@data = {name: "Joe", food: "Joe's Shmoes"}
 		@name = "Dog"
-		@food = "his own fucking food"
+		@food = "Denny's Fennies"
 	end
 
 	describe "#new" do
