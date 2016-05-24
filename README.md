@@ -103,3 +103,12 @@ file.write name: "Joe", food: "Joe's Schmoes"
 ```
 
 You can then call the "write" method with the same data you would pass to the "apply" method in a GTemplate instance, and the file will write the data to the file "example.txt".
+
+You can change the filename and filepath of the generic file by setting the appropriate attributes
+
+```ruby
+file.name = "super_example.txt"
+file.path = "./tmp"
+
+# generic file will now be written to ./tmp/super_example.txt
+```
