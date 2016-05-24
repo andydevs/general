@@ -40,7 +40,7 @@ You can also specify operations to be performed on values passed to placeholders
 
 The current placeholder operations are:
 
-| operation  |                       description                       |
+| Operation  |                       Description                       |
 |:-----------|:--------------------------------------------------------|
 | capitalize | Capitalizes the first letter of each word in a string   |
 | uppercase  | Makes every letter in a string uppercase                |
