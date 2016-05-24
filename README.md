@@ -112,6 +112,7 @@ file.path = "./tmp"
 
 # generic file will now be written to ./tmp/super_example.txt
 ```
-## Credits
+
+
 
 Anshul Kharbanda
