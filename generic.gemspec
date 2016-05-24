@@ -16,10 +16,10 @@
 
 Gem::Specification.new do |spec|
 	spec.name        = "generic"
-	spec.version     = "1.1.2"
+	spec.version     = "1.2.0"
 	spec.license     = "GPL-3.0"
 	spec.summary     = "A templating system for ruby."
-	spec.description = "Generic is a simple templating system in ruby. A generic template consists of regular text along with placeholders, which are defined as follows: `@(-name-)`. You can also specify default text as well like so: `@(-name-: -default text-)`. Generic allows you to create templates from both pure strings and files (with the extension .generic), as well as create new strings and files with these created objects."
+	spec.description = "Generic is a simple templating system in ruby."
 	spec.authors     = ["Anshul Kharbanda"]
 	spec.email       = "akanshul97@gmail.com"
 	spec.files       = ["lib/generic.rb",

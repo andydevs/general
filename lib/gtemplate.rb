@@ -25,32 +25,21 @@ module Generic
 	# Created: 3 - 4 - 2016
 	class GTemplate
 		# Regular expression that matches placeholders
-		PLACEHOLDER = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>[^\t\n\r\f]*?))?\)/
+		PLACEHOLDER = /@\((?<name>[[:alpha:]][[:word:]]*)[[:space:]]*(\:[[:space:]]*(?<default>.*?))?\)/
+
+		# Regular expression that matches array placeholders
+		ARRAY_PLACEHOLDER = /@\[(?<name>[[:alpha:]][[:word:]]*)\]\s*(?<text>.*?)\s*@\[(?<delimeter>.+)?\]/m
 
 		# Creates a GTemplate with the given template string
 		#
 		# Parameter: string - the string being converted to a template
 		def initialize string
-			@parts    = []
-			@indeces  = {}
-			@defaults = {}
-			
-			while Generic::GTemplate::PLACEHOLDER =~ string
-				match = Generic::GTemplate::PLACEHOLDER.match string
-				@parts << string[0...match.begin(0)] << match
-				string = string[match.end(0)..-1]
-				
-				if @indeces.has_key? match[:name].to_sym
-					@indeces[match[:name].to_sym] << @parts.length - 1
-				else
-					@indeces[match[:name].to_sym] = [@parts.length - 1]
-				end
+			@parts    	= []
+			@places   	= {}
+			@defaults 	= {}
+			@array    	= Hash.new(false)
 
-				unless @defaults.has_key? match[:name].to_sym
-					@defaults[match[:name].to_sym] = match[:default]					
-				end
-			end
-			@parts << string
+			parse_string string
 		end
 
 		# Returns a string representation of the string
@@ -67,11 +56,77 @@ module Generic
 			applied_data = @defaults.merge data
 			applied_parts = @parts.clone
 			applied_data.each do |key, value|
-				@indeces[key].each do |index|
-					applied_parts[index] = value					
+				if @array[key]
+					@places[key].each do |place|
+						applied_parts[place[:index]] = value.collect {|subvalue| place[:template].apply subvalue}.join(place[:delimeter])
+					end
+				else
+					@places[key].each do |place|
+						applied_parts[place] = value				
+					end
 				end
 			end
 			return applied_parts.join
+		end
+
+		private
+
+		# Returns true if given string has a placeholder
+		#
+		# Parameter: string - the string to check for a placeholder
+		#
+		# Return: true if given string has a placeholder
+		def has_placeholder string
+			return PLACEHOLDER =~ string || ARRAY_PLACEHOLDER =~ string
+		end
+
+		# Parses the string into Generic template data
+		#
+		# Parameter: string - the string to parse
+		def parse_string string
+			# While match remains in string
+			while has_placeholder string
+				if ARRAY_PLACEHOLDER =~ string
+					# Split match and add parts
+					match = ARRAY_PLACEHOLDER.match string
+					name = match[:name].to_sym
+					@parts << string[0...match.begin(0)] << name
+					string = string[match.end(0)..-1]
+
+					# Get delimeter (if any) and parse array template
+					delimeter = match[:delimeter].nil? ? " " : match[:delimeter]
+					template = GTemplate.new(match[:text])
+
+					# Push place and array information
+					push_place name, {index: @parts.length - 1, template: template, delimeter: delimeter}
+					@array[name] = true
+				elsif PLACEHOLDER =~ string
+					# Split match and add parts
+					match = PLACEHOLDER.match string
+					name = match[:name].to_sym
+					@parts << string[0...match.begin(0)] << name
+					string = string[match.end(0)..-1]
+					
+					# Push place and default information
+					push_place name, @parts.length - 1
+					@defaults[name] = match[:default] unless @defaults.has_key? name
+				end
+			end
+			
+			# Add end of string
+			@parts << string
+		end
+
+		# Adds the given place for the placeholder of the given name
+		#
+		# Parameter: name  - the name of the placeholder add a place to
+		# Parameter: place - the place information to add
+		def push_place name, place
+			if @places.has_key? name
+				@places[name] << place
+			else
+				@places[name] = [place]
+			end
 		end
 	end
 end
