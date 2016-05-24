@@ -2,11 +2,13 @@
 
 ## Overview
 
-Generic is a simple templating system in ruby. A generic template consists of regular text along with placeholders, which are defined as follows: `@(-name-)`. You can also specify default text as well like so: `@(-name-: -default text-)`. Generic allows you to create templates from both pure strings and files (with the extension .generic), as well as create new strings and files with these created objects.
+Generic is a simple templating system in ruby. Generic allows you to create templates from both pure strings and files (with the extension .generic), as well as create new strings and files with these created objects.
 
 ## Generic Templates
 
 ### Basic Templates
+
+A generic template consists of regular text along with placeholders, which are defined as follows: `@(-name-)`. You can also specify default text as well like so: `@(-name-: -default text-)`. 
 
 Here's an exmple of a generic template text: `"Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"`
 
