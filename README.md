@@ -12,9 +12,7 @@ A generic template consists of regular text along with placeholders, which are d
 
 Here's an exmple of a generic template text: `"Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"`
 
-To import the library, type `require 'generic'` as you would for any other gem.
-
-You can then create a generic template from a string within your ruby code using the GTemplate object:
+To import all classes in the library, type `require 'generic'`. You can then create a generic template from a string within your ruby code using the GTemplate object:
 
 ```ruby
 template = Generic::GTemplate.new "Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"
