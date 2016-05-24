@@ -34,6 +34,20 @@ string = template.apply food: "Joe's Schmoes"
 # string now equals "Hello, I am Gordon Ramsay and I like Joe's Schmoes"
 ```
 
+### Placeholder Operations
+
+You can also specify operations to be performed on values passed to placeholders, akin to AngularJS's filters. For example: `@(name -> capitalize)` will capitalize whatever name is inputted before applying it to the text.
+
+The current placeholder operations are:
+
+| operation  |                       description                       |
+|:-----------|:--------------------------------------------------------|
+| capitalize | Capitalizes the first letter of each word in a string   |
+| uppercase  | Makes every letter in a string uppercase                |
+| lowercase  | Makes every letter in a string lowercase                |
+| dollars    | Formats an integer money amount (in cents) to dollars   |
+| hourminsec | Formats an integer time (in seconds) to HH:MM:SS format |
+
 ### Array Templates
 
 You can also make array templates within templates, which will format each value in an array of data according to a generic template

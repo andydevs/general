@@ -6,7 +6,7 @@ describe Generic::GFile do
 		@filename = "sample.txt"
 		@new_filename = "supersample.txt"
 		@new_filepath = "tmp/supertmp"
-		@data = {name: "Joe", food: "Joe's Schmoes"}
+		@data = {name: "joe", food: "Joe's Schmoes"}
 		@default_text = "There once was a chef name Gordon Ramsay, and he loved eating carrots."
 		@applied_text = "There once was a chef name Joe, and he loved eating Joe's Schmoes."
 	end

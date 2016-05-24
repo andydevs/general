@@ -25,10 +25,27 @@ module Generic
 	# Created: 3 - 4 - 2016
 	class GTemplate
 		# Regular expression that matches placeholders
-		PLACEHOLDER = /@\((?<name>[[:alpha:]][[:word:]]*)[[:space:]]*(\:[[:space:]]*(?<default>.*?))?\)/
+		PLACEHOLDER = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>.*?))?\s*(->\s*(?<operation>[a-zA-Z]\w*))?\)/
 
 		# Regular expression that matches array placeholders
-		ARRAY_PLACEHOLDER = /@\[(?<name>[[:alpha:]][[:word:]]*)\]\s*(?<text>.*?)\s*@\[(?<delimeter>.+)?\]/m
+		ARRAY_PLACEHOLDER = /@\[(?<name>[a-zA-Z]\w*)\]\s*(?<text>.*?)\s*@\[(?<delimeter>.+)?\]/m
+
+		# Operations that can be called on placeholder values
+		OPERATIONS = {
+			# String operations
+			default: 	  lambda { |string| return string },
+			capitalize:   lambda { |string| return string.split(" ")
+													   	 .collect(&:capitalize)
+													   	 .join(" ") },
+			uppercase:    lambda { |string| return string.uppercase },
+			lowercase:    lambda { |string| return string.lowercase },
+
+			# Integer operations
+			dollars: 	  lambda { |integer| return "$" + (integer * 0.01).to_s },
+			hourminsec:   lambda { |integer| return (integer / 3600).to_s \
+											+ ":" + (integer % 3600 / 60).to_s \
+											+ ":" + (integer % 3600 % 60).to_s }
+		}
 
 		# Creates a GTemplate with the given template string
 		#
@@ -37,6 +54,7 @@ module Generic
 			@parts    	= []
 			@places   	= {}
 			@defaults 	= {}
+			@operation  = {}
 			@array    	= Hash.new(false)
 
 			parse_string string
@@ -53,7 +71,7 @@ module Generic
 		#
 		# Return: the template with the given data applied
 		def apply data={}
-			applied_data = @defaults.merge data
+			applied_data = @defaults.merge data.to_hash
 			applied_parts = @parts.clone
 			applied_data.each do |key, value|
 				if @array[key]
@@ -62,7 +80,7 @@ module Generic
 					end
 				else
 					@places[key].each do |place|
-						applied_parts[place] = value				
+						applied_parts[place[:index]] = place[:operation].call(value)			
 					end
 				end
 			end
@@ -106,9 +124,11 @@ module Generic
 					name = match[:name].to_sym
 					@parts << string[0...match.begin(0)] << name
 					string = string[match.end(0)..-1]
+
+					operation = match[:operation].nil? ? OPERATIONS[:default] : OPERATIONS[match[:operation].to_sym]
 					
 					# Push place and default information
-					push_place name, @parts.length - 1
+					push_place name, {index: @parts.length - 1, operation: operation}
 					@defaults[name] = match[:default] unless @defaults.has_key? name
 				end
 			end
