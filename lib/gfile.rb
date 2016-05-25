@@ -1,4 +1,4 @@
-# Generic is a templating system in ruby
+# General is a templating system in ruby
 # Copyright (C) 2016  Anshul Kharbanda
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,18 @@
 
 require_relative "gtemplate"
 
-# Generic is a templating system in ruby
+# General is a templating system in ruby
 #
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
-module Generic
-	# Implements the generic file IO
+module General
+	# Implements the general file IO
 	#
 	# Author: Anshul Kharbanda
 	# Created: 3 - 4 - 2016
 	class GFile
-		# The generic file extention
-		EXTENTION = ".generic"
+		# The general file extention
+		EXTENTION = ".general"
 
 		# Can write to attributes "name" and "path"
 		#
@@ -42,7 +42,7 @@ module Generic
 		def initialize path
 			@name = File.basename path, EXTENTION
 			@path = File.dirname path
-			@generic = Generic::GTemplate.new IO.read path
+			@general = General::GTemplate.new IO.read path
 		end
 
 		# Returns the path of the target file
@@ -52,19 +52,19 @@ module Generic
 			@path + "/" + @name	
 		end
 
-		# Writes the generic with the given 
+		# Writes the general with the given 
 		# data applied to the target file
 		#
 		# Parameter: data - the data to be applied (merges with defaults)
 		def write data={}
-			IO.write target, @generic.apply(data)
+			IO.write target, @general.apply(data)
 		end
 
 		# Returns the string representation of the GFile
 		#
 		# Return: the string representation of the GFile
 		def to_s
-			"#{@generic} >>> #{target}"
+			"#{@general} >>> #{target}"
 		end
 	end
 end

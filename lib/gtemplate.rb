@@ -1,4 +1,4 @@
-# Generic is a templating system in ruby
+# General is a templating system in ruby
 # Copyright (C) 2016  Anshul Kharbanda
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Generic is a templating system in ruby
+# General is a templating system in ruby
 #
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
-module Generic
-	# Implements the generic templating system for strings
+module General
+	# Implements the general templating system for strings
 	#
 	# Author: Anshul Kharbanda
 	# Created: 3 - 4 - 2016
@@ -98,7 +98,7 @@ module Generic
 			return PLACEHOLDER =~ string || ARRAY_PLACEHOLDER =~ string
 		end
 
-		# Parses the string into Generic template data
+		# Parses the string into General template data
 		#
 		# Parameter: string - the string to parse
 		def parse_string string
