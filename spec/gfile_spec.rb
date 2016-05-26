@@ -1,6 +1,6 @@
 require "spec_require"
 
-describe Generic::GFile do
+describe General::GFile do
 	before :all do
 		@filepath = "tmp"
 		@filename = "sample.txt"
@@ -12,12 +12,12 @@ describe Generic::GFile do
 	end
 
 	before :each do
-		@file = Generic::GFile.new (@filepath + "/" + @filename + Generic::GFile::EXTENTION)
+		@file = General::GFile.new (@filepath + "/" + @filename + General::GFile::EXTENTION)
 	end
 
 	describe "#new" do
 		it "Creates a new GFile with the given filename" do
-			expect(@file).to be_an_instance_of Generic::GFile
+			expect(@file).to be_an_instance_of General::GFile
 			expect(@file.target).to eql (@filepath + "/" + @filename)
 		end
 	end

@@ -65,26 +65,43 @@ module General
 		# Return: a string representation of the string
 		def to_s; @parts.join; end
 
-		# Returns the template with the given data applied
+		# Applies the given data to the template and returns the generated string
 		#
-		# Parameter: data - the data to be applied (merges with defaults)
+		# Parameter: data - the data to be applied (as a hash. merges with defaults)
 		#
-		# Return: the template with the given data applied
+		# Return: string of the template with the given data applied
 		def apply data={}
 			applied_data = @defaults.merge data.to_hash
 			applied_parts = @parts.clone
 			applied_data.each do |key, value|
-				if @array[key]
+				if @places.has_key? key
 					@places[key].each do |place|
-						applied_parts[place[:index]] = value.collect {|subvalue| place[:template].apply subvalue}.join(place[:delimeter])
+						if @array[key]
+							applied_parts[place[:index]] = place[:template].apply_all(value).join(place[:delimeter])
+						else
+							applied_parts[place[:index]] = place[:operation].call(value)			
+						end
 					end
 				else
-					@places[key].each do |place|
-						applied_parts[place[:index]] = place[:operation].call(value)			
-					end
+					throw "Placeholder is not defined in template: @(#{key})"
 				end
 			end
 			return applied_parts.join
+		end
+
+		# Applies each data structure in the array independently to the template
+		# and returns an array of the generated strings
+		#
+		# Parameter: data_array - the array of data to be applied 
+		# 						  (each data hash will be merged with defaults)
+		#
+		# Return: array of strings generated from the template with the given data applied
+		def apply_all data_array
+			string_array = []
+			data_array.each do |data|
+				string_array << apply(data)
+			end
+			return string_array
 		end
 
 		private
@@ -102,14 +119,16 @@ module General
 		#
 		# Parameter: string - the string to parse
 		def parse_string string
-			# While match remains in string
+			# While there is still a placeholder in string
 			while has_placeholder string
 				if ARRAY_PLACEHOLDER =~ string
 					# Split match and add parts
 					match = ARRAY_PLACEHOLDER.match string
-					name = match[:name].to_sym
-					@parts << string[0...match.begin(0)] << name
+					@parts << string[0...match.begin(0)] << match
 					string = string[match.end(0)..-1]
+
+					# Get name
+					name = match[:name].to_sym
 
 					# Get delimeter (if any) and parse array template
 					delimeter = match[:delimeter].nil? ? " " : match[:delimeter]
@@ -121,10 +140,13 @@ module General
 				elsif PLACEHOLDER =~ string
 					# Split match and add parts
 					match = PLACEHOLDER.match string
-					name = match[:name].to_sym
-					@parts << string[0...match.begin(0)] << name
+					@parts << string[0...match.begin(0)] << match
 					string = string[match.end(0)..-1]
 
+					# Get name
+					name = match[:name].to_sym
+
+					# Get operation and arguments (if any)
 					operation = match[:operation].nil? ? OPERATIONS[:default] : OPERATIONS[match[:operation].to_sym]
 					
 					# Push place and default information
@@ -150,3 +172,6 @@ module General
 		end
 	end
 end
+
+tem = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
+puts tem

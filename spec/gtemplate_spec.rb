@@ -1,8 +1,8 @@
 require "spec_require"
 
-describe Generic::GTemplate do
+describe General::GTemplate do
 	before :all do
-		@template1 = Generic::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loved @(food: Cat Food)!"
+		@template1 = General::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loved @(food: Cat Food)!"
 		@default_text      = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Cat Food!"
 		@all_applied_text  = "There once was a man named Joe. Joe loved Joe's Shmoes!"
 		@name_applied_text = "There once was a man named Dog. Dog loved Cat Food!"
@@ -11,7 +11,7 @@ describe Generic::GTemplate do
 		@name = "Dog"
 		@food = "Denny's Fennies"
 
-		@template2 = Generic::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
+		@template2 = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
 		@data2 = {greetings: [
 			{name: "Joe", pet: "cat"},
 			{name: "Ben", pet: "dog"}, 
@@ -19,16 +19,16 @@ describe Generic::GTemplate do
 		]}
 		@applied_text2 = "Hello, Joe! How is the cat?\nHello, Ben! How is the dog?\nHello, Ken! How is the plant?"
 
-		@template3 = Generic::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
+		@template3 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
 		@data3 = {name: "cat", amount: 19999}
 		@applied_text3 = "There once was a dog named Cat. Cat earned $199.99 last week."
 	end
 
 	describe "#new" do
 		it "Creates a new GTemplate with the given template string" do
-			expect(@template1).to be_an_instance_of Generic::GTemplate
-			expect(@template2).to be_an_instance_of Generic::GTemplate
-			expect(@template3).to be_an_instance_of Generic::GTemplate
+			expect(@template1).to be_an_instance_of General::GTemplate
+			expect(@template2).to be_an_instance_of General::GTemplate
+			expect(@template3).to be_an_instance_of General::GTemplate
 		end
 	end
 
