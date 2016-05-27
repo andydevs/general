@@ -172,6 +172,3 @@ module General
 		end
 	end
 end
-
-tem = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
-puts tem
