@@ -34,6 +34,17 @@ string = template.apply food: "Joe's Schmoes"
 # string now equals "Hello, I am Gordon Ramsay and I like Joe's Schmoes"
 ```
 
+If you have an array of data, you can use `apply_all` to apply the template to each individual element separately.
+
+```ruby
+array = template.apply_all [{name: "Joe", food: "Joe Schmoes"}, {name: "Jane", food: "Jane's Danes"}, {name: "Denny", food: "Denny's Fennies"}]
+
+#array now has these elements:
+#   - Hello, I am Joe and I like Joe's Schmoes
+#   - Hello, I am Jane and I like Jane's Danes
+#   - Hello, I am Denny and I like Denny's Fennies
+```
+
 ### Placeholder Operations
 
 You can also specify operations to be performed on values passed to placeholders, akin to AngularJS's filters. For example: `@(name -> capitalize)` will capitalize whatever name is inputted before applying it to the text.
