@@ -63,7 +63,7 @@ The current placeholder operations are:
 
 You can also make array templates within templates, which will format each value in an array of data according to a general template
 
-A general array template is as follows: `@[-name-] -general template for each value- @[]`. You can also specify the delimeter by adding it in the end tag, like so: `@[-name-] -general template for each value- @[-delimeter-]`. If no delimeter is given, the default is a space. The start and end tags are invariant with whitespace. So you can also define the template like such: 
+A general array template is as follows: `@[-name-] -general template for each value- @[]`. You can also specify the delimeter, which will be appended to the end of each element. The delimeter should be added in the end tag, like so: `@[-name-] -general template for each value- @[-delimeter-]`. If no delimeter is given, the default is a space. The start and end tags are invariant with atleast 1 whitespace or newline. So you can also define the template like such: 
 
 ```
 @[-name-]
