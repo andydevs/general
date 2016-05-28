@@ -28,7 +28,7 @@ module General
 		PLACEHOLDER = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>.*?))?\s*(->\s*(?<operation>[a-zA-Z]\w*))?\)/
 
 		# Regular expression that matches array placeholders
-		ARRAY_PLACEHOLDER = /@\[(?<name>[a-zA-Z]\w*)\]\s*(?<text>.*?)\s*@\[(?<delimeter>.+)?\]/m
+		ARRAY_PLACEHOLDER = /@\[(?<name>[a-zA-Z]\w*)\]( |\n)?(?<text>.*?)( |\n)?@\[(?<delimeter>.+)?\]/m
 
 		# Operations that can be called on placeholder values
 		OPERATIONS = {
@@ -79,7 +79,7 @@ module General
 						if @array[key]
 							applied_parts[place[:index]] = place[:template].apply_all(value).join(place[:delimeter])
 						else
-							applied_parts[place[:index]] = place[:operation].call(value)			
+							applied_parts[place[:index]] = OPERATIONS[place[:operation]].call(value)			
 						end
 					end
 				else
@@ -121,37 +121,51 @@ module General
 		def parse_string string
 			# While there is still a placeholder in string
 			while has_placeholder string
-				if ARRAY_PLACEHOLDER =~ string
-					# Split match and add parts
-					match = ARRAY_PLACEHOLDER.match string
-					@parts << string[0...match.begin(0)] << match
-					string = string[match.end(0)..-1]
+				# Find locations of next placeholder and next array placeholder
+				next_p = PLACEHOLDER =~ string
+				next_a = ARRAY_PLACEHOLDER =~ string
 
-					# Get name
-					name = match[:name].to_sym
+				# If found at least one
+				if !(next_a.nil? && next_p.nil?)
 
-					# Get delimeter (if any) and parse array template
-					delimeter = match[:delimeter].nil? ? " " : match[:delimeter]
-					template = GTemplate.new(match[:text])
+					# If found only array placeholder (or if found array placeholder before placeholder)
+					# Process placeholder
+					if next_p.nil? && !next_a.nil? || !(next_a.nil? || next_p.nil?) && next_a < next_p
+						# Split match and add parts
+						match = ARRAY_PLACEHOLDER.match string
+						@parts << string[0...match.begin(0)] << match[:name].to_sym
+						string = string[match.end(0)..-1]
 
-					# Push place and array information
-					push_place name, {index: @parts.length - 1, template: template, delimeter: delimeter}
-					@array[name] = true
-				elsif PLACEHOLDER =~ string
-					# Split match and add parts
-					match = PLACEHOLDER.match string
-					@parts << string[0...match.begin(0)] << match
-					string = string[match.end(0)..-1]
+						# Get name
+						name = match[:name].to_sym
 
-					# Get name
-					name = match[:name].to_sym
+						# Get delimeter (if any) and parse array template
+						delimeter = match[:delimeter].nil? ? " " : match[:delimeter]
+						template = GTemplate.new(match[:text])
 
-					# Get operation and arguments (if any)
-					operation = match[:operation].nil? ? OPERATIONS[:default] : OPERATIONS[match[:operation].to_sym]
-					
-					# Push place and default information
-					push_place name, {index: @parts.length - 1, operation: operation}
-					@defaults[name] = match[:default] unless @defaults.has_key? name
+						# Push place and array information
+						push_place name, {index: @parts.length - 1, template: template, delimeter: delimeter}
+						@array[name] = true
+
+					# If found only array placeholder (or if found array placeholder before placeholder)
+					# Process placeholder
+					elsif next_a.nil? && !next_p.nil? || !(next_a.nil? || next_p.nil?) && next_p < next_a
+						# Split match and add parts
+						match = PLACEHOLDER.match string
+						@parts << string[0...match.begin(0)] << match[:name].to_sym
+						string = string[match.end(0)..-1]
+
+						# Get name
+						name = match[:name].to_sym
+
+						# Get operation and arguments (if any)
+						operation = match[:operation].nil? ? :default : match[:operation].to_sym
+						
+						# Push place and default information
+						push_place name, {index: @parts.length - 1, operation: operation}
+						@defaults[name] = match[:default] unless @defaults.has_key? name
+
+					end
 				end
 			end
 			
@@ -172,3 +186,15 @@ module General
 		end
 	end
 end
+
+tmp = General::GTemplate.new "@(module): @(module_doc)\n@[command_doc] \t@(command) -> @(text) @[\n]"
+
+documentation = {
+	module: "rubide::main",
+	module_doc: "main is the main",
+	command_doc: [
+		{command: "info", text: "prints the info"},
+	]
+}
+
+puts tmp.apply documentation

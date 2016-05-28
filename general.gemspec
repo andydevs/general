@@ -16,7 +16,7 @@
 
 Gem::Specification.new do |spec|
 	spec.name        = "general"
-	spec.version     = "1.2.4"
+	spec.version     = "1.2.5"
 	spec.license     = "GPL-3.0"
 	spec.summary     = "A templating system for ruby."
 	spec.description = "General is a simple templating system in ruby that allows you to create templates from both \
