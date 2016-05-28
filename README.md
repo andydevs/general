@@ -8,7 +8,7 @@ General is a simple templating system in ruby that allows you to create template
 
 ### Basic Templates
 
-A general template consists of regular text along with placeholders, which are defined as follows: `@(-name-)`. You can also specify default text as well like so: `@(-name-: -default text-)`. 
+A general template consists of regular text along with placeholders, which are defined as follows: `@(-name-)`. You can also specify default text as well like so: `@(-name-: -default text-)`.
 
 Here's an exmple of a general template text: `"Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"`
 
