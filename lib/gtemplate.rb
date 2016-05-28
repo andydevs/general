@@ -186,15 +186,3 @@ module General
 		end
 	end
 end
-
-tmp = General::GTemplate.new "@(module): @(module_doc)\n@[command_doc] \t@(command) -> @(text) @[\n]"
-
-documentation = {
-	module: "rubide::main",
-	module_doc: "main is the main",
-	command_doc: [
-		{command: "info", text: "prints the info"},
-	]
-}
-
-puts tmp.apply documentation
