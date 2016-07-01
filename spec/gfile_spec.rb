@@ -2,10 +2,10 @@ require "spec_require"
 
 describe General::GFile do
 	before :all do
-		@filepath = "tmp"
+		@filepath = "exp"
 		@filename = "sample.txt"
 		@new_filename = "supersample.txt"
-		@new_filepath = "tmp/supertmp"
+		@new_filepath = "exp/superexp"
 		@data = {name: "joe", food: "Joe's Schmoes"}
 		@default_text = "There once was a chef name Gordon Ramsay, and he loved eating carrots."
 		@applied_text = "There once was a chef name Joe, and he loved eating Joe's Schmoes."
@@ -18,7 +18,6 @@ describe General::GFile do
 	describe "#new" do
 		it "Creates a new GFile with the given filename" do
 			expect(@file).to be_an_instance_of General::GFile
-			expect(@file.target).to eql (@filepath + "/" + @filename)
 		end
 	end
 

@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - general
+scope: source.general
+contexts:
+  main:
+    - comment: Placeholder
+      match: '\@\((\w+)\s*(\:\s*(.+?)\s*(\-\>\s*(.+?))?)?\)'
+      scope: keyword.control.general
+      captures:
+        1: constant.numeric.general
+        3: string.quoted.single.general
+        5: entity.name.function.general
+
+    - comment: Array Template
+      match: '\@\[((\w+)|(.+?))\]'
+      scope: keyword.control.general
+      captures:
+        2: constant.numeric.general
+        1: string.quoted.single.general
