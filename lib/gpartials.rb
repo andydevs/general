@@ -29,8 +29,8 @@ module General
 		# Initializes the GPartialString with the given string
 		#
 		# Parameter: string - the string value of the GPartialString
-		def initialize(string)
-			@string = string
+		def initialize(string, match=nil)
+			@string = match ? string[0...match.begin(0)] : string
 		end
 		
 		# Returns the string
@@ -54,17 +54,19 @@ module General
 	# Created: 7 - 1 - 2016
 	class GPlaceholder
 		# Regular expression that matches placeholders
-		REGEX = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>.*?))?\s*(->\s*(?<operation>[a-zA-Z]\w*))?\)/
+		REGEX = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>.*?))?\s*(->\s*(?<operation>[\w+\s+]+))?\)/
 
 		# Read name
 		attr :name
 
 		# Initializes the GPlaceholder with the given match
 		#
-		# Parameter: match - the match data from the string being parsed
-		def initialize match
+		# Parameter: match    - the match data from the string being parsed
+		# Parameter: defaults - the hash of default data from the GTemplate
+		def initialize match, defaults
 			@name = match[:name].to_sym
 			@operation = match[:operation]
+			@defaults = defaults
 		end
 
 		# Returns the value of the placeholder in the given data 
@@ -75,11 +77,11 @@ module General
 		# Return: the value of the placeholder in the given data 
 		# 		  with the given operation performed on it
 		def apply data
-			if @operation
-				return General::GOperations.send(@operation, data[@name]).to_s
-			else
-				return data[@name].to_s
-			end
+			# Get value from either data or defaults
+			value = data[@name] || @defaults[@name]
+
+			# Return value (operation performed if one is defined)
+			return (@operation ? General::GOperations.send(@operation, value) : value).to_s
 		end
 
 		# Returns the string representation of the placeholder

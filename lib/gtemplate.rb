@@ -31,9 +31,9 @@ module General
 		#
 		# Parameter: string - the string being converted to a template
 		def initialize string
-			# The string gets split into parts by placeholder and array template
-			@parts    		   = []
-			@defaults 		   = {}
+			# The string gets split into partials by placeholder and array template
+			@partials = []
+			@defaults = {}
 
 			parse_string string
 		end
@@ -41,7 +41,9 @@ module General
 		# Returns a string representation of the string
 		#
 		# Return: a string representation of the string
-		def to_s; @parts.collect(&:to_s).join; end
+		def to_s
+			return @partials.collect(&:to_s).join
+		end
 
 		# Applies the given data to the template and returns the generated string
 		#
@@ -49,11 +51,7 @@ module General
 		#
 		# Return: string of the template with the given data applied
 		def apply data={}
-			# Create applied data and parts
-			applied_data = @defaults.merge data.to_hash
-
-			# Apply each part
-			return @parts.inject("") { |string, part| string += part.apply(applied_data) }
+			return @partials.collect { |partial| partial.apply(data) }.join
 		end
 
 		# Applies each data structure in the array independently to the template
@@ -74,56 +72,53 @@ module General
 		# Parameter: string - the string to check for a placeholder
 		#
 		# Return: true if given string has a placeholder
-		def has_placeholder string
-			placeholder = General::GPlaceholder::REGEX =~ string
-			array_placeholder = General::GArrayPlaceholder::REGEX =~ string
-			return !placeholder.nil? && placeholder > -1 || !array_placeholder.nil? && array_placeholder > -1
+		def has_next string
+			next_p = General::GPlaceholder::REGEX      =~ string
+			next_a = General::GArrayPlaceholder::REGEX =~ string
+			return !((next_p.nil? || next_p < 0) && (next_a.nil? || next_a < 0))
+		end
+
+		# Returns true if the next placeholder is an aray placeholder
+		#
+		# Parameter: string - the string to check for an array placeholder
+		#
+		# Return: true if the next placeholder is an aray placeholder
+		def next_array_placeholder string
+			next_p = General::GPlaceholder::REGEX      =~ string
+			next_a = General::GArrayPlaceholder::REGEX =~ string
+			return !(next_a.nil? || next_p.nil?) && next_a < next_p
 		end
 
 		# Parses the string into General template data
 		#
 		# Parameter: string - the string to parse
 		def parse_string string
-			# While there is still a placeholder in string
-			while has_placeholder string
-				# Find locations of next placeholder and next array placeholder
-				next_p = General::GPlaceholder::REGEX =~ string
-				next_a = General::GArrayPlaceholder::REGEX =~ string
+			# While there is still a placeholder or array placeholder in string
+			while has_next string
+				# If next is array placeholder, process array placeholder
+				if next_array_placeholder string
+					# Split match and add partials
+					match = General::GArrayPlaceholder::REGEX.match string
+					@partials << General::GPartialString.new(string, match) \
+							  << General::GArrayPlaceholder.new(match)
 
-				# If found at least one
-				if !(next_a.nil? && next_p.nil?)
-
-					# If found only array placeholder (or if found array placeholder before placeholder)
-					# Process placeholder
-					if !(next_a.nil? || next_p.nil?) && next_a < next_p || next_p.nil?
-						# Split match and add part
-						match = General::GArrayPlaceholder::REGEX.match string
-						@parts << General::GPartialString.new(string[0...match.begin(0)])
-
-						# Push array template
-						@parts << General::GArrayPlaceholder.new(match)
-
-					# If found only placeholder (or if found placeholder before array placeholder)
-					# Process placeholder
-					elsif !(next_a.nil? || next_p.nil?) && next_p < next_a || next_a.nil?
-						# Split match and add previous part
-						match = General::GPlaceholder::REGEX.match string
-						@parts << General::GPartialString.new(string[0...match.begin(0)])
-
-						# Add placeholder
-						@parts << General::GPlaceholder.new(match)
-						
-						# Push default information
-						@defaults[match[:name].to_sym] ||= match[:default]
-					end
-
-					# Trim string
-					string = string[match.end(0)..-1]
+				# Else process placeholder
+				else
+					# Split match and add partials
+					match = General::GPlaceholder::REGEX.match string
+					@partials << General::GPartialString.new(string, match) \
+							  << General::GPlaceholder.new(match, @defaults)
+					
+					# Push default information
+					@defaults[match[:name].to_sym] ||= match[:default]
 				end
+
+				# Trim string
+				string = string[match.end(0)..-1]
 			end
 			
 			# Add end of string
-			@parts << General::GPartialString.new(string)
+			@partials << General::GPartialString.new(string)
 		end
 	end
 end
