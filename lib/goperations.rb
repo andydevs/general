@@ -68,13 +68,13 @@ module General
 			end
 		end
 
-		# Returns the integer time value (in seconds) formatted to H:MM:SS
+		# Returns the integer time value (in seconds) formatted to I:MM:SS A
 		#
-		# Parameter: integer - the integer being formatted (representing the time in second)
+		# Parameter: integer - the integer being formatted (representing the time in seconds)
 		#
-		# Return: the formatted H:MM:SS
-		def self.hourminsec integer
-			return format_time "H:MM:SS", integer
+		# Return: the formatted I:MM:SS A
+		def self.time integer
+			return format_time "I:MM:SS A", integer
 		end
 
 		private
