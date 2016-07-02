@@ -51,7 +51,11 @@ module General
 		#
 		# Return: string of the template with the given data applied
 		def apply data={}
-			return @partials.collect { |partial| partial.apply(data) }.join
+			begin
+				return @partials.collect { |partial| partial.apply(data) }.join
+			rescue Exception => e
+				throw e
+			end
 		end
 
 		# Applies each data structure in the array independently to the template
@@ -62,7 +66,11 @@ module General
 		#
 		# Return: array of strings generated from the template with the given data applied
 		def apply_all data_array
-			return data_array.collect { |data| apply(data) }
+			begin
+				return data_array.collect { |data| apply(data) }
+			rescue Exception => e
+				throw e
+			end
 		end
 
 		private

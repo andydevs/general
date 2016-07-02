@@ -21,6 +21,7 @@ describe General::GTemplate do
 		]}
 		@applied_text2 = "Hello, Ben! How is the dog?\nHello, Jen! How is the cat?\nHello, Ken! How is the plant?"
 
+		# General array template and placeholders test
 		@template3 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
 		@data3 = {
 			film: 'Batman Begins',

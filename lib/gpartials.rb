@@ -21,7 +21,7 @@
 module General
 	private
 
-	# Represents a plain string part in a GTemplate
+	# Represents a plain string partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
@@ -48,7 +48,7 @@ module General
 		end
 	end
 
-	# Represents a placeholder part in a GTemplate
+	# Represents a placeholder partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
@@ -92,7 +92,7 @@ module General
 		end
 	end
 
-	# Represents an array placeholder part in a GTemplate
+	# Represents an array placeholder partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
@@ -124,6 +124,76 @@ module General
 		# 		  formatted by the given GTemplate and joined by the given delimeter
 		def apply data
 			return @template.apply_all(data[@name]).join(@delimeter)
+		end
+
+		# Returns the string representation of the array placeholder
+		#
+		# Return: the string representation of the array placeholder
+		def to_s
+			return "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect}]"
+		end
+	end
+
+	# Represents an timeformat placeholder partial in a GTimeFormat
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 7 - 1 - 2016
+	class GTimeFormatPlaceholder
+		# Regular expression that matches timeformat placeholders
+		REGEX = /@(?<type>[A-Z]+)/
+
+		# Read type
+		attr :type
+
+		# Initializes the GTimeFormatPlaceholder with the given match
+		#
+		# Parameter: match - the match data from the string being parsed
+		def initialize match
+			@type = match[:type]
+		end
+
+		# Returns the value of the timeformat placeholder in the given time value
+		# formatted according to the time format type
+		#
+		# Parameter: value - the time value being applied
+		#
+		# Return: the value of the timeformat placeholder in the given time value
+		# 		  formatted according to the time format type
+		def apply value
+			if value.is_a? Integer
+				map = type_map(value).to_s
+				return @type[0] == "A" ? type_map(value)
+												.to_s 
+									   : type_map(value)
+									   			.to_s
+									   			.rjust(@type.length, '0')
+			else
+				throw :TIMEFORMAT_INVALID_TYPE
+			end
+		end
+
+		# Returns the string representation of the timeformat placeholder
+		#
+		# Return: the string representation of the timeformat placeholder
+		def to_s
+			return "@#{@type}"
+		end
+
+		private
+
+		# Returns the value modified according to the raw timeformat type
+		#
+		# Parameter: value - the time value being applied
+		#
+		# Return: the value modified according to the raw timeformat type
+		def type_map value
+			case @type[0]
+				when "H" then return (value / 3600)
+				when "I" then return (value / 3600 % 12 + 1)
+				when "M" then return (value % 3600 / 60)
+				when "S" then return (value % 3600 % 60)
+				when "A" then return (value / 3600 > 11 ? 'PM' : 'AM')
+			end
 		end
 	end
 end
