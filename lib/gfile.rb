@@ -29,42 +29,22 @@ module General
 		# The general file extention
 		EXTENTION = ".general"
 
-		# Can write to attributes "name" and "path"
-		#
-		# "name" is the name of the target file
-		#
-		# "path" is the path of the target file
-		attr_writer :name, :path
+		# Can read and write target file
+		attr_accessor :target
 
 		# Creates a new GFile with the given path
 		#
 		# Paraeter: path the path to the GFile
 		def initialize path
-			@name = File.basename path, EXTENTION
-			@path = File.dirname path
-			@general = General::GTemplate.new IO.read path
+			@template = General::GTemplate.new IO.read path
+			@target = path.gsub(/.general\z/, "")
 		end
 
-		# Returns the path of the target file
-		#
-		# Return: the path of the target file
-		def target
-			@path + "/" + @name	
-		end
-
-		# Writes the general with the given 
+		# Writes the template with the given 
 		# data applied to the target file
 		#
-		# Parameter: data - the data to be applied (merges with defaults)
-		def write data={}
-			IO.write target, @general.apply(data)
-		end
-
-		# Returns the string representation of the GFile
-		#
-		# Return: the string representation of the GFile
-		def to_s
-			"#{@general} >>> #{target}"
-		end
+		# Parameter: data - the data to be applied 
+		# 					(merges with defaults)
+		def write(data={}); IO.write target, @template.apply(data); end
 	end
 end

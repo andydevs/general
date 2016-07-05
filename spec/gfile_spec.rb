@@ -2,17 +2,15 @@ require "spec_require"
 
 describe General::GFile do
 	before :all do
-		@filepath = "exp"
-		@filename = "sample.txt"
-		@new_filename = "supersample.txt"
-		@new_filepath = "exp/superexp"
+		@filepath = "exp/sample.txt"
+		@new_filepath = "exp/superexp/supersample.txt"
 		@data = {name: "joe", food: "Joe's Schmoes"}
 		@default_text = "There once was a chef name Gordon Ramsay, and he loved eating carrots."
 		@applied_text = "There once was a chef name Joe, and he loved eating Joe's Schmoes."
 	end
 
 	before :each do
-		@file = General::GFile.new (@filepath + "/" + @filename + General::GFile::EXTENTION)
+		@file = General::GFile.new (@filepath + General::GFile::EXTENTION)
 	end
 
 	describe "#new" do
@@ -23,21 +21,14 @@ describe General::GFile do
 
 	describe "#target" do
 		it "Returns the name of the target" do
-			expect(@file.target).to eql (@filepath + "/" + @filename)
+			expect(@file.target).to eql (@filepath)
 		end
 	end
 
-	describe "#name=" do
-		it "Changes the name of the target" do
-			@file.name = @new_filename
-			expect(@file.target).to eql (@filepath + "/" + @new_filename)
-		end
-	end
-
-	describe "#path=" do
-		it "Changes the path of the target" do
-			@file.path = @new_filepath
-			expect(@file.target).to eql (@new_filepath + "/" + @filename)
+	describe "#target=" do
+		it "Changes the target to the given value" do
+			@file.target = @new_filepath
+			expect(@file.target).to eql @new_filepath
 		end
 	end
 
@@ -51,7 +42,7 @@ describe General::GFile do
 
 		context "With given data" do
 			it "Writes the given data to the target file" do
-				@file.write(@data)
+				@file.write @data
 				expect(IO.read(@file.target)).to eql @applied_text
 			end
 		end
