@@ -137,24 +137,23 @@
 <span class="pl-c">#       Michael Caine: Alfred Pennyworth"</span></pre></div>
 
 <h2>
-<a id="general-files" class="anchor" href="#general-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General Files</h2>
+<a id="general-io" class="anchor" href="#general-io" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General IO</h2>
 
-<p>You can also create general file template from a general file (these are files with the extension .general) by using the GFile class. For example, here's how you create a template file from the file "example.txt.general"</p>
+<p>You can also write to files using io GIO, a general template capable of writing to files. You can create a GIO like a GTemplate:</p>
 
-<div class="highlight highlight-source-ruby"><pre>file <span class="pl-k">=</span> <span class="pl-c1">General</span>::<span class="pl-c1">GFile</span>.<span class="pl-k">new</span> <span class="pl-s"><span class="pl-pds">"</span>example.txt.general<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-source-ruby"><pre>gio <span class="pl-k">=</span> <span class="pl-c1">General</span>::<span class="pl-c1">GIO</span>.<span class="pl-k">new</span> <span class="pl-s"><span class="pl-pds">"</span>Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!<span class="pl-pds">"</span></span></pre></div>
 
-<p>This file will create a template that can be written to the file "example.txt". To write to the file, simply call:</p>
+<p>You can also load a GIO from a file. For example, here's how you create a template file from the file "example.txt.general"</p>
 
-<div class="highlight highlight-source-ruby"><pre>file.write <span class="pl-c1">name:</span> <span class="pl-s"><span class="pl-pds">"</span>Joe<span class="pl-pds">"</span></span>, <span class="pl-c1">food:</span> <span class="pl-s"><span class="pl-pds">"</span>Joe's Schmoes<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-source-ruby"><pre>gio <span class="pl-k">=</span> <span class="pl-c1">General</span>::<span class="pl-c1">GIO</span>.load <span class="pl-s"><span class="pl-pds">"</span>example.txt.general<span class="pl-pds">"</span></span></pre></div>
 
-<p>You can then call the "write" method with the same data you would pass to the "apply" method in a GTemplate instance, and the file will write the data to the file "example.txt".</p>
+<p>To write to a file, simply call the write method, pass in the file and the data to apply (like in GTemplate#apply):</p>
 
-<p>You can change the filename and filepath of the general file by setting the appropriate attributes</p>
+<div class="highlight highlight-source-ruby"><pre>gio.write file, <span class="pl-c1">name:</span> <span class="pl-s"><span class="pl-pds">"</span>Joe<span class="pl-pds">"</span></span>, <span class="pl-c1">food:</span> <span class="pl-s"><span class="pl-pds">"</span>Joe's Schmoes<span class="pl-pds">"</span></span></pre></div>
 
-<div class="highlight highlight-source-ruby"><pre>file.name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>super_example.txt<span class="pl-pds">"</span></span>
-file.path <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>./tmp<span class="pl-pds">"</span></span>
+<p>Where <code>file</code> is the file you are writing to. You can also pass the name of the file to write to as well:</p>
 
-<span class="pl-c"># general file will now be written to ./tmp/super_example.txt</span></pre></div>
+<div class="highlight highlight-source-ruby"><pre>gio.write <span class="pl-s"><span class="pl-pds">"</span>example.txt<span class="pl-pds">"</span></span>, <span class="pl-c1">name:</span> <span class="pl-s"><span class="pl-pds">"</span>Joe<span class="pl-pds">"</span></span>, <span class="pl-c1">food:</span> <span class="pl-s"><span class="pl-pds">"</span>Joe's Schmoes<span class="pl-pds">"</span></span></pre></div>
 
 <hr>
 
