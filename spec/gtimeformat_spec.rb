@@ -5,6 +5,9 @@ describe General::GTimeFormat do
 		# Time value
 		@time = (11 + 3)*3600 + 42*60 + 9
 
+		# Phony value
+		@phony = {data: "Time, Yo!"}
+
 		# Formats
 		@format1 = General::GTimeFormat.new "@HH:@MM:@SS"
 		@format2 = General::GTimeFormat.new "@I:@MM:@S @A"
@@ -30,6 +33,14 @@ describe General::GTimeFormat do
 				expect(@format1.apply(@time)).to eql @applied1
 				expect(@format2.apply(@time)).to eql @applied2
 				expect(@format3.apply(@time)).to eql @applied3
+			end
+		end
+
+		context "if value given is not integer" do
+			it "raises TypeError" do
+				expect{ @format1.apply(@phony) }.to raise_error TypeError
+				expect{ @format2.apply(@phony) }.to raise_error TypeError
+				expect{ @format3.apply(@phony) }.to raise_error TypeError
 			end
 		end
 	end

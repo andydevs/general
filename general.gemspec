@@ -16,7 +16,7 @@
 
 Gem::Specification.new do |spec|
 	spec.name        = "general"
-	spec.version     = "1.2.8"
+	spec.version     = "1.3.0"
 	spec.license     = "GPL-3.0"
 	spec.summary     = "A templating system for ruby."
 	spec.authors     = ["Anshul Kharbanda"]
@@ -32,9 +32,9 @@ Gem::Specification.new do |spec|
 	spec.files  = ["lib/general.rb",
 				   "lib/gpartials.rb",
 				   "lib/gtemplate.rb",
-				   "lib/gfile.rb",
+				   "lib/gio.rb",
 				   "lib/goperations.rb",
 				   "spec/spec_require.rb",
 				   "spec/gtemplate_spec.rb",
-				   "spec/gfile_spec.rb"]
+				   "spec/gio_spec.rb"]
 end

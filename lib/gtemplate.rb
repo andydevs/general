@@ -41,37 +41,23 @@ module General
 		# Returns a string representation of the string
 		#
 		# Return: a string representation of the string
-		def to_s
-			return @partials.collect(&:to_s).join
-		end
+		def to_s; @partials.collect(&:to_s).join; end
 
 		# Applies the given data to the template and returns the generated string
 		#
 		# Parameter: data - the data to be applied (as a hash. merges with defaults)
 		#
 		# Return: string of the template with the given data applied
-		def apply data={}
-			begin
-				return @partials.collect { |partial| partial.apply(data) }.join
-			rescue Exception => e
-				throw e
-			end
-		end
+		def apply(data={}); @partials.collect { |partial| partial.apply(data) }.join; end
 
 		# Applies each data structure in the array independently to the template
 		# and returns an array of the generated strings
 		#
-		# Parameter: data_array - the array of data to be applied 
+		# Parameter: array - the array of data to be applied 
 		# 						  (each data hash will be merged with defaults)
 		#
 		# Return: array of strings generated from the template with the given data applied
-		def apply_all data_array
-			begin
-				return data_array.collect { |data| apply(data) }
-			rescue Exception => e
-				throw e
-			end
-		end
+		def apply_all(array); array.collect { |data| apply(data) }; end
 
 		private
 

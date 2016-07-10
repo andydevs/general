@@ -53,44 +53,39 @@ describe General::GTemplate do
 	end
 
 	describe "#apply" do
-		context "With no data" do
-			it "Returns the template with the default data applied" do
+		context "with no data" do
+			it "returns the template with the default data applied" do
 				expect(@template1.apply).to eql @default_text
 			end
 		end
 
-		context "With only name given" do
-			it "Returns the template with the given name and default food applied" do
+		context "with partial data" do
+			it "returns the template with the given data applied to corresponding placeholders and default data applied to the rest" do
 				expect(@template1.apply(name: @name)).to eql @name_applied_text
-			end
-		end
-
-		context "With only food given" do
-			it "Returns the template with the default name and given food applied" do
 				expect(@template1.apply(food: @food)).to eql @food_applied_text
 			end
 		end
 
-		context "With all data" do
-			it "Returns the template with the given data applied" do
+		context "with all data" do
+			it "returns the template with the given data applied" do
 				expect(@template1.apply(@data1)).to eql @all_applied_text
 			end
 		end
 
-		context "With array template" do
-			it "Returns the template with the given array data applied and formatted according to the template" do
+		context "with array template" do
+			it "returns the template with the given array data applied and formatted according to the template" do
 				expect(@template2.apply(@data2)).to eql @applied_text2
 			end
 		end
 
-		context "With array template and regular placeholder" do
-			it "Returns the template with the given data applied (including array data) and formatted according to the template" do
+		context "with array template and regular placeholder" do
+			it "returns the template with the given data applied (including array data) and formatted according to the template" do
 				expect(@template3.apply(@data3)).to eql @applied_text3
 			end
 		end
 
-		context "With placeholder operation" do
-			it "Returns the template with the given array data applied and formatted according to the format operations" do 
+		context "with placeholder operation" do
+			it "returns the template with the given array data applied and formatted according to the format operations" do 
 				expect(@template4.apply(@data4)).to eql @applied_text4
 			end
 		end

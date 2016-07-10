@@ -1,3 +1,3 @@
 require_relative "../lib/gtemplate"
-require_relative "../lib/gfile"
-require_relative "../lib/gtime_format"
+require_relative "../lib/gio"
+require_relative "../lib/gtimeformat"

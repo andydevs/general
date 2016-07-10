@@ -21,30 +21,40 @@ require_relative "gtemplate"
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
 module General
-	# Implements the general file IO
+	# Implements the general IO writer template
 	#
 	# Author: Anshul Kharbanda
 	# Created: 3 - 4 - 2016
-	class GFile
-		# The general file extention
-		EXTENTION = ".general"
+	class GIO < GTemplate
+		# The general file extension
+		EXTENSION = ".general"
 
-		# Can read and write target file
-		attr_accessor :target
-
-		# Creates a new GFile with the given path
+		# Loads a GIO from a file with the given path
 		#
-		# Paraeter: path the path to the GFile
-		def initialize path
-			@template = General::GTemplate.new IO.read path
-			@target = path.gsub(/.general\z/, "")
+		# Parameter: path - the path of the file to load
+		#
+		# Return: GIO loaded from the file
+		def self.load path
+			file = File.new path
+			gio = self.new file.read
+			file.close
+			return gio
 		end
 
 		# Writes the template with the given 
-		# data applied to the target file
+		# data applied to the target stream
 		#
-		# Parameter: data - the data to be applied 
-		# 					(merges with defaults)
-		def write(data={}); IO.write target, @template.apply(data); end
+		# Parameter: ios  - if String, is the name of the file to write to
+		# 					if IO, is the stream to write to
+		# Parameter: data - the data to be applied (merges with defaults)
+		def write ios, data={}
+			if ios.is_a? String
+				IO.write ios, apply(data)
+			elsif ios.is_a? IO
+				ios.write apply(data)
+			else
+				raise TypeError.new "Expected IO or String, got: #{ios.class}"
+			end
+		end
 	end
 end

@@ -162,22 +162,21 @@ module General
 		def apply value
 			if value.is_a? Integer
 				map = type_map(value).to_s
-				return @type[0] == "A" ? type_map(value)
-												.to_s 
-									   : type_map(value)
-									   			.to_s
-									   			.rjust(@type.length, '0')
+				return is_justify? ? map.rjust(@type.length, '0') : map
 			else
-				throw :TIMEFORMAT_INVALID_TYPE
+				raise TypeError.new "Expected Integer, got: #{value.class}"
 			end
 		end
+
+		# Returns true if the timeformat placeholder is a justifiable type
+		#
+		# Return: true if the timeformat placeholder is a justifiable type
+		def is_justify?; "HIMS".include? @type[0]; end
 
 		# Returns the string representation of the timeformat placeholder
 		#
 		# Return: the string representation of the timeformat placeholder
-		def to_s
-			return "@#{@type}"
-		end
+		def to_s; return "@#{@type}"; end
 
 		private
 

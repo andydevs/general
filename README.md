@@ -99,30 +99,32 @@ string = template.apply crew: [
 #		Michael Caine: Alfred Pennyworth"
 ```
 
-## General Files
+## General IO
 
-You can also create general file template from a general file (these are files with the extension .general) by using the GFile class. For example, here's how you create a template file from the file "example.txt.general"
-
-```ruby
-file = General::GFile.new "example.txt.general"
-```
-
-This file will create a template that can be written to the file "example.txt". To write to the file, simply call:
+You can also write to files using io GIO, a general template capable of writing to files. You can create a GIO like a GTemplate:
 
 ```ruby
-file.write name: "Joe", food: "Joe's Schmoes"
+gio = General::GIO.new "Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"
 ```
 
-You can then call the "write" method with the same data you would pass to the "apply" method in a GTemplate instance, and the file will write the data to the file "example.txt".
-
-You can change the filename and filepath of the general file by setting the appropriate attributes
+You can also load a GIO from a file. For example, here's how you create a template file from the file "example.txt.general"
 
 ```ruby
-file.name = "super_example.txt"
-file.path = "./tmp"
-
-# general file will now be written to ./tmp/super_example.txt
+gio = General::GFile.load "example.txt.general"
 ```
+
+To write to a file, simply call the write method, pass in the file and the data to apply (like in GTemplate#apply):
+
+```ruby
+gio.write file, name: "Joe", food: "Joe's Schmoes"
+```
+
+Where `file` is the file you are writing to. You can also pass the name of the file to write to as well:
+
+```ruby
+gio.write "example.txt", name: "Joe", food: "Joe's Schmoes"
+```
+
 -------------------------------------------------------------------------------------------------------------------------------------
 
 Anshul Kharbanda

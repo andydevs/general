@@ -15,4 +15,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "gtemplate"
-require_relative "gfile"
+require_relative "gtimeformat"
+require_relative "gio"
