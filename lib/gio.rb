@@ -29,16 +29,25 @@ module General
 		# The general file extension
 		EXTENSION = ".general"
 
+		# Public read source
+		attr :source
+
 		# Loads a GIO from a file with the given path
 		#
 		# Parameter: path - the path of the file to load
 		#
 		# Return: GIO loaded from the file
 		def self.load path
-			file = File.new path
-			gio = self.new file.read
-			file.close
-			return gio
+			self.new IO.read(path), path
+		end
+
+		# Creates a GIO with the given template string and source filename
+		#
+		# Parameter: string - the string being converted to a template
+		# Parameter: source - the name of the source file of the template
+		def initialize string, source=nil
+			super string
+			@source = source
 		end
 
 		# Writes the template with the given 
