@@ -125,6 +125,12 @@ Where `file` is the file you are writing to. You can also pass the name of the f
 gio.write "example.txt", name: "Joe", food: "Joe's Schmoes"
 ```
 
+To get the original source filename of the GIO, just call `source`
+
+```ruby
+gio.source # == "example.txt.general"
+```
+
 -------------------------------------------------------------------------------------------------------------------------------------
 
 Anshul Kharbanda
