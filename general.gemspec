@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
 				   "lib/gpartials.rb",
 				   "lib/gtemplate.rb",
 				   "lib/gio.rb",
-				   "lib/gtimeformat.rb"
+				   "lib/gtimeformat.rb",
 				   "lib/goperations.rb",
 				   "spec/spec_require.rb",
 				   "spec/gtemplate_spec.rb",
