@@ -36,16 +36,12 @@ module General
 		# Returns the string
 		#
 		# Returns: the string
-		def apply data
-			@string
-		end
+		def apply(data); @string; end
 
 		# Returns the string
 		#
 		# Returns: the string
-		def to_s
-			@string
-		end
+		def to_s; @string; end
 	end
 
 	# Represents a placeholder partial in a GTemplate
@@ -88,7 +84,10 @@ module General
 		#
 		# Return: the string representation of the placeholder
 		def to_s
-			return "@(#{@name} -> #{@operation})"
+			str = "@(#{@name}"
+			str += ": #{@defaults[@name]}" if @defaults[@name]
+			str += "-> #{@operation}" if @operation
+			return str + ")"
 		end
 	end
 
@@ -122,16 +121,12 @@ module General
 		#
 		# Return: the value of the array placeholder in the given data
 		# 		  formatted by the given GTemplate and joined by the given delimeter
-		def apply data
-			return @template.apply_all(data[@name]).join(@delimeter)
-		end
+		def apply(data); @template.apply_all(data[@name]).join(@delimeter); end
 
 		# Returns the string representation of the array placeholder
 		#
 		# Return: the string representation of the array placeholder
-		def to_s
-			return "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect}]"
-		end
+		def to_s; "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect}]"; end
 	end
 
 	# Represents an timeformat placeholder partial in a GTimeFormat
@@ -148,9 +143,7 @@ module General
 		# Initializes the GTimeFormatPlaceholder with the given match
 		#
 		# Parameter: match - the match data from the string being parsed
-		def initialize match
-			@type = match[:type]
-		end
+		def initialize(match); @type = match[:type]; end
 
 		# Returns the value of the timeformat placeholder in the given time value
 		# formatted according to the time format type

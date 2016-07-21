@@ -16,7 +16,7 @@
 
 Gem::Specification.new do |spec|
 	spec.name        = "general"
-	spec.version     = "1.4.1"
+	spec.version     = "1.4.2"
 	spec.license     = "GPL-3.0"
 	spec.summary     = "A templating system for ruby."
 	spec.authors     = ["Anshul Kharbanda"]
