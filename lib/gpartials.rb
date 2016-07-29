@@ -21,20 +21,39 @@
 module General
 	private
 
+	# Represents a Partial in a template
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 7 - 29 - 2016
+	class GPartial
+		# Get name
+		attr :name
+
+		# Initializes the GPartial with the given object
+		#
+		# Parameter: obj - the object containing information for the partial
+		def initialize(obj); @name = obj[:name].to_sym; end
+
+		# Returns a detailed inspection of the General partial
+		#
+		# Return: a detailed inspection of the General partial
+		def inspect; "@<name=#{@name}>"; end
+	end
+
 	# Represents a plain string partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
-	class GPartialString
-		# Read name
-		attr :name
+	class GPartialString < GPartial
+		# Regular expression that matches string partials
+		REGEX = /\A[^@]+?(?=(@|\z))/m
 
 		# Initializes the GPartialString with the given string
 		#
 		# Parameter: string - the string value of the GPartialString
-		def initialize(string, match=nil)
-			@name = :gpartialstring
-			@string = match ? string[0...match.begin(0)] : string
+		def initialize(match)
+			super name: :gpartialstring
+			@string = match.to_s
 		end
 		
 		# Returns the string
@@ -45,33 +64,31 @@ module General
 		# Returns the string as a regex
 		#
 		# Returns: the string as a regex
-		def regex(first); @string.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
+		def regex(first=true); @string.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
 
 		# Returns the string
 		#
 		# Returns: the string
-		def string(first); @string.inspect[1...-1]; end
+		def string(first=true); @string.inspect[1...-1]; end
 	end
 
 	# Represents a placeholder partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
-	class GPlaceholder
+	class GPlaceholder < GPartial
 		# Regular expression that matches placeholders
 		REGEX = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>.*?))?\s*(->\s*(?<operation>[\w+\s+]+))?\)/
-
-		# Read name
-		attr :name
 
 		# Initializes the GPlaceholder with the given match
 		#
 		# Parameter: match    - the match data from the string being parsed
 		# Parameter: defaults - the hash of default data from the GTemplate
 		def initialize match, defaults
-			@name = match[:name].to_sym
+			super match
 			@operation = match[:operation]
-			@defaults = defaults
+			@defaults  = defaults
+			@defaults[@name] ||= match[:default] if match[:default]
 		end
 
 		# Returns the value of the placeholder in the given data 
@@ -92,15 +109,15 @@ module General
 		# Returns the string as a regex
 		#
 		# Returns: the string as a regex
-		def regex(first); first ? "(?<#{@name.to_s}>.*)" : "\\k<#{@name.to_s}>"; end
+		def regex(first=true); first ? "(?<#{@name.to_s}>.*)" : "\\k<#{@name.to_s}>"; end
 
 		# Returns the string representation of the placeholder
 		#
 		# Return: the string representation of the placeholder
-		def string first
+		def string first=true
 			str = "@(#{@name}"
-			str += ": #{@defaults[@name]}" if @defaults[@name] and first
-			str += "-> #{@operation}" if @operation
+			str += ": #{@defaults[@name]}" if @defaults[@name] && first
+			str += " -> #{@operation}" if @operation
 			return str + ")"
 		end
 	end
@@ -109,21 +126,18 @@ module General
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
-	class GArrayPlaceholder
+	class GArrayPlaceholder < GPartial
 		# Regular expression that matches array placeholders
-		REGEX = /@\[(?<name>[a-zA-Z]\w*)\]( +|\n+)?(?<text>.*?)( +|\n+)?@\[(?<delimeter>.+)?\]/m
+		REGEX = /\A@\[(?<name>[a-zA-Z]\w*)\]( +|\n+)?(?<text>.*?)( +|\n+)?@\[(?<delimeter>.+)?\]/m
 
 		# Default delimeter
 		DEFAULT_DELIMETER = " "
-
-		# Read name
-		attr :name
 
 		# Initializes the GPlaceholder with the given match
 		#
 		# Parameter: match - the match data from the string being parsed
 		def initialize match
-			@name = match[:name].to_sym
+			super
 			@delimeter = match[:delimeter] || DEFAULT_DELIMETER
 			@template = General::GTemplate.new match[:text]
 		end
@@ -140,7 +154,7 @@ module General
 		# Returns the string as a regex
 		# 
 		# Returns: the string as a regex
-		def regex(first)
+		def regex(first=true)
 			"(?<#{@name.to_s}>(" \
 			+ @template.regex(true) \
 			+ "(#{@delimeter.inspect[1...-1]})?)+)"
@@ -149,65 +163,53 @@ module General
 		# Returns the string representation of the array placeholder
 		#
 		# Return: the string representation of the array placeholder
-		def string(first); "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"; end
+		def string(first=true); "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"; end
 	end
 
 	# Represents an timeformat placeholder partial in a GTimeFormat
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
-	class GTimeFormatPlaceholder
+	class GTimeFormatPlaceholder < GPartial
 		# Regular expression that matches timeformat placeholders
-		REGEX = /@(?<type>[A-Z]+)/
-
-		# Read type
-		attr :type
-
-		# Initializes the GTimeFormatPlaceholder with the given match
-		#
-		# Parameter: match - the match data from the string being parsed
-		def initialize(match); @type = match[:type]; end
+		REGEX = /@(?<name>[A-Z]+)/
 
 		# Returns the value of the timeformat placeholder in the given time value
-		# formatted according to the time format type
+		# formatted according to the time format name
 		#
 		# Parameter: value - the time value being applied
 		#
 		# Return: the value of the timeformat placeholder in the given time value
-		# 		  formatted according to the time format type
+		# 		  formatted according to the time format name
 		def apply value
-			if value.is_a? Integer
-				map = type_map(value).to_s
-				return is_justify? ? map.rjust(@type.length, '0') : map
-			else
-				raise TypeError.new "Expected Integer, got: #{value.class}"
-			end
+			map = name_map(value).to_s
+			return is_justify? ? map.rjust(@name.length, '0') : map
 		end
 
-		# Returns true if the timeformat placeholder is a justifiable type
+		# Returns true if the timeformat placeholder is a justifiable name
 		#
-		# Return: true if the timeformat placeholder is a justifiable type
-		def is_justify?; "HIMS".include? @type[0]; end
+		# Return: true if the timeformat placeholder is a justifiable name
+		def is_justify?; "HIMS".include? @name[0]; end
 
 		# Returns the string representation of the timeformat placeholder
 		#
 		# Return: the string representation of the timeformat placeholder
-		def to_s; return "@#{@type}"; end
+		def to_s; "@#{@name}"; end
 
 		private
 
-		# Returns the value modified according to the raw timeformat type
+		# Returns the value modified according to the raw timeformat name
 		#
 		# Parameter: value - the time value being applied
 		#
-		# Return: the value modified according to the raw timeformat type
-		def type_map value
-			case @type[0]
-				when "H" then return (value / 3600)
-				when "I" then return (value / 3600 % 12 + 1)
-				when "M" then return (value % 3600 / 60)
-				when "S" then return (value % 3600 % 60)
-				when "A" then return (value / 3600 > 11 ? 'PM' : 'AM')
+		# Return: the value modified according to the raw timeformat name
+		def name_map value
+			case @name[0]
+				when "H" then (value / 3600)
+				when "I" then (value / 3600 % 12 + 1)
+				when "M" then (value % 3600 / 60)
+				when "S" then (value % 3600 % 60)
+				when "A" then (value / 3600 > 11 ? 'PM' : 'AM')
 			end
 		end
 	end

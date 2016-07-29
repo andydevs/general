@@ -27,27 +27,35 @@ module General
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 2 - 2016
 	class GTimeFormat < GTemplate
+		# Applies the given integer value to the template and returns the generated string
+		#
+		# Parameter: value - the value to be applied (as a hash. merges with defaults)
+		#
+		# Return: string of the template with the given value applied
+		def apply value
+			if value.is_a? Integer
+				super value
+			else
+				raise TypeError.new "Expected Integer, got: #{value.class}"
+			end
+		end
+
 		private
 
 		# Parses the given string into GTimeFormat partials
 		#
 		# Parameter: string - the string to parse
-		def parse_string string
-			# While a GTimeFormatPlaceholder remains
-			while !(General::GTimeFormatPlaceholder::REGEX =~ string).nil? \
-				&& (General::GTimeFormatPlaceholder::REGEX =~ string) > -1
-
-				# Split match and add partials
-				match = General::GTimeFormatPlaceholder::REGEX.match string
-				@partials << General::GPartialString.new(string, match) \
-						  << General::GTimeFormatPlaceholder.new(match)
-
-				# Trim string
+		def parse string
+			loop do
+				if match = General::GPartialString::REGEX.match(string)
+					@partials << General::GPartialString.new(match)
+				elsif match = General::GTimeFormatPlaceholder::REGEX.match(string)
+					@partials << General::GTimeFormatPlaceholder.new(match)
+				else
+					return
+				end
 				string = string[match.end(0)..-1]
 			end
-
-			# Add end partial of string
-			@partials << General::GPartialString.new(string)
 		end
 	end
 end

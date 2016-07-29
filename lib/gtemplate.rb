@@ -37,7 +37,7 @@ module General
 			@defaults = {}
 
 			# Parse the string
-			parse_string string
+			parse string
 		end
 
 		# Returns a string representation of the string
@@ -105,58 +105,22 @@ module General
 
 		private
 
-		# Returns true if given string has a placeholder
-		#
-		# Parameter: string - the string to check for a placeholder
-		#
-		# Return: true if given string has a placeholder
-		def has_next string
-			next_p = General::GPlaceholder::REGEX      =~ string
-			next_a = General::GArrayPlaceholder::REGEX =~ string
-			return !((next_p.nil? || next_p < 0) && (next_a.nil? || next_a < 0))
-		end
-
-		# Returns true if the next placeholder is an aray placeholder
-		#
-		# Parameter: string - the string to check for an array placeholder
-		#
-		# Return: true if the next placeholder is an aray placeholder
-		def next_array_placeholder string
-			next_p = General::GPlaceholder::REGEX      =~ string
-			next_a = General::GArrayPlaceholder::REGEX =~ string
-			return !(next_a.nil? || next_p.nil?) && next_a < next_p
-		end
-
 		# Parses the string into General template data
 		#
 		# Parameter: string - the string to parse
-		def parse_string string
-			# While there is still a placeholder or array placeholder in string
-			while has_next string
-				# If next is array placeholder, process array placeholder
-				if next_array_placeholder string
-					# Split match and add partials
-					match = General::GArrayPlaceholder::REGEX.match string
-					@partials << General::GPartialString.new(string, match) \
-							  << General::GArrayPlaceholder.new(match)
-
-				# Else process placeholder
+		def parse string
+			loop do
+				if match = General::GPartialString::REGEX.match(string)
+					@partials << General::GPartialString.new(match)
+				elsif match = General::GArrayPlaceholder::REGEX.match(string)
+					@partials << General::GArrayPlaceholder.new(match)
+				elsif match = General::GPlaceholder::REGEX.match(string)
+					@partials << General::GPlaceholder.new(match, @defaults)
 				else
-					# Split match and add partials
-					match = General::GPlaceholder::REGEX.match string
-					@partials << General::GPartialString.new(string, match) \
-							  << General::GPlaceholder.new(match, @defaults)
-					
-					# Push default information
-					@defaults[match[:name].to_sym] ||= match[:default]
+					return
 				end
-
-				# Trim string
 				string = string[match.end(0)..-1]
 			end
-			
-			# Add end of string
-			@partials << General::GPartialString.new(string)
 		end
 	end
 end
