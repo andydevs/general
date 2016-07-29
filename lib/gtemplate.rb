@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Require
 require_relative "goperations"
 require_relative "gpartials"
 
@@ -35,13 +36,21 @@ module General
 			@partials = []
 			@defaults = {}
 
+			# Parse the string
 			parse_string string
 		end
 
 		# Returns a string representation of the string
 		#
 		# Return: a string representation of the string
-		def to_s; @partials.collect(&:to_s).join; end
+		def to_s
+			first = Hash.new(true); str = ""
+			@partials.each do |part|
+				str += part.string(first[part.name])
+				first[part.name] &&= false
+			end
+			return str
+		end
 
 		# Applies the given data to the template and returns the generated string
 		#
@@ -54,10 +63,45 @@ module General
 		# and returns an array of the generated strings
 		#
 		# Parameter: array - the array of data to be applied 
-		# 						  (each data hash will be merged with defaults)
+		# 				     (each data hash will be merged with defaults)
 		#
-		# Return: array of strings generated from the template with the given data applied
+		# Return: array of strings generated from the template with the given 
+		# 		  data applied
 		def apply_all(array); array.collect { |data| apply(data) }; end
+
+		# Returns the string as a regex
+		#
+		# Returns: the string as a regex
+		def regex sub=false
+			first = Hash.new(true); str = ""
+			@partials.each do |part|
+				str += part.regex(first[part.name]);
+				first[part.name] &&= false
+			end
+			return sub ? str : Regexp.new("\\A" + str + "\\z")
+		end
+
+		# Matches the given string against the template and returns the 
+		# collected information. Returns nil if the given string does 
+		# not match.
+		#
+		# If a block is given, it will be run with the generated hash
+		# if the string matches. Alias for:
+		# 
+		# if m = template.match(string)
+		# 	 # Run block
+		# end
+		# 
+		# Parameter: string the string to match
+		# 
+		# Return: Information matched from the string or nil
+		def match string
+			regex.match(string) do |match|
+				hash = match.names.collect { |name| [name.to_sym, match[name.to_sym]] }.to_h
+				yield hash if block_given?
+				return hash
+			end
+		end
 
 		private
 

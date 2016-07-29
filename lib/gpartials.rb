@@ -26,10 +26,14 @@ module General
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
 	class GPartialString
+		# Read name
+		attr :name
+
 		# Initializes the GPartialString with the given string
 		#
 		# Parameter: string - the string value of the GPartialString
 		def initialize(string, match=nil)
+			@name = :gpartialstring
 			@string = match ? string[0...match.begin(0)] : string
 		end
 		
@@ -38,10 +42,15 @@ module General
 		# Returns: the string
 		def apply(data); @string; end
 
+		# Returns the string as a regex
+		#
+		# Returns: the string as a regex
+		def regex(first); @string.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
+
 		# Returns the string
 		#
 		# Returns: the string
-		def to_s; @string; end
+		def string(first); @string.inspect[1...-1]; end
 	end
 
 	# Represents a placeholder partial in a GTemplate
@@ -80,12 +89,17 @@ module General
 			return (@operation ? General::GOperations.send(@operation, value) : value).to_s
 		end
 
+		# Returns the string as a regex
+		#
+		# Returns: the string as a regex
+		def regex(first); first ? "(?<#{@name.to_s}>.*)" : "\\k<#{@name.to_s}>"; end
+
 		# Returns the string representation of the placeholder
 		#
 		# Return: the string representation of the placeholder
-		def to_s
+		def string first
 			str = "@(#{@name}"
-			str += ": #{@defaults[@name]}" if @defaults[@name]
+			str += ": #{@defaults[@name]}" if @defaults[@name] and first
 			str += "-> #{@operation}" if @operation
 			return str + ")"
 		end
@@ -123,10 +137,19 @@ module General
 		# 		  formatted by the given GTemplate and joined by the given delimeter
 		def apply(data); @template.apply_all(data[@name]).join(@delimeter); end
 
+		# Returns the string as a regex
+		# 
+		# Returns: the string as a regex
+		def regex(first)
+			"(?<#{@name.to_s}>(" \
+			+ @template.regex(true) \
+			+ "(#{@delimeter.inspect[1...-1]})?)+)"
+		end
+
 		# Returns the string representation of the array placeholder
 		#
 		# Return: the string representation of the array placeholder
-		def to_s; "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect}]"; end
+		def string(first); "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"; end
 	end
 
 	# Represents an timeformat placeholder partial in a GTimeFormat
