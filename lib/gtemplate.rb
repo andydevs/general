@@ -97,7 +97,9 @@ module General
 		# Return: Information matched from the string or nil
 		def match string
 			regex.match(string) do |match|
-				hash = match.names.collect { |name| [name.to_sym, match[name.to_sym]] }.to_h
+				hash = match.names.collect { |name|
+					[name.to_sym, match[name.to_sym]]
+				}.to_h
 				yield hash if block_given?
 				return hash
 			end
@@ -110,7 +112,9 @@ module General
 		# Parameter: string - the string to parse
 		def parse string
 			loop do
-				if match = General::GPartialString::REGEX.match(string)
+				if match = General::GAt::REGEX.match(string)
+					@partials << General::GAt.new(match)
+				elsif match = General::GPartialString::REGEX.match(string)
 					@partials << General::GPartialString.new(match)
 				elsif match = General::GArrayPlaceholder::REGEX.match(string)
 					@partials << General::GArrayPlaceholder.new(match)

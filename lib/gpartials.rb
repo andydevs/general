@@ -33,11 +33,6 @@ module General
 		#
 		# Parameter: obj - the object containing information for the partial
 		def initialize(obj); @name = obj[:name].to_sym; end
-
-		# Returns a detailed inspection of the General partial
-		#
-		# Return: a detailed inspection of the General partial
-		def inspect; "@<name=#{@name}>"; end
 	end
 
 	# Represents a plain string partial in a GTemplate
@@ -46,11 +41,11 @@ module General
 	# Created: 7 - 1 - 2016
 	class GPartialString < GPartial
 		# Regular expression that matches string partials
-		REGEX = /\A[^@]+?(?=(@|\z))/m
+		REGEX = /\A[^@]+?(?=(@|\\@|\z))/m
 
-		# Initializes the GPartialString with the given string
+		# Initializes the GPartialString with the given match
 		#
-		# Parameter: string - the string value of the GPartialString
+		# Parameter: match - the match object of the GPartialString
 		def initialize(match)
 			super name: :gpartialstring
 			@string = match.to_s
@@ -70,6 +65,35 @@ module General
 		#
 		# Returns: the string
 		def string(first=true); @string.inspect[1...-1]; end
+	end
+
+	# Represents a @ character in a GTemplate
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 7 - 29 - 2016
+	class GAt < GPartial
+		# Regular expression that matches string partials
+		REGEX = /\A\\@/
+
+		# Initializes the GAt with the given match
+		#
+		# Parameter: match - the match object of the GAt
+		def initialize(match); super(name: :gat); end
+
+		# Returns the @ character
+		#
+		# Returns: the @ character
+		def apply(data); "@"; end
+
+		# Returns the @ character as a regex
+		#
+		# Returns: the @ character as a regex
+		def regex(first=true); /@/; end
+
+		# Returns the @ character
+		#
+		# Returns: the @ character
+		def string(first=true); "@"; end
 	end
 
 	# Represents a placeholder partial in a GTemplate

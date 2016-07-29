@@ -10,9 +10,10 @@ describe General::GTemplate do
 	# Before all
 	before :all do
 		@template1 = General::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loved @(food: Cat Food)!"
-		@template2 = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
-		@template3 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
-		@template4 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
+		@template2 = General::GTemplate.new "@(user)\\@@(domain)"
+		@template3 = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
+		@template4 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
+		@template5 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
 	end
 
 	# Describe General::GTemplate::new
@@ -26,6 +27,7 @@ describe General::GTemplate do
 			expect(@template2).to be_an_instance_of General::GTemplate
 			expect(@template3).to be_an_instance_of General::GTemplate
 			expect(@template4).to be_an_instance_of General::GTemplate
+			expect(@template5).to be_an_instance_of General::GTemplate
 		end
 	end
 
@@ -77,26 +79,37 @@ describe General::GTemplate do
 			end
 		end
 
+		context 'with general @ character' do
+			before :all do
+				@data2 = { user: "hillary", domain: "clinton.org" }
+				@text2 = "hillary@clinton.org"
+			end
+
+			it 'returns the templae with the given data applied (including the @ character)' do
+				expect(@template2.apply @data2).to eql @text2
+			end
+		end
+
 		context "with array template" do
 			before :all do
-				@data2 = {
+				@data3 = {
 					greetings: [
 						{name: "Ben", pet: "dog"}, 
 						{name: "Jen", pet: "cat"},
 						{name: "Ken", pet: "plant"}
 					]
 				}
-				@text2 = "Hello, Ben! How is the dog?\nHello, Jen! How is the cat?\nHello, Ken! How is the plant?"
+				@text3 = "Hello, Ben! How is the dog?\nHello, Jen! How is the cat?\nHello, Ken! How is the plant?"
 			end
 
 			it "returns the template with the given array data applied and formatted according to the template" do
-				expect(@template2.apply @data2).to eql @text2
+				expect(@template3.apply @data3).to eql @text3
 			end
 		end
 
 		context "with array template and regular placeholder" do
 			before :all do
-				@data3 = {
+				@data4 = {
 					film: 'Batman Begins',
 					crew: [
 						{name: 'David S. Goyer', role: 'Writer'},
@@ -107,23 +120,23 @@ describe General::GTemplate do
 					],
 					score: 10
 				}
-				@text3 = "Batman Begins\nCrew:\n\tDavid S. Goyer: Writer\n\tChris Nolan: Director\n\tWally Pfister: Director of Photography" \
+				@text4 = "Batman Begins\nCrew:\n\tDavid S. Goyer: Writer\n\tChris Nolan: Director\n\tWally Pfister: Director of Photography" \
 								 "\n\tMichael Caine: Alfred Pennyworth\n\tChristian Bale: Bruce Wayne/Batman\nScore: 10/10"
 			end
 
 			it "returns the template with the given data applied (including array data) and formatted according to the template" do
-				expect(@template3.apply @data3).to eql @text3
+				expect(@template4.apply @data4).to eql @text4
 			end
 		end
 
 		context "with placeholder operation" do
 			before :all do
-				@data4 = {name: "cat", amount: 19999}
-				@text4 = "There once was a dog named Cat. Cat earned $199.99 last week."
+				@data5 = {name: "cat", amount: 19999}
+				@text5 = "There once was a dog named Cat. Cat earned $199.99 last week."
 			end
 
 			it "returns the template with the given array data applied and formatted according to the format operations" do 
-				expect(@template4.apply @data4).to eql @text4
+				expect(@template5.apply @data5).to eql @text5
 			end
 		end
 	end
