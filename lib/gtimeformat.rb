@@ -47,8 +47,8 @@ module General
 		# Parameter: string - the string to parse
 		def parse string
 			loop do
-				if match = General::GPartialString::REGEX.match(string)
-					@partials << General::GPartialString.new(match)
+				if match = General::GText::REGEX.match(string)
+					@partials << General::GText.new(match)
 				elsif match = General::GTimeFormatPlaceholder::REGEX.match(string)
 					@partials << General::GTimeFormatPlaceholder.new(match)
 				else

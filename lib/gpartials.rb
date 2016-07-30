@@ -42,35 +42,35 @@ module General
 		def initialize(obj); @name = obj[:name].to_sym; end
 	end
 
-	# Represents a plain string partial in a GTemplate
+	# Represents a plain text partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
-	class GPartialString < GPartial
-		# Regular expression that matches string partials
+	class GText < GPartial
+		# Regular expression that matches text partials
 		REGEX = /\A[^@]+?(?=(@|\\@|\z))/m
 
-		# Initializes the GPartialString with the given match
+		# Initializes the GText with the given match
 		#
-		# Parameter: match - the match object of the GPartialString
+		# Parameter: match - the match object of the GText
 		def initialize(match)
 			super name: :gpartialstring
 			@string = match.to_s
 		end
 		
-		# Returns the string
+		# Returns the text
 		#
-		# Returns: the string
+		# Returns: the text
 		def apply(data); @string; end
 
-		# Returns the string as a regex
+		# Returns the text as a regex
 		#
-		# Returns: the string as a regex
+		# Returns: the text as a regex
 		def regex(first=true); @string.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
 
-		# Returns the string
+		# Returns the text as a string
 		#
-		# Returns: the string
+		# Returns: the text as a string
 		def string(first=true); @string.inspect[1...-1]; end
 	end
 
