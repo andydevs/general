@@ -26,6 +26,13 @@ module General
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 29 - 2016
 	class GPartial
+		protected
+
+		# Regular expression that matches placeholder names
+		NAME = /(?<name>[a-zA-Z]\w*)/
+
+		public
+
 		# Get name
 		attr :name
 
@@ -101,8 +108,24 @@ module General
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 1 - 2016
 	class GPlaceholder < GPartial
+		private
+
+		# Regular expression that matches a single placeholder
+		ARGUMENT  = /(?<text>\w+)|((?<qtat>'|")(?<text>.*)\k<qtat>)/
+
+		# Regular expression that matches placeholder arguments
+		ARGUMENTS = /(?<arguments>(#{ARGUMENT}\s*)*)/
+
+		# Regular expression that matches placeholder operations
+		OPERATION = /(->\s*(?<operation>\w+))/
+
+		# Regular expression that matches placeholder defaults
+		DEFAULT   = /(\:\s*(?<default>[^(\-\>)]+))/
+
+		public
+
 		# Regular expression that matches placeholders
-		REGEX = /@\((?<name>[a-zA-Z]\w*)\s*(\:\s*(?<default>.*?))?\s*(->\s*(?<operation>[\w+\s+]+))?\)/
+		REGEX = /@\(\s*#{NAME}\s*#{DEFAULT}?\s*#{OPERATION}?\s*#{ARGUMENTS}?\s*\)/
 
 		# Initializes the GPlaceholder with the given match
 		#
@@ -110,9 +133,12 @@ module General
 		# Parameter: defaults - the hash of default data from the GTemplate
 		def initialize match, defaults
 			super match
-			@operation = match[:operation]
 			@defaults  = defaults
-			@defaults[@name] ||= match[:default] if match[:default]
+			@operation = match[:operation]
+			@arguments = match[:arguments].gsub(ARGUMENT).collect { |arg|
+				ARGUMENT.match(arg)[:text]
+			}
+			@defaults[@name] ||= match[:default]
 		end
 
 		# Returns the value of the placeholder in the given data 
@@ -127,7 +153,7 @@ module General
 			value = data[@name] || @defaults[@name]
 
 			# Return value (operation performed if one is defined)
-			return (@operation ? General::GOperations.send(@operation, value) : value).to_s
+			return (@operation ? General::GOperations.send(@operation, value, *@arguments) : value).to_s
 		end
 
 		# Returns the string as a regex
@@ -152,7 +178,7 @@ module General
 	# Created: 7 - 1 - 2016
 	class GArrayPlaceholder < GPartial
 		# Regular expression that matches array placeholders
-		REGEX = /\A@\[(?<name>[a-zA-Z]\w*)\]( +|\n+)?(?<text>.*?)( +|\n+)?@\[(?<delimeter>.+)?\]/m
+		REGEX = /\A@\[#{NAME}\]( +|\n+)?(?<text>.*?)( +|\n+)?@\[(?<delimeter>.+)?\]/m
 
 		# Default delimeter
 		DEFAULT_DELIMETER = " "

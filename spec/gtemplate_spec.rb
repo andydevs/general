@@ -14,6 +14,7 @@ describe General::GTemplate do
 		@template3 = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
 		@template4 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
 		@template5 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
+		@template6 = General::GTemplate.new "There once was a cat named @(name -> capitalize all)."
 	end
 
 	# Describe General::GTemplate::new
@@ -23,11 +24,11 @@ describe General::GTemplate do
 	# Parameter: string - the string being converted to a template
 	describe "::new" do
 		it "creates a new GTemplate with the given template string" do
-			expect(@template1).to be_an_instance_of General::GTemplate
-			expect(@template2).to be_an_instance_of General::GTemplate
-			expect(@template3).to be_an_instance_of General::GTemplate
-			expect(@template4).to be_an_instance_of General::GTemplate
-			expect(@template5).to be_an_instance_of General::GTemplate
+			[@template1, @template2, @template3,
+			 @template4, @template5, @template6]
+			.each do |template|
+				expect(template).to be_an_instance_of General::GTemplate
+			end
 		end
 	end
 
@@ -135,8 +136,19 @@ describe General::GTemplate do
 				@text5 = "There once was a dog named Cat. Cat earned $199.99 last week."
 			end
 
-			it "returns the template with the given array data applied and formatted according to the format operations" do 
+			it "returns the template with the given data applied and formatted according to the format operations" do 
 				expect(@template5.apply @data5).to eql @text5
+			end
+		end
+
+		context 'with placeholder operation arguments' do
+			before :all do
+				@data6 = {name: "joe schmoe"}
+				@text6 = "There once was a cat named Joe Schmoe."
+			end
+
+			it 'returns the template with the given data applied and formatted according to the format operations and arguments' do
+				expect(@template6.apply @data6).to eql @text6
 			end
 		end
 	end

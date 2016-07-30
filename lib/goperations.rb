@@ -31,8 +31,11 @@ module General
 		# Parameter: string - the string being capitalized
 		#
 		# Return: the capitalized string
-		def self.capitalize string
-			return string.split(' ').collect(&:capitalize).join(' ')
+		def self.capitalize string, what="first"
+			case what
+			when "all" then string.split(' ').collect(&:capitalize).join(' ')
+			else string.capitalize
+			end
 		end
 
 		# Converts every letter in the string to uppercase
