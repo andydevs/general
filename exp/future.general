@@ -1,0 +1,11 @@
+There once was a man named @(name: gordon ramsay). @(name) loved @(food: Cat Food).
+
+@if(drives: true)
+
+@(name) drove to the store to get some @(food).
+
+@else
+
+@(name) walked thirty blocks uphil to the store to get some @(food)
+
+@end

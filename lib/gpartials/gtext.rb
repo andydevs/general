@@ -55,7 +55,7 @@ module General
 		def string(first=true); @string.inspect[1...-1]; end
 	end
 
-		# Represents a special character in a GTemplate
+	# Represents a special character in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 29 - 2016
@@ -65,8 +65,13 @@ module General
 
 		# Special character information
 		SPECIALS = {
-			at:    "@",
-			arrow: "->"
+			at: "@",
+			lt: "<", gt: ">",
+			op: "(", cp: ")",
+			ob: "[", cb: "]",
+			oc: "{", cc: "}",
+			ms: "-", ps: "+",
+			bs: "\\", fs: "/"
 		}
 
 		# Initializes the GSpecial with the given match
