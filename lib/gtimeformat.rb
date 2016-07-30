@@ -14,8 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "gtemplate"
-require_relative "gpartials"
+require_relative "gbasetemplate"
+require_relative "gpartials/gtext"
+require_relative "gpartials/gtimeformatplaceholder"
 
 # General is a templating system in ruby
 #
@@ -26,7 +27,22 @@ module General
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 2 - 2016
-	class GTimeFormat < GTemplate
+	class GTimeFormat < GBaseTemplate
+		def initialize string
+			super(string)
+
+			loop do
+				if match = General::GText::REGEX.match(string)
+					@partials << General::GText.new(match)
+				elsif match = General::GTimeFormatPlaceholder::REGEX.match(string)
+					@partials << General::GTimeFormatPlaceholder.new(match)
+				else
+					return
+				end
+				string = string[match.end(0)..-1]
+			end
+		end
+
 		# Applies the given integer value to the template and returns the generated string
 		#
 		# Parameter: value - the value to be applied (as a hash. merges with defaults)
@@ -37,24 +53,6 @@ module General
 				super value
 			else
 				raise TypeError.new "Expected Integer, got: #{value.class}"
-			end
-		end
-
-		private
-
-		# Parses the given string into GTimeFormat partials
-		#
-		# Parameter: string - the string to parse
-		def parse string
-			loop do
-				if match = General::GText::REGEX.match(string)
-					@partials << General::GText.new(match)
-				elsif match = General::GTimeFormatPlaceholder::REGEX.match(string)
-					@partials << General::GTimeFormatPlaceholder.new(match)
-				else
-					return
-				end
-				string = string[match.end(0)..-1]
 			end
 		end
 	end

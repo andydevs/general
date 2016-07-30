@@ -15,6 +15,8 @@ describe General::GTemplate do
 		@template4 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
 		@template5 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
 		@template6 = General::GTemplate.new "There once was a cat named @(name -> capitalize all)."
+		@template7 = General::GTemplate.new "The time is @(time -> time)"
+		@template8 = General::GTemplate.new "The time is @(time -> time '@SS <- @MM <- @HH')"
 	end
 
 	# Describe General::GTemplate::new
@@ -24,8 +26,8 @@ describe General::GTemplate do
 	# Parameter: string - the string being converted to a template
 	describe "::new" do
 		it "creates a new GTemplate with the given template string" do
-			[@template1, @template2, @template3,
-			 @template4, @template5, @template6]
+			[@template1, @template2, @template3, @template4, 
+			@template5, @template6, @template7, @template8]
 			.each do |template|
 				expect(template).to be_an_instance_of General::GTemplate
 			end
@@ -40,29 +42,34 @@ describe General::GTemplate do
 	#
 	# Return: string of the template with the given data applied
 	describe "#apply" do
+
+		# ------------------------------------BASIC PLACEHOLDER------------------------------------
+
+		# Test basic @(name: default) placeholder
 		context 'with a general template' do
+
+			# --------------------------------DATA--------------------------------
+
 			before :all do
 				@data1 = {name: "Joe", food: "Joe's Shmoes"}
 				@name  = "Dog"
 				@food  = "Denny's Fennies"
+
+				@default_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Cat Food!"
+				@name_text = "There once was a man named Dog. Dog loved Cat Food!"
+				@food_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Denny's Fennies!"
+				@all_text = "There once was a man named Joe. Joe loved Joe's Shmoes!"
 			end
 
-			context "with no data" do
-				before :all do
-					@default_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Cat Food!"
-				end
+			# --------------------------------TEST--------------------------------
 
+			context "with no data" do
 				it "returns the template with the default data applied" do
 					expect(@template1.apply).to eql @default_text
 				end
 			end
 
 			context "with partial data" do
-				before :all do
-					@name_text = "There once was a man named Dog. Dog loved Cat Food!"
-					@food_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Denny's Fennies!"
-				end
-
 				it "returns the template with the given data applied to corresponding placeholders and default data applied to the rest" do
 					expect(@template1.apply name: @name).to eql @name_text
 					expect(@template1.apply food: @food).to eql @food_text
@@ -70,28 +77,37 @@ describe General::GTemplate do
 			end
 
 			context "with all data" do
-				before :all do
-					@all_text = "There once was a man named Joe. Joe loved Joe's Shmoes!"
-				end
-
 				it "returns the template with the given data applied" do
 					expect(@template1.apply @data1).to eql @all_text
 				end
 			end
 		end
 
+		# ------------------------------------SPECIAL CHARACTERS------------------------------------
+
+		# Test special characters
 		context 'with general special characters' do
+
+			# --------------------------------DATA--------------------------------
+
 			before :all do
 				@data2 = { user: "hillary", domain: "clinton.org" }
 				@text2 = "hillary@clinton.org"
 			end
+
+			# --------------------------------TEST--------------------------------
 
 			it 'returns the templae with the given data applied (including the @ character)' do
 				expect(@template2.apply @data2).to eql @text2
 			end
 		end
 
+		# ------------------------------------ARRAY TEMPLATE------------------------------------
+
+		# Test array template
 		context "with array template" do
+
+			# --------------------------------DATA--------------------------------
 			before :all do
 				@data3 = {
 					greetings: [
@@ -101,15 +117,7 @@ describe General::GTemplate do
 					]
 				}
 				@text3 = "Hello, Ben! How is the dog?\nHello, Jen! How is the cat?\nHello, Ken! How is the plant?"
-			end
 
-			it "returns the template with the given array data applied and formatted according to the template" do
-				expect(@template3.apply @data3).to eql @text3
-			end
-		end
-
-		context "with array template and regular placeholder" do
-			before :all do
 				@data4 = {
 					film: 'Batman Begins',
 					crew: [
@@ -125,30 +133,61 @@ describe General::GTemplate do
 								 "\n\tMichael Caine: Alfred Pennyworth\n\tChristian Bale: Bruce Wayne/Batman\nScore: 10/10"
 			end
 
-			it "returns the template with the given data applied (including array data) and formatted according to the template" do
-				expect(@template4.apply @data4).to eql @text4
+			# --------------------------------TEST--------------------------------
+
+			context 'with no placeholder' do
+				it "returns the template with the given array data applied and formatted according to the template" do
+					expect(@template3.apply @data3).to eql @text3
+				end
+			end
+
+			context 'with regular placeholder' do
+				it "returns the template with the given data applied (including array data) and formatted according to the template" do
+					expect(@template4.apply @data4).to eql @text4
+				end
 			end
 		end
 
+		# ------------------------------------OPERATIONS------------------------------------
+
 		context "with placeholder operation" do
+
+			# --------------------------------DATA--------------------------------
+
 			before :all do
 				@data5 = {name: "cat", amount: 19999}
 				@text5 = "There once was a dog named Cat. Cat earned $199.99 last week."
-			end
 
-			it "returns the template with the given data applied and formatted according to the format operations" do 
-				expect(@template5.apply @data5).to eql @text5
-			end
-		end
-
-		context 'with placeholder operation arguments' do
-			before :all do
 				@data6 = {name: "joe schmoe"}
 				@text6 = "There once was a cat named Joe Schmoe."
+
+				hrs = 3
+				min = 14
+				sec = 12
+				pm = true
+
+				@data78 = {
+					time: ( ((pm ? 11 : 0) + hrs)*3600 + min*60 + sec )
+				}
+
+				@text7 = "The time is #{hrs}:#{min.to_s.rjust(2,'0')}:#{sec.to_s.rjust(2,'0')} #{pm ? 'PM' : 'AM'}"
+				@text8 = "The time is #{sec.to_s.rjust(2,'0')} <- #{min.to_s.rjust(2,'0')} <- #{((pm ? 11 : 0) + hrs).to_s.rjust(2,'0')}"
 			end
 
-			it 'returns the template with the given data applied and formatted according to the format operations and arguments' do
-				expect(@template6.apply @data6).to eql @text6
+			# --------------------------------TEST--------------------------------
+
+			context 'with no arguments' do
+				it "returns the template with the given data applied and formatted according to the format operations" do 
+					expect(@template5.apply @data5).to eql @text5
+					expect(@template7.apply @data78).to eql @text7
+				end
+			end
+
+			context 'with arguments' do
+				it 'returns the template with the given data applied and formatted according to the format operations and arguments' do
+					expect(@template6.apply @data6).to eql @text6
+					expect(@template8.apply @data78).to eql @text8
+				end
 			end
 		end
 	end
@@ -164,7 +203,7 @@ describe General::GTemplate do
 	# Return: array of strings generated from the template with the given 
 	# 		  data applied
 	describe '#apply_all' do
-		before(:all) do
+		before :all do
 			@data5 = [
 				{name: "Joe",   food: "Joe's Schmoes"},
 				{name: "Jane",  food: "Jane's Danes"},

@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Require
-require_relative "goperations"
-require_relative "gpartials"
+require_relative "gbasetemplate"
+require_relative "gpartials/gtext"
+require_relative "gpartials/gplaceholder"
 
 # General is a templating system in ruby
 #
@@ -27,17 +27,29 @@ module General
 	#
 	# Author: Anshul Kharbanda
 	# Created: 3 - 4 - 2016
-	class GTemplate
+	class GTemplate < GBaseTemplate
 		# Creates a GTemplate with the given template string
 		#
 		# Parameter: string - the string being converted to a template
 		def initialize string
-			# The string gets split into partials by placeholder and array template
-			@partials = []
+			super(string)
 			@defaults = {}
 
-			# Parse the string
-			parse string
+			# The string gets split into partials by placeholder and array template
+			loop do
+				if match = General::GText::REGEX.match(string)
+					@partials << General::GText.new(match)
+				elsif match = General::GSpecial::REGEX.match(string)
+					@partials << General::GSpecial.new(match)
+				elsif match = General::GArrayPlaceholder::REGEX.match(string)
+					@partials << General::GArrayPlaceholder.new(match)
+				elsif match = General::GPlaceholder::REGEX.match(string)
+					@partials << General::GPlaceholder.new(match, @defaults)
+				else
+					return
+				end
+				string = string[match.end(0)..-1]
+			end
 		end
 
 		# Returns a string representation of the string
@@ -51,23 +63,6 @@ module General
 			end
 			return str
 		end
-
-		# Applies the given data to the template and returns the generated string
-		#
-		# Parameter: data - the data to be applied (as a hash. merges with defaults)
-		#
-		# Return: string of the template with the given data applied
-		def apply(data={}); @partials.collect { |partial| partial.apply(data) }.join; end
-
-		# Applies each data structure in the array independently to the template
-		# and returns an array of the generated strings
-		#
-		# Parameter: array - the array of data to be applied 
-		# 				     (each data hash will be merged with defaults)
-		#
-		# Return: array of strings generated from the template with the given 
-		# 		  data applied
-		def apply_all(array); array.collect { |data| apply(data) }; end
 
 		# Returns the string as a regex
 		#
@@ -102,28 +97,6 @@ module General
 				}.to_h
 				yield hash if block_given?
 				return hash
-			end
-		end
-
-		private
-
-		# Parses the string into General template data
-		#
-		# Parameter: string - the string to parse
-		def parse string
-			loop do
-				if match = General::GText::REGEX.match(string)
-					@partials << General::GText.new(match)
-				elsif match = General::GSpecial::REGEX.match(string)
-					@partials << General::GSpecial.new(match)
-				elsif match = General::GArrayPlaceholder::REGEX.match(string)
-					@partials << General::GArrayPlaceholder.new(match)
-				elsif match = General::GPlaceholder::REGEX.match(string)
-					@partials << General::GPlaceholder.new(match, @defaults)
-				else
-					return
-				end
-				string = string[match.end(0)..-1]
 			end
 		end
 	end

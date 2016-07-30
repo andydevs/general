@@ -14,100 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require_relative "gpartial"
+require_relative "../goperations"
+
 # General is a templating system in ruby
 #
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
 module General
 	private
-
-	# Represents a Partial in a template
-	#
-	# Author:  Anshul Kharbanda
-	# Created: 7 - 29 - 2016
-	class GPartial
-		protected
-
-		# Regular expression that matches placeholder names
-		NAME = /(?<name>[a-zA-Z]\w*)/
-
-		public
-
-		# Get name
-		attr :name
-
-		# Initializes the GPartial with the given object
-		#
-		# Parameter: obj - the object containing information for the partial
-		def initialize(obj); @name = obj[:name].to_sym; end
-	end
-
-	# Represents a plain text partial in a GTemplate
-	#
-	# Author:  Anshul Kharbanda
-	# Created: 7 - 1 - 2016
-	class GText < GPartial
-		# Regular expression that matches text partials
-		REGEX = /\A[^@]+?(?=(@|\\@|\z))/m
-
-		# Initializes the GText with the given match
-		#
-		# Parameter: match - the match object of the GText
-		def initialize(match)
-			super name: :gpartialstring
-			@string = match.to_s
-		end
-		
-		# Returns the text
-		#
-		# Returns: the text
-		def apply(data); @string; end
-
-		# Returns the text as a regex
-		#
-		# Returns: the text as a regex
-		def regex(first=true); @string.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
-
-		# Returns the text as a string
-		#
-		# Returns: the text as a string
-		def string(first=true); @string.inspect[1...-1]; end
-	end
-
-	# Represents a special character in a GTemplate
-	#
-	# Author:  Anshul Kharbanda
-	# Created: 7 - 29 - 2016
-	class GSpecial < GPartial
-		# Regular expression that matches special partials
-		REGEX = /\A@(?<key>\w+)\;/
-
-		# Special character information
-		SPECIALS = {
-			at:    {string: "@", regex: /@/},
-			arrow: {string: "->", regex: /\-\>/}
-		}
-
-		# Initializes the GSpecial with the given match
-		#
-		# Parameter: match - the match object of the GSpecial
-		def initialize(match); super(name: :gspecial); @key=match[:key].to_sym; end
-
-		# Returns the special character
-		#
-		# Returns: the special character
-		def apply(data); SPECIALS[@key][:string]; end
-
-		# Returns the special character as a regex
-		#
-		# Returns: the special character as a regex
-		def regex(first=true); SPECIALS[@key][:regex]; end
-
-		# Returns the special character
-		#
-		# Returns: the special character
-		def string(first=true); SPECIALS[@key][:string]; end
-	end
 
 	# Represents a placeholder partial in a GTemplate
 	#
@@ -220,53 +135,5 @@ module General
 		#
 		# Return: the string representation of the array placeholder
 		def string(first=true); "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"; end
-	end
-
-	# Represents an timeformat placeholder partial in a GTimeFormat
-	#
-	# Author:  Anshul Kharbanda
-	# Created: 7 - 1 - 2016
-	class GTimeFormatPlaceholder < GPartial
-		# Regular expression that matches timeformat placeholders
-		REGEX = /@(?<name>[A-Z]+)/
-
-		# Returns the value of the timeformat placeholder in the given time value
-		# formatted according to the time format name
-		#
-		# Parameter: value - the time value being applied
-		#
-		# Return: the value of the timeformat placeholder in the given time value
-		# 		  formatted according to the time format name
-		def apply value
-			map = name_map(value).to_s
-			return is_justify? ? map.rjust(@name.length, '0') : map
-		end
-
-		# Returns true if the timeformat placeholder is a justifiable name
-		#
-		# Return: true if the timeformat placeholder is a justifiable name
-		def is_justify?; "HIMS".include? @name[0]; end
-
-		# Returns the string representation of the timeformat placeholder
-		#
-		# Return: the string representation of the timeformat placeholder
-		def to_s; "@#{@name}"; end
-
-		private
-
-		# Returns the value modified according to the raw timeformat name
-		#
-		# Parameter: value - the time value being applied
-		#
-		# Return: the value modified according to the raw timeformat name
-		def name_map value
-			case @name[0]
-				when "H" then (value / 3600)
-				when "I" then (value / 3600 % 12 + 1)
-				when "M" then (value % 3600 / 60)
-				when "S" then (value % 3600 % 60)
-				when "A" then (value / 3600 > 11 ? 'PM' : 'AM')
-			end
-		end
 	end
 end
