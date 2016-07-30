@@ -112,10 +112,10 @@ module General
 		# Parameter: string - the string to parse
 		def parse string
 			loop do
-				if match = General::GAt::REGEX.match(string)
-					@partials << General::GAt.new(match)
-				elsif match = General::GPartialString::REGEX.match(string)
+				if match = General::GPartialString::REGEX.match(string)
 					@partials << General::GPartialString.new(match)
+				elsif match = General::GSpecial::REGEX.match(string)
+					@partials << General::GSpecial.new(match)
 				elsif match = General::GArrayPlaceholder::REGEX.match(string)
 					@partials << General::GArrayPlaceholder.new(match)
 				elsif match = General::GPlaceholder::REGEX.match(string)

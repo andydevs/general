@@ -10,7 +10,7 @@ describe General::GTemplate do
 	# Before all
 	before :all do
 		@template1 = General::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loved @(food: Cat Food)!"
-		@template2 = General::GTemplate.new "@(user)\\@@(domain)"
+		@template2 = General::GTemplate.new "@(user)@at;@(domain)"
 		@template3 = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
 		@template4 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
 		@template5 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
@@ -80,7 +80,7 @@ describe General::GTemplate do
 			end
 		end
 
-		context 'with general @ character' do
+		context 'with general special characters' do
 			before :all do
 				@data2 = { user: "hillary", domain: "clinton.org" }
 				@text2 = "hillary@clinton.org"

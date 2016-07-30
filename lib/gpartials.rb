@@ -74,33 +74,39 @@ module General
 		def string(first=true); @string.inspect[1...-1]; end
 	end
 
-	# Represents a @ character in a GTemplate
+	# Represents a special character in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 29 - 2016
-	class GAt < GPartial
-		# Regular expression that matches string partials
-		REGEX = /\A\\@/
+	class GSpecial < GPartial
+		# Regular expression that matches special partials
+		REGEX = /\A@(?<key>\w+)\;/
 
-		# Initializes the GAt with the given match
-		#
-		# Parameter: match - the match object of the GAt
-		def initialize(match); super(name: :gat); end
+		# Special character information
+		SPECIALS = {
+			at:    {string: "@", regex: /@/},
+			arrow: {string: "->", regex: /\-\>/}
+		}
 
-		# Returns the @ character
+		# Initializes the GSpecial with the given match
 		#
-		# Returns: the @ character
-		def apply(data); "@"; end
+		# Parameter: match - the match object of the GSpecial
+		def initialize(match); super(name: :gspecial); @key=match[:key].to_sym; end
 
-		# Returns the @ character as a regex
+		# Returns the special character
 		#
-		# Returns: the @ character as a regex
-		def regex(first=true); /@/; end
+		# Returns: the special character
+		def apply(data); SPECIALS[@key][:string]; end
 
-		# Returns the @ character
+		# Returns the special character as a regex
 		#
-		# Returns: the @ character
-		def string(first=true); "@"; end
+		# Returns: the special character as a regex
+		def regex(first=true); SPECIALS[@key][:regex]; end
+
+		# Returns the special character
+		#
+		# Returns: the special character
+		def string(first=true); SPECIALS[@key][:string]; end
 	end
 
 	# Represents a placeholder partial in a GTemplate
@@ -111,7 +117,7 @@ module General
 		private
 
 		# Regular expression that matches a single placeholder
-		ARGUMENT  = /(?<text>\w+)|((?<qtat>'|")(?<text>.*)\k<qtat>)/
+		ARGUMENT = /(?<text>\w+)|((?<qtat>'|")(?<text>.*)\k<qtat>)/
 
 		# Regular expression that matches placeholder arguments
 		ARGUMENTS = /(?<arguments>(#{ARGUMENT}\s*)*)/
@@ -120,7 +126,7 @@ module General
 		OPERATION = /(->\s*(?<operation>\w+))/
 
 		# Regular expression that matches placeholder defaults
-		DEFAULT   = /(\:\s*(?<default>[^(\-\>)]+))/
+		DEFAULT = /(\:\s*(?<default>[^(\-\>)]+))/
 
 		public
 
