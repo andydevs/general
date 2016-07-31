@@ -26,6 +26,15 @@ module General
 	# Author: Anshul Kharbanda
 	# Created: 6 - 3 - 2016
 	module GOperations
+		# The money types used by the money operation
+		MONEY_TYPES = {
+			"USD" => "$",
+			"EUR" => "€"
+		}
+
+		# The default time format
+		DEFAULT_TIME = "@I:@MM:@SS @A"
+
 		#-----------------------------------STRING OPERATIONS------------------------------------
 
 		# Capitalizes every word in the string
@@ -34,9 +43,11 @@ module General
 		#
 		# Return: the capitalized string
 		def self.capitalize string, what="first"
+			assert_type string, String
 			case what
 			when "all" then string.split(' ').collect(&:capitalize).join(' ')
-			else string.capitalize
+			when "first" then string.capitalize
+			else raise TypeError.new "Undefined second argument for operation capitalize: #{what}"
 			end
 		end
 
@@ -45,8 +56,9 @@ module General
 		# Parameter: string - the string being uppercased
 		#
 		# Return: the uppercased string
-		def self.uppercase string
-			return string.upcase
+		def self.uppercase(string)
+			assert_type string, String
+			string.upcase
 		end
 
 		# Converts every letter in the string to lowercase
@@ -54,33 +66,51 @@ module General
 		# Parameter: string - the string being lowercased
 		#
 		# Return: the lowercased string
-		def self.lowercase string
-			return string.downcase
+		def self.lowercase(string)
+			assert_type string, String
+			string.downcase
 		end
 
 		#-----------------------------------INTEGER OPERATIONS------------------------------------
 
-		# Returns the integer monetary value (in cents) formatted to USD
+		# Returns the integer monetary value formatted to the given money type
 		#
-		# Parameter: integer - the integer being formatted (representing the amount in cents)
+		# Parameter: integer - the monetary amount being formatted
+		# Parameter: type    - the type of money (defaults to USD)
 		#
-		# Return: the formatted USD amount
-		def self.dollars integer
-			if integer < 0
-				"-$" + (integer * -0.01).to_s
+		# Return: the formatted money amount
+		def self.money integer, type="USD"
+			assert_type integer, Integer
+			if MONEY_TYPES[type]
+				(integer < 0 ? "-" : "") + MONEY_TYPES[type] + (integer * 0.01).abs.to_s
 			else
-				'$' + (integer * 0.01).to_s
+				raise TypeError.new("Money type: #{type} is not supported!")
 			end
 		end
 
 		# Returns the integer time value (in seconds) formatted with the given formatter
 		#
 		# Parameter: integer - the integer being formatted (representing the time in seconds)
-		# Parameter: format  - the format being used (defaults to @I:@MM:@SS @A)
+		# Parameter: format  - the format being used (defaults to DEFAULT_TIME)
 		#
 		# Return: the time formatted with the given formatter
-		def self.time integer, format="@I:@MM:@SS @A"
+		def self.time integer, format=DEFAULT_TIME
+			assert_type integer, Integer
 			General::GTimeFormat.new(format).apply(integer)
+		end
+
+		private
+
+		# Raises TypeError if the given value is not one of the given types
+		#
+		# Parameter: value - the value to check
+		# Parameter: types - the types to check for
+		#
+		# Raises: TypeError - if the given value is not one of the given types
+		def self.assert_type value, *types
+			unless types.any? {|type| value.is_a? type}
+				raise TypeError.new "Unexpected value type #{value.class.name}. Expected #{types.collect(&:name).join(",")}"
+			end
 		end
 	end
 end

@@ -13,7 +13,7 @@ describe General::GTemplate do
 		@template2 = General::GTemplate.new "@(user)@at;@(domain)"
 		@template3 = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
 		@template4 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
-		@template5 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> dollars) last week."
+		@template5 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> money) last week."
 		@template6 = General::GTemplate.new "There once was a cat named @(name -> capitalize all)."
 		@template7 = General::GTemplate.new "The time is @(time -> time)"
 		@template8 = General::GTemplate.new "The time is @(time -> time '@SS <- @MM <- @HH')"
