@@ -44,7 +44,7 @@ module General
 		public
 
 		# Regular expression that matches placeholders
-		REGEX = /@\(\s*#{NAME}\s*#{DEFAULT}?\s*#{OPERATION}?\s*#{ARGUMENTS}?\s*\)/
+		REGEX = /@\(\s*#{NAME}\s*#{DEFAULT}?\s*(#{OPERATION}\s*#{ARGUMENTS}?)?\s*\)/
 
 		# Initializes the GPlaceholder with the given match
 		#
