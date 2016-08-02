@@ -19,9 +19,8 @@
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
 module General
-	private
-
-	# Represents a Partial in a template
+	# A unit of the GTemplate. Returns a string based on an argument hash
+	# When GTemplate is applied
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 29 - 2016

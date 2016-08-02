@@ -1,4 +1,4 @@
-There once was a man named @(name: gordon ramsay). @(name) loved @(food: Cat Food).
+@@include sample
 
 @if(drives: true)
 

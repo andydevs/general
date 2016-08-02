@@ -21,8 +21,6 @@ require_relative "gpartial"
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
 module General
-	private
-
 	# Represents a plain text partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
@@ -31,28 +29,37 @@ module General
 		# Regular expression that matches text partials
 		REGEX = /\A[^@]+?(?=(@|\\@|\z))/m
 
+		# The partial name of a text
+		PTNAME = :gpartialstring
+
 		# Initializes the GText with the given match
 		#
 		# Parameter: match - the match object of the GText
 		def initialize(match)
-			super name: :gpartialstring
-			@string = match.to_s
+			super name: PTNAME
+			@text = match.to_s
 		end
 		
 		# Returns the text
 		#
-		# Returns: the text
-		def apply(data); @string; end
-
-		# Returns the text as a regex
+		# Parameter: data - the data to apply to the partial
 		#
-		# Returns: the text as a regex
-		def regex(first=true); @string.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
+		# Returns: the text
+		def apply(data); @text; end
 
 		# Returns the text as a string
 		#
+		# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+		#
 		# Returns: the text as a string
-		def string(first=true); @string.inspect[1...-1]; end
+		def string(first=true); @text.inspect[1...-1]; end
+
+		# Returns the text as a regex
+		#
+		# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+		#
+		# Returns: the text as a regex
+		def regex(first=true); @text.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
 	end
 
 	# Represents a special character in a GTemplate
@@ -65,21 +72,22 @@ module General
 
 		# Special character information
 		SPECIALS = {
-			at: "@",
-			lt: "<", gt: ">",
-			op: "(", cp: ")",
-			ob: "[", cb: "]",
-			oc: "{", cc: "}",
-			ms: "-", ps: "+",
-			bs: "\\", fs: "/"
+			at: "@",  pd: "#",
+			lt: "<",  gt: ">",
+			op: "(",  cp: ")",
+			ob: "[",  cb: "]",
+			oc: "{",  cc: "}",
+			ms: "-",  ps: "+", 
+			st: "*",  pc: "%",
+			bs: "\\", fs: "/",
+			dl: "$",
 		}
 
 		# Initializes the GSpecial with the given match
 		#
 		# Parameter: match - the match object of the GSpecial
 		def initialize(match)
-			super(match)
-			@string=SPECIALS[match[:key].to_sym]
+			super SPECIALS[match[:key].to_sym]
 		end
 	end
 end

@@ -21,8 +21,6 @@ require_relative "gpartial"
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
 module General
-	private
-
 	# Represents an timeformat placeholder partial in a GTimeFormat
 	#
 	# Author:  Anshul Kharbanda

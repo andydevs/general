@@ -22,8 +22,6 @@ require_relative "../goperations"
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
 module General
-	private
-
 	# Represents a placeholder partial in a GTemplate
 	#
 	# Author:  Anshul Kharbanda
