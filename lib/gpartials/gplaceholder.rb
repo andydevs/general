@@ -52,11 +52,15 @@ module General
 		# Parameter: defaults - the hash of default data from the GTemplate
 		def initialize match, defaults
 			super match
-			@defaults  = defaults
 			@operation = match[:operation]
-			@arguments = match[:arguments].gsub(ARGUMENT).collect { |arg|
-				ARGUMENT.match(arg)[:text]
-			}
+			if match[:arguments]
+				@arguments = match[:arguments].gsub(ARGUMENT).collect { |arg|
+					ARGUMENT.match(arg)[:text]
+				}
+			else
+				@arguments = []
+			end
+			@defaults  = defaults
 			@defaults[@name] ||= match[:default]
 		end
 
@@ -77,16 +81,25 @@ module General
 
 		# Returns the string as a regex
 		#
+		# Parameter: first - true if the placeholder is the first of its kind in the GTemplate
+		#
 		# Returns: the string as a regex
 		def regex(first=true); first ? "(?<#{@name.to_s}>.*)" : "\\k<#{@name.to_s}>"; end
 
 		# Returns the string representation of the placeholder
 		#
+		# Parameter: first - true if the placeholder is the first of its kind in the GTemplate
+		#
 		# Return: the string representation of the placeholder
 		def string first=true
 			str = "@(#{@name}"
-			str += ": #{@defaults[@name]}" if @defaults[@name] && first
-			str += " -> #{@operation}" if @operation
+			if first
+				str += ": #{@defaults[@name]}" if @defaults[@name]
+				if @operation && first
+					str += " -> #{@operation}"
+					str += " #{@arguments.join " "}" unless @arguments.empty?
+				end
+			end
 			return str + ")"
 		end
 	end

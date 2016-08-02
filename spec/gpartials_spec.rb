@@ -21,14 +21,18 @@
 # Author:  Anshul Kharbanda
 # Created: 7 - 29 - 2016
 describe 'General Partials' do
-	before(:all) do
+	before :all do
 		@placename1 = :plac1
 		@placename2 = :plac2
 		@placename3 = :plac3
-		@arrayplacename = :array1
+		@placename4 = :plac4
+		@arrayname = :array1
+
 		@hash = { 
 		  	@placename1 => "foobar",
-			@arrayplacename => [
+		  	@placename3 => "barbaz",
+		  	@placename4 => "jujar",
+			@arrayname => [
 		  		{subarg1: "ju"}, 
 		  		{subarg2: "jar"},
 		  		{subarg3: "jaz"}
@@ -57,6 +61,17 @@ describe 'General Partials' do
 		describe '::new' do
 			it 'creates the GPartial wih the given object' do
 				expect(@partial).to be_an_instance_of General::GPartial
+				expect(@partial.instance_variable_get :@name).to eql @name
+			end
+		end
+
+		# Describe General::GPartial#name
+		#
+		# Returns the name of the partial
+		#
+		# Return: the name of the partial
+		describe '#name' do
+			it 'returns the name of the GPartial' do
 				expect(@partial.name).to eql @name
 			end
 		end
@@ -175,8 +190,8 @@ describe 'General Partials' do
 		# Created: 7 - 1 - 2016
 		describe General::GSpecial do
 			before :all do
-				@text  = "@"
-				@regex = "@"
+				@text    = "@"
+				@regex   = "@"
 				@partial = General::GSpecial.new key: "at"
 			end
 
@@ -189,65 +204,258 @@ describe 'General Partials' do
 				it 'creates the GSpecial with the given match object' do
 					expect(@partial).to be_an_instance_of General::GSpecial
 					expect(@partial.name).to eql General::GSpecial::PTNAME
-					expect(@partial.instance_variable_get(:@text)).to eql @text
+					expect(@partial.instance_variable_get :@text).to eql @text
 				end
 			end
 		end
 	end
 
+	# Describe General Placeholder Partials
+	#
+	# Placeholder parts in a General Template
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 7 - 1 - 2016
 	describe 'General Placeholder Partials' do
+		# Represents a placeholder partial in a GTemplate
+		#
+		# Author:  Anshul Kharbanda
+		# Created: 7 - 1 - 2016
 		describe General::GPlaceholder do
 			before :all do
+				# Default hash
 				@defaults = {}
-				@finaldefaults = {
-					@placename1 => @default1,
-					@placename2 => @default2,
-					@placename3 => @default3
-				}
+				
+				# ------------PLACEHOLDER------------
+				@partial1 = General::GPlaceholder.new [
+					[:name, @placename1]
+				].to_h, @defaults
+				@string1       = "@(#{@partial1.name})"
+				@string_first1 = "@(#{@partial1.name})"
+				@regex1        = "\\k<#{@partial1.name}>"
+				@regex_first1  = "(?<#{@partial1.name}>.*)"
 
-				@default1 = "foo1"
-				@partial1 = General::GPlaceholder.new name: @placename1, 
-													  default: @default1
-
+				# --------------DEFAULT--------------
 				@default2 = "foo2"
-				@operation2 = "uppercase"
-				@partial2 = General::GPlaceholder.new name: @placename3,
-												   	  default: @default2,
-												   	  operation: @operation2
-
-				@default3 = "foo3"
+				@partial2 = General::GPlaceholder.new [
+					[:name,    @placename2],
+					[:default, @default2]
+				].to_h, @defaults
+				@string2       = "@(#{@partial2.name})"
+				@string_first2 = "@(#{@partial2.name}:" \
+							   + " #{@default2})"
+				@regex2        = "\\k<#{@partial2.name}>"
+				@regex_first2  = "(?<#{@partial2.name}>.*)"
+				
+				# -------------OPERATION-------------
 				@operation3 = "capitalize"
-				@arguments3 = "all"
-				@partial3 = General::GPlaceholder.new name: @placename3,
-													  default: @default3,
-													  operation: @operation3,
-													  arguments: @arguments3
+				@result3  = General::GOperations.send(
+					@operation3.to_sym, 
+					@hash[@placename3]
+				)
+				@partial3 = General::GPlaceholder.new [
+					[:name, 	 @placename3],
+					[:operation, @operation3]
+				].to_h, @defaults
+				@string3       = "@(#{@partial3.name})"
+				@string_first3 = "@(#{@partial3.name}" \
+							   + " -> #{@operation3})"
+				@regex3        = "\\k<#{@partial3.name}>"
+				@regex_first3  = "(?<#{@partial3.name}>.*)"
+				
+				# -------------ARGUMENTS-------------
+				@operation4 = "capitalize"
+				@arguments4 = ["all"]
+				@result4  = General::GOperations.send(
+					@operation4.to_sym,
+					@hash[@placename4],
+					*@arguments4
+				)
+				@partial4 = General::GPlaceholder.new [
+					[:name, 	 @placename4],
+					[:operation, @operation4],
+					[:arguments, @arguments4.join(" ")]
+				].to_h, @defaults
+				@string4       = "@(#{@partial4.name})"
+				@string_first4 = "@(#{@partial4.name}" \
+							   + " -> #{@operation4} " \
+							   + "#{@arguments4.join " "})"
+				@regex4        = "\\k<#{@partial4.name}>"
+				@regex_first4  = "(?<#{@partial4.name}>.*)"
 			end
 
+			# Describe General::GPlaceholder::new
+			# 
+			# Initializes the GPlaceholder with the given match
+			# 
+			# Parameter: match - the match data from the string being parsed
 			describe '::new' do
-				it 'creates a GPlaceholder with the given match info' do
-					expect(@partial1).to be_an_instance_of General::GPlaceholder
-					expect(@partial1.instance_variable_get :@default).to eql @default1
-					expect(@partial1.instance_variable_get :@operation1).to be_empty
-					expect(@partial1.instance_variable_get :@arguments1).to be_empty
+				# -------------------------------------PLACEHOLDER---------------------------------------
+				context 'with name given' do
+					it 'creaes a GPlaceholder with the given name' do
+						expect(@partial1).to be_an_instance_of General::GPlaceholder
+						expect(@partial1.instance_variable_get :@name).to eql @placename1
+						expect(@partial1.instance_variable_get :@operation).to be_nil
+						expect(@partial1.instance_variable_get :@arguments).to be_empty
+					end
+				end
 
-					# expect(@partial2).to be_an_instance_of General::GPlaceholder
-					
-					# expect(@partial3).to be_an_instance_of General::GPlaceholder
+				# ---------------------------------------DEFAULT-----------------------------------------
+				context 'with name and default in match object' do
+					it 'creates a GPlaceholder with the given name and default' do
+						expect(@partial2).to be_an_instance_of General::GPlaceholder
+						expect(@partial2.instance_variable_get :@name).to eql @placename2
+						expect(@partial2.instance_variable_get :@operation).to be_nil
+						expect(@partial2.instance_variable_get :@arguments).to be_empty
+						expect(@defaults[@placename2]).to eql @default2
+					end
+				end
+
+				# --------------------------------------OPERATION----------------------------------------
+				context 'with name, default, and operation in match object' do
+					it 'creates a GPlaceholder with the given name, default, and operation' do
+						expect(@partial3).to be_an_instance_of General::GPlaceholder
+						expect(@partial3.instance_variable_get :@name).to eql @placename3
+						expect(@partial3.instance_variable_get :@operation).to eql @operation3
+						expect(@partial3.instance_variable_get :@arguments).to be_empty
+						expect(@defaults[@placename3]).to eql @default3
+					end
+				end
+
+				# --------------------------------------ARGUMENTS----------------------------------------
+				context 'with name, default, operation, and arguments in match object' do
+					it 'creates a GPlaceholder with the given name, default, operation, and arguments' do
+						expect(@partial4).to be_an_instance_of General::GPlaceholder
+						expect(@partial4.instance_variable_get :@name).to eql @placename4
+						expect(@partial4.instance_variable_get :@operation).to eql @operation4
+						expect(@partial4.instance_variable_get :@arguments).to eql @arguments4
+						expect(@defaults[@placename4]).to eql @default4
+					end
 				end
 			end
 
-			# describe '#apply' do
-			  
-			# end
+			# Describe General::GPlaceholder#apply
+			# 
+			# Returns the value of the placeholder in the given data 
+			# with the given operation performed on it
+			#
+			# Parameter: data - the data being applied
+			#
+			# Return: the value of the placeholder in the given data 
+			# 		  with the given operation performed on it
+			describe '#apply' do
+				# -------------------------------------PLACEHOLDER---------------------------------------
+				context 'when name is defined in given data' do
+					it 'returns the value in the data at the name' do
+						expect(@partial1.apply @hash).to eql @hash[@partial1.name]
+					end
+				end
 
-			# describe '#string' do
-			  
-			# end
+				# ---------------------------------------DEFAULT-----------------------------------------
+				context 'when name is not defined in given data, but defined in defaults' do
+					it 'returns the value in the default at the name' do
+						expect(@partial2.apply @hash).to eql @defaults[@partial2.name]
+					end
+				end
 
-			# describe '#regex' do
-			  
-			# end
+				# --------------------------------------OPERATION----------------------------------------
+				context 'when an operation is defined' do
+					it 'returns the value in the data/default at the name with the operation applied' do
+						expect(@partial3.apply @hash).to eql @result3
+					end
+				end
+
+				# --------------------------------------ARGUMENTS----------------------------------------
+				context 'when an operation and arguments are defined' do
+					it 'returns the value in the data/default at the name with the operation and arguments applied' do
+						expect(@partial4.apply @hash).to eql @result4
+					end
+				end
+			end
+
+			# Describe General::GTemplate#string
+			#
+			# Returns the string representation of the placeholder
+			#
+			# Parameter: first - true if the placeholder is the first of its kind in the GTemplate
+			#
+			# Return: the string representation of the placeholder
+			describe '#string' do
+				# -------------------------------------NO FIRST---------------------------------------
+				context 'when no first argument specified' do
+					it 'returns the first string representation of the placeholder' do
+						expect(@partial1.string).to eql @string_first1
+						expect(@partial2.string).to eql @string_first2
+						expect(@partial3.string).to eql @string_first3
+						expect(@partial4.string).to eql @string_first4
+					end
+				end
+
+				# --------------------------------------FIRST-----------------------------------------
+				context 'when first argument is specified' do
+					# --------------------------------TRUE--------------------------------
+					context 'when first is true' do
+						it 'returns the first string representation of the placeholder' do
+							expect(@partial1.string true).to eql @string_first1
+							expect(@partial2.string true).to eql @string_first2
+							expect(@partial3.string true).to eql @string_first3
+							expect(@partial4.string true).to eql @string_first4
+						end
+					end
+
+					# --------------------------------FALSE-------------------------------
+					context 'when first is false' do
+						it 'returns the string representation of the placeholder' do
+							expect(@partial1.string false).to eql @string1
+							expect(@partial2.string false).to eql @string2
+							expect(@partial3.string false).to eql @string3
+							expect(@partial4.string false).to eql @string4
+						end
+					end
+				end
+			end
+
+			# Describe General::GTemplate#regex
+			#
+			# Returns the string as a regex
+			#
+			# Parameter: first - true if the placeholder is the first of its kind in the GTemplate
+			#
+			# Returns: the string as a regex
+			describe '#regex' do
+				# -------------------------------------NO FIRST---------------------------------------
+				context 'when no first argument specified' do
+					it 'returns the first regex representation of the placeholder' do
+						expect(@partial1.regex).to eql @regex_first1
+						expect(@partial2.regex).to eql @regex_first2
+						expect(@partial3.regex).to eql @regex_first3
+						expect(@partial4.regex).to eql @regex_first4
+					end
+				end
+
+				# --------------------------------------FIRST-----------------------------------------
+				context 'when first argument is specified' do
+					# --------------------------------TRUE--------------------------------
+					context 'when first is true' do
+						it 'returns the first regex representation of the placeholder' do
+							expect(@partial1.regex true).to eql @regex_first1
+							expect(@partial2.regex true).to eql @regex_first2
+							expect(@partial3.regex true).to eql @regex_first3
+							expect(@partial4.regex true).to eql @regex_first4
+						end
+					end
+
+					# --------------------------------FALSE-------------------------------
+					context 'when first is false' do
+						it 'returns the regex representation of the placeholder' do
+							expect(@partial1.regex false).to eql @regex1
+							expect(@partial2.regex false).to eql @regex2
+							expect(@partial3.regex false).to eql @regex3
+							expect(@partial4.regex false).to eql @regex4
+						end
+					end
+				end
+			end
 		end
 	end
 end
