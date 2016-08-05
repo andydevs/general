@@ -28,8 +28,11 @@ module General
 	# Author:  Anshul Kharbanda
 	# Created: 7 - 2 - 2016
 	class GTimeFormat < GBaseTemplate
+		# Initialize the GTimeFormat with the given string
+		#
+		# Parameter: string - the template string
 		def initialize string
-			super(string)
+			super string
 
 			loop do
 				if match = General::GText::REGEX.match(string)

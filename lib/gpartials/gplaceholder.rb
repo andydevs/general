@@ -137,9 +137,7 @@ module General
 		# 
 		# Returns: the string as a regex
 		def regex(first=true)
-			"(?<#{@name.to_s}>(" \
-			+ @template.regex(true) \
-			+ "(#{@delimeter.inspect[1...-1]})?)+)"
+			"(?<#{@name.to_s}>(#{@template.regex(true)}(#{@delimeter.inspect[1...-1]})?)+)"
 		end
 
 		# Returns the string representation of the array placeholder

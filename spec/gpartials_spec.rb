@@ -26,16 +26,16 @@ describe 'General Partials' do
 		@placename2 = :plac2
 		@placename3 = :plac3
 		@placename4 = :plac4
-		@arrayname = :array1
+		@arrayname1 = :aray1
 
 		@hash = { 
 		  	@placename1 => "foobar",
 		  	@placename3 => "barbaz",
 		  	@placename4 => "jujar",
-			@arrayname => [
-		  		{subarg1: "ju"}, 
-		  		{subarg2: "jar"},
-		  		{subarg3: "jaz"}
+			@arrayname1 => [
+		  		{subarg: "ju"}, 
+		  		{subarg: "jar"},
+		  		{subarg: "jaz"}
 		  	]
 		}
 	end
@@ -453,6 +453,131 @@ describe 'General Partials' do
 							expect(@partial3.regex false).to eql @regex3
 							expect(@partial4.regex false).to eql @regex4
 						end
+					end
+				end
+			end
+		end
+	end
+
+	# Describe General::GArrayPlaceholder
+	# 
+	# Represents an array placeholder partial in a GTemplate
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 7 - 1 - 2016
+	describe General::GArrayPlaceholder do
+		before :all do
+			# -----------DATA-----------
+			
+			@text  = "Subarg: @(subarg)"
+			@regex = "Subarg: (?<subarg>.*)"
+			@delim = "\n"
+
+			# ---------------------------OUTPUT---------------------------
+			
+			@out1 = @hash[@arrayname1]
+					.collect{|e| "Subarg: #{e[:subarg]}"}
+					.join(General::GArrayPlaceholder::DEFAULT_DELIMETER)
+			@out2 = @hash[@arrayname1]
+					.collect{|e| "Subarg: #{e[:subarg]}"}
+					.join(@delim)
+
+			# ------------------------------------------PARTIALS------------------------------------------
+
+			@partial1 = General::GArrayPlaceholder.new name: @arrayname1, text: @text
+			@partial2 = General::GArrayPlaceholder.new name: @arrayname1, text: @text, delimeter: @delim
+
+			# -------------------------------------------STRING-------------------------------------------
+
+			@string1 = "@[#{@arrayname1}] #{@text} @[ ]"
+			@string2 = "@[#{@arrayname1}] #{@text} @[\\n]"
+
+			# -------------------------------------------REGEX--------------------------------------------
+
+			@regex1 = "(?<#{@arrayname1}>(#{@regex}( )?)+)"
+			@regex2 = "(?<#{@arrayname1}>(#{@regex}(\\n)?)+)"
+		end
+
+		# Describe General::GArrayPlaceholder::new
+		# 
+		# Initializes the GPlaceholder with the given match
+		#
+		# Parameter: match - the match data from the string being parsed
+		describe '::new' do
+			context 'with the given name and text' do
+				it 'creates a new GArrayPlaceholder with the given name and text' do
+					expect(@partial1).to be_an_instance_of General::GArrayPlaceholder
+				end
+			end
+
+			context 'with the given name, text, and delimeter' do
+				it 'creates a new GArrayPlaceholder with the given name and text and delimeter' do
+					expect(@partial1).to be_an_instance_of General::GArrayPlaceholder
+				end
+			end
+		end
+
+		# Describe General::GTemplate#apply
+		# 
+		# Returns the value of the array placeholder in the given data
+		# formatted by the given GTemplate and joined by the given delimeter
+		#
+		# Parameter: data - the data being applied
+		#
+		# Return: the value of the array placeholder in the given data
+		# 		  formatted by the given GTemplate and joined by the given delimeter
+		describe '#apply' do
+			it 'applies the given data array formatted according to the given GTemplate and joined by the delimeter' do
+				expect(@partial1.apply @hash).to eql @out1
+				expect(@partial2.apply @hash).to eql @out2
+			end
+		end
+
+		describe '#string' do
+			context 'with no first argument is given' do
+				it 'returns the string of the GArrayPlaceholder' do
+					expect(@partial1.string).to eql @string1
+					expect(@partial2.string).to eql @string2
+				end
+			end
+
+			context 'with first argument is given' do
+				context 'when first is true' do
+					it 'returns the string of the GArrayPlaceholder' do
+						expect(@partial1.string true).to eql @string1
+						expect(@partial2.string true).to eql @string2
+					end
+				end
+
+				context 'when first is false' do
+					it 'returns the string of the GArrayPlaceholder' do
+						expect(@partial1.string false).to eql @string1
+						expect(@partial2.string false).to eql @string2					
+					end
+				end
+			end
+		end
+
+		describe '#regex' do
+			context 'with no first argument is given' do
+				it 'returns the regex of the GArrayPlaceholder' do
+					expect(@partial1.regex).to eql @regex1
+					expect(@partial2.regex).to eql @regex2
+				end
+			end
+
+			context 'with first argument is given' do
+				context 'when first is true' do
+					it 'returns the regex of the GArrayPlaceholder' do
+						expect(@partial1.regex true).to eql @regex1
+						expect(@partial2.regex true).to eql @regex2
+					end
+				end
+
+				context 'when first is false' do
+					it 'returns the regex of the GArrayPlaceholder' do
+						expect(@partial1.regex false).to eql @regex1
+						expect(@partial2.regex false).to eql @regex2					
 					end
 				end
 			end

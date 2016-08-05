@@ -50,8 +50,7 @@ module General
 			@source = source
 		end
 
-		# Writes the template with the given 
-		# data applied to the target stream
+		# Writes the template with the given data applied to the target stream
 		#
 		# Parameter: ios  - if String, is the name of the file to write to
 		# 					if IO, is the stream to write to
