@@ -94,10 +94,14 @@ module General
 		def string first=true
 			str = "@(#{@name}"
 			if first
-				str += ": #{@defaults[@name]}" if @defaults[@name]
-				if @operation && first
+				if @defaults[@name]
+					str += ": #{@defaults[@name]}"
+				end
+				if @operation
 					str += " -> #{@operation}"
-					str += " #{@arguments.join " "}" unless @arguments.empty?
+					unless @arguments.empty?
+						str += @arguments.collect {|s| " \"#{s}\""}.join
+					end
 				end
 			end
 			return str + ")"
@@ -133,14 +137,14 @@ module General
 		# 		  formatted by the given GTemplate and joined by the given delimeter
 		def apply(data); @template.apply_all(data[@name]).join(@delimeter); end
 
-		# Returns the string as a regex
+		# Throws TypeError
 		# 
-		# Returns: the string as a regex
-		def regex(first=true)
-			"(?<#{@name.to_s}>(#{@template.regex(true)}(#{@delimeter.inspect[1...-1]})?)+)"
-		end
+		# Parameter: first - true if the placeholder is the first of it's kind
+		def regex(first=true); raise TypeError.new("Array Templates cannot be matched."); end
 
 		# Returns the string representation of the array placeholder
+		#
+		# Parameter: first - true if the placeholder is the first of it's kind
 		#
 		# Return: the string representation of the array placeholder
 		def string(first=true); "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"; end

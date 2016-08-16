@@ -266,7 +266,7 @@ describe 'General Partials' do
 				# -------------ARGUMENTS-------------
 				@operation4 = "capitalize"
 				@arguments4 = ["all"]
-				@result4  = General::GOperations.send(
+				@result4 = General::GOperations.send(
 					@operation4.to_sym,
 					@hash[@placename4],
 					*@arguments4
@@ -279,7 +279,7 @@ describe 'General Partials' do
 				@string4       = "@(#{@partial4.name})"
 				@string_first4 = "@(#{@partial4.name}" \
 							   + " -> #{@operation4} " \
-							   + "#{@arguments4.join " "})"
+							   + "#{@arguments4.collect {|s| "\"#{s}\""}.join " "})"
 				@regex4        = "\\k<#{@partial4.name}>"
 				@regex_first4  = "(?<#{@partial4.name}>.*)"
 			end
@@ -517,22 +517,29 @@ describe 'General Partials' do
 			end
 		end
 
-		# Describe General::GTemplate#apply
+		# Describe General::GArrayPlaceholder#apply
 		# 
 		# Returns the value of the array placeholder in the given data
-		# formatted by the given GTemplate and joined by the given delimeter
+		# formatted by the given GArrayPlaceholder and joined by the given delimeter
 		#
 		# Parameter: data - the data being applied
 		#
 		# Return: the value of the array placeholder in the given data
-		# 		  formatted by the given GTemplate and joined by the given delimeter
+		# 		  formatted by the given GArrayPlaceholder and joined by the given delimeter
 		describe '#apply' do
-			it 'applies the given data array formatted according to the given GTemplate and joined by the delimeter' do
+			it 'applies the given data array formatted according to the given GArrayPlaceholder and joined by the delimeter' do
 				expect(@partial1.apply @hash).to eql @out1
 				expect(@partial2.apply @hash).to eql @out2
 			end
 		end
 
+		# Describe General::GArrayPlaceholder#string
+		#
+		# Returns the string representation of the GArrayPlaceholder
+		#
+		# Parameter: first - true if the GArrayPlaceholder is the first of it's time
+		#
+		# Returns: the string representation of the GArrayPlaceholder
 		describe '#string' do
 			context 'with no first argument is given' do
 				it 'returns the string of the GArrayPlaceholder' do
@@ -558,26 +565,31 @@ describe 'General Partials' do
 			end
 		end
 
+		# Describe General::GArrayPlaceholder#regex
+		#
+		# Throws TypeError
+		# 
+		# Parameter: first - true if the placeholder is the first of it's kind
 		describe '#regex' do
 			context 'with no first argument is given' do
 				it 'returns the regex of the GArrayPlaceholder' do
-					expect(@partial1.regex).to eql @regex1
-					expect(@partial2.regex).to eql @regex2
+					expect { @partial1.regex }.to raise_error TypeError
+					expect { @partial2.regex }.to raise_error TypeError
 				end
 			end
 
 			context 'with first argument is given' do
 				context 'when first is true' do
 					it 'returns the regex of the GArrayPlaceholder' do
-						expect(@partial1.regex true).to eql @regex1
-						expect(@partial2.regex true).to eql @regex2
+						expect { @partial1.regex true }.to raise_error TypeError
+						expect { @partial2.regex true }.to raise_error TypeError
 					end
 				end
 
 				context 'when first is false' do
 					it 'returns the regex of the GArrayPlaceholder' do
-						expect(@partial1.regex false).to eql @regex1
-						expect(@partial2.regex false).to eql @regex2					
+						expect { @partial1.regex false }.to raise_error TypeError
+						expect { @partial2.regex false }.to raise_error TypeError					
 					end
 				end
 			end
