@@ -29,13 +29,8 @@ Gem::Specification.new do |spec|
 	
 	spec.add_development_dependency "rspec", "~> 3.4"
 
-	spec.files  = ["lib/general.rb",
-				   "lib/gpartials.rb",
-				   "lib/gtemplate.rb",
-				   "lib/gio.rb",
-				   "lib/gtimeformat.rb",
-				   "lib/goperations.rb",
-				   "spec/spec_require.rb",
-				   "spec/gtemplate_spec.rb",
-				   "spec/gio_spec.rb"]
+	spec.files = Dir.glob("lib/**/*.*") \
+			   + Dir.glob("spec/**/*.*") \
+			   + Dir.glob("exp/**/*.*") \
+			   + %w(Rakefile README.md LICENSE)
 end
