@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "../lib/gio"
-require_relative "../lib/gtemplate"
-require_relative "../lib/gtimeformat"
 require_relative "../lib/goperations"
 require_relative "../lib/gpartials/gpartial"
 require_relative "../lib/gpartials/gtext"
 require_relative "../lib/gpartials/gplaceholder"
 require_relative "../lib/gpartials/gpartial"
+require_relative "../lib/templates/gtemplate"
+require_relative "../lib/templates/gio"
+require_relative "../lib/templates/gtimeformat"
