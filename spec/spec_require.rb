@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require_relative "../lib/gdothash"
 require_relative "../lib/goperations"
 require_relative "../lib/gpartials/gpartial"
 require_relative "../lib/gpartials/gtext"
