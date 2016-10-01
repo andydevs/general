@@ -24,11 +24,13 @@ require_relative "spec_require"
 # Created: 9 - 27 - 2016
 describe General::GDotHash do
 	before :all do
-		@hash     = {name: {first: "Joe", last: "Schmoe"}}
-		@key      = :"name.first"
-		@value    = @hash[:name][:first]
-		@newvalue = "Doe"
-		@gdothash = General::GDotHash.new @hash
+		@hash       = {name: {first: "Joe", last: "Schmoe"}}
+		@key1       = :"name.first"
+		@key2       = :"name.middle"
+		@value1     = @hash[:name][:first]
+		@newvalue1  = "Doe"
+		@newvalue2  = "Bobo"
+		@gdothash   = General::GDotHash.new @hash
 	end
 
 	# Describing General::GDotHash::new
@@ -59,7 +61,7 @@ describe General::GDotHash do
 	# Return: the value at the given key
 	describe '#[]' do
 		it 'returns the value addressed by the given dot notation key' do
-			expect(@gdothash[@key]).to eql @value
+			expect(@gdothash[@key1]).to eql @value1
 		end
 	end
 
@@ -68,9 +70,18 @@ describe General::GDotHash do
 	# Parameter: key   - the key to set
 	# Parameter: value - the value to set
 	describe '#[]=' do
-		it 'sets the position addressed by the given dot notation key to the given value' do
-			expect { @gdothash[@key] = @newvalue }.not_to raise_error
-			expect(@gdothash[@key]).to eql @newvalue
+		context 'if given position exists' do
+			it 'sets the position addressed by the given dot notation key to the given value' do
+				expect { @gdothash[@key1] = @newvalue1 }.not_to raise_error
+				expect(@gdothash[@key1]).to eql @newvalue1
+			end
+		end
+
+		context 'if given position does not exist' do
+			it 'creates position addressed by the given dot notation key in the given hash and sets it to the given value' do
+				expect { @gdothash[@key2] = @newvalue2 }.not_to raise_error
+				expect(@gdothash[@key2]).to eql @newvalue2
+			end
 		end
 	end
 end

@@ -33,7 +33,7 @@ module General
 		# Parameter: string - the string being converted to a template
 		def initialize string
 			super(string)
-			@defaults = {}
+			@defaults = General::GDotHash.new
 
 			# The string gets split into partials by placeholder and array template
 			loop do

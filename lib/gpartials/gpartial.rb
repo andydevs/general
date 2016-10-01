@@ -28,7 +28,7 @@ module General
 		protected
 
 		# Regular expression that matches placeholder names
-		NAME = /(?<name>[a-zA-Z]\w*)/
+		NAME = /(?<name>[a-zA-Z]\w*(\.[a-zA-Z]\w*)*)/
 
 		public
 

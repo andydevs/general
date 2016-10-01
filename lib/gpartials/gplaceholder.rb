@@ -60,8 +60,8 @@ module General
 			else
 				@arguments = []
 			end
-			@defaults  = defaults
-			@defaults[@name] ||= match[:default]
+			@defaults = defaults
+			@defaults[@name] = match[:default] unless @defaults.has_key? @name
 		end
 
 		# Returns the value of the placeholder in the given data 
@@ -73,7 +73,11 @@ module General
 		# 		  with the given operation performed on it
 		def apply data
 			# Get value from either data or defaults
-			value = data[@name] || @defaults[@name]
+			if data.has_key? @name
+				value = data[@name]
+			else
+				value = @defaults[@name]
+			end
 
 			# Return value (operation performed if one is defined)
 			return (@operation ? General::GOperations.send(@operation, value, *@arguments) : value).to_s

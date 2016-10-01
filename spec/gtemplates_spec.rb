@@ -40,6 +40,7 @@ describe 'General Templates' do
 			@template6 = General::GTemplate.new "There once was a cat named @(name -> capitalize all)."
 			@template7 = General::GTemplate.new "The time is @(time -> time)"
 			@template8 = General::GTemplate.new "The time is @(time -> time '@SS <- @MM <- @HH')"
+			@template9 = General::GTemplate.new "The name's @(name.last)... @(name.first) @(name.last)."
 		end
 
 		# Describe General::GTemplate::new
@@ -49,8 +50,9 @@ describe 'General Templates' do
 		# Parameter: string - the string being converted to a template
 		describe "::new" do
 			it "creates a new GTemplate with the given template string" do
-				[@template1, @template2, @template3, @template4, 
-				@template5, @template6, @template7, @template8]
+				[@template1, @template2, @template3, 
+				 @template4, @template5, @template6, 
+				 @template7, @template8, @template9]
 				.each do |template|
 					expect(template).to be_an_instance_of General::GTemplate
 				end
@@ -206,6 +208,23 @@ describe 'General Templates' do
 						expect(@template6.apply @data6).to eql @text6
 						expect(@template8.apply @data78).to eql @text8
 					end
+				end
+			end
+
+			# ------------------------------------DOT NOTATION------------------------------------
+
+			context "with dot notation" do
+				# --------------------------------DATA--------------------------------
+
+				before :all do
+					@data9 = General::GDotHash.new name: {first: "Gordon", last: "Ramsay"}
+					@text9 = "The name's Ramsay... Gordon Ramsay."
+				end
+
+				# --------------------------------TEST--------------------------------
+
+				it "returns the template with the given data applied appropriately" do 
+					expect(@template9.apply @data9).to eql @text9
 				end
 			end
 		end

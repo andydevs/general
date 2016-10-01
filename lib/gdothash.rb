@@ -34,6 +34,31 @@ module General
 		# Return: the string representation of the hash
 		def to_s; @hash.to_s; end
 
+		# Returns true if the GDotHash contains the given key
+		# 
+		# Parameter: key - the key to check
+		#
+		# Return: true if the GDotHash contains the given key
+		def has_key? key
+			# Split keys
+			subkeys = key.to_s.split(".").collect(&:to_sym)
+
+			# Check each subkey
+			sub = @hash
+			subkeys.each do |subkey|
+				# Return false if subhash doesn't contain key
+				# Else continue
+				if sub.is_a?(Hash) && sub.has_key?(subkey)
+					sub = sub[subkey]
+				else
+					return false
+				end
+			end
+
+			# Return true if passed
+			return true
+		end
+
 		# Gets the value at the given key
 		#
 		# Parameter: key - the key to return
@@ -65,12 +90,17 @@ module General
 			# Split subkeys
 			subkeys = key.to_s.split(".").collect(&:to_sym)
 
-			# Travel down to hash above value
-			set = @hash
-			subkeys[0...-1].each { |key| set = set[key] }
+			# Generate structure of new data
+			new_data = Hash.new
+			sub = new_data
+			subkeys[0...-1].each do |subkey|
+				sub[subkey] = Hash.new
+				sub = sub[subkey]
+			end
+			sub[subkeys[-1]] = value
 
-			# Set key in hash to new value
-			set[subkeys[-1]] = value
+			# Merge hash with new data
+			@hash.merge! new_data
 		end
 	end
 end
