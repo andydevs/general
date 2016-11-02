@@ -57,7 +57,7 @@ The current placeholder operations are:
 | uppercase  | Makes every letter in a string uppercase                |
 | lowercase  | Makes every letter in a string lowercase                |
 | dollars    | Formats an integer money amount (in cents) to dollars   |
-| hourminsec | Formats an integer time (in seconds) to HH:MM:SS format |
+| time       | Formats an integer time (in seconds) to HH:MM:SS format |
 
 ### Array Templates
 
