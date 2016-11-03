@@ -243,4 +243,92 @@ describe General::GOperations do
 			end
 		end
 	end
+
+	#----------------------------------TO ARRAY OPERATIONS------------------------------------
+
+	# Splits the string by the given delimeter (or by newline if no delimeter is given)
+	#
+	# Parameter: string    - the string to split
+	# Parameter: delimeter - the delimeter to split by (defaults to newline)
+	#
+	# Return: the array containing the split string chunks
+	describe '::split' do
+		before(:all) do
+			@string1 = "Hello World\nI am dog"
+			@array1  = ["Hello World", "I am dog"]
+
+			@string2 = "Butter, Milk, Eggs, Bread"
+			@delim2  = ",\s*"
+			@array2  = ["Butter", "Milk", "Eggs", "Bread"]
+
+			@string4 = 3
+		end
+
+		context 'with string value given' do
+			it 'splits the string by whitespace' do
+				expect(General::GOperations.split(@string1)).to eql @array1
+			end
+		end
+
+		context 'with string and delimeter given' do
+			it 'splits the string using the given delimeter' do
+				expect(General::GOperations.split(@string2, @delim2)).to eql @array2
+			end
+		end
+
+		context 'with no string value given' do
+			it 'raises ArgumentError' do
+				expect { General::GOperations.split }.to raise_error ArgumentError
+			end
+		end
+
+		context 'with value of other type given' do
+			it 'raises TypeError' do
+				expect { General::GOperations.split @string4 }.to raise_error TypeError
+			end
+		end
+	end
+
+	# Splits a sequence by a set number of words (defaults to 10)
+	#
+	# Parameter: string - the string to split
+	# Parameter: words  - the number of words to split by (defaults to 10)
+	#
+	# Return: an array containing hashes representing the chunks of the string split by words
+	describe '::splitwords' do
+		before(:all) do
+			@string1 = "The number of words in this string is greater than ten!"
+			@array1  = ["The number of words in this string is greater than", "ten!"]
+
+			@string2 = "The number of words (in this string) is greater than five, so every \"fifth\" word is on Joe's new line!"
+			@words2  = 5
+			@array2  = ["The number of words (in", "this string) is greater than", "five, so every \"fifth\" word", "is on Joe's new line!"]
+
+			@string3 = 4
+		end
+
+		context 'with string value given' do
+			it 'splits the string by ten words' do
+				expect(General::GOperations.splitwords @string1).to eql @array1
+			end
+		end
+
+		context 'with string and number of words given' do
+			it 'splits the string by the given number of words' do
+				expect(General::GOperations.splitwords @string2, @words2).to eql @array2
+			end
+		end
+
+		context 'with no string value given' do
+			it 'raises ArgumentError' do
+				expect { General::GOperations.splitwords }.to raise_error ArgumentError
+			end
+		end
+
+		context 'with value of other type given' do
+			it 'raises TypeError' do
+				expect { General::GOperations.splitwords @string3 }.to raise_error TypeError
+			end
+		end
+	end
 end
