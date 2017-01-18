@@ -59,21 +59,21 @@ describe General::GOperations do
 			end
 
 			context 'when the second argument is neither "first" or "all"' do
-				it 'raises TypeError' do
-					expect{General::GOperations.capitalize @input, "foo"}.to raise_error TypeError
+				it 'raises Error' do
+					expect{General::GOperations.capitalize @input, "foo"}.to raise_error
 				end
 			end
 		end
 
 		context 'with no string argument' do
 			it 'raises Error' do
-				expect { General::GOperations.capitalize }.to raise_error ArgumentError
+				expect { General::GOperations.capitalize }.to raise_error
 			end
 		end
 
 		context 'with argument of another type' do
 			it 'raises Error' do
-				expect { General::GOperations.capitalize(0) }.to raise_error TypeError
+				expect { General::GOperations.capitalize(0) }.to raise_error
 			end
 		end
 	end
@@ -99,13 +99,13 @@ describe General::GOperations do
 
 		context 'with no string argument' do
 			it 'raises Error' do
-				expect { General::GOperations.uppercase }.to raise_error ArgumentError
+				expect { General::GOperations.uppercase }.to raise_error
 			end
 		end
 
 		context 'with argument of another type' do
 			it 'raises Error' do
-				expect { General::GOperations.capitalize(0) }.to raise_error TypeError
+				expect { General::GOperations.capitalize(0) }.to raise_error
 			end
 		end
 	end
@@ -131,13 +131,13 @@ describe General::GOperations do
 
 		context 'with no string argument' do
 			it 'raises Error' do
-				expect { General::GOperations.lowercase }.to raise_error ArgumentError
+				expect { General::GOperations.lowercase }.to raise_error
 			end
 		end
 
 		context 'with argument of another type' do
 			it 'raises Error' do
-				expect { General::GOperations.capitalize(0) }.to raise_error TypeError
+				expect { General::GOperations.capitalize(0) }.to raise_error
 			end
 		end
 	end
@@ -178,21 +178,21 @@ describe General::GOperations do
 			end
 
 			context 'if string money value is not supported' do
-				it 'raises TypeError' do
-					expect { General::GOperations.money(@money1, "RUE") }.to raise_error TypeError
+				it 'raises Error' do
+					expect { General::GOperations.money(@money1, "RUE") }.to raise_error
 				end
 			end
 		end
 
 		context 'with no integer value given' do
 			it 'raises Error' do
-				expect { General::GOperations.money }.to raise_error ArgumentError
+				expect { General::GOperations.money }.to raise_error
 			end
 		end
 
 		context 'with argument of another type' do
 			it 'raises Error' do
-				expect { General::GOperations.money "" }.to raise_error TypeError
+				expect { General::GOperations.money "" }.to raise_error
 			end
 		end
 	end
@@ -233,13 +233,13 @@ describe General::GOperations do
 
 		context 'with no integer value given' do
 			it 'raises Error' do
-				expect { General::GOperations.time }.to raise_error ArgumentError
+				expect { General::GOperations.time }.to raise_error
 			end
 		end
 
 		context 'with argument of another type' do
 			it 'raises Error' do
-				expect { General::GOperations.time "" }.to raise_error TypeError
+				expect { General::GOperations.time "" }.to raise_error
 			end
 		end
 	end
@@ -277,14 +277,14 @@ describe General::GOperations do
 		end
 
 		context 'with no string value given' do
-			it 'raises ArgumentError' do
-				expect { General::GOperations.split }.to raise_error ArgumentError
+			it 'raises Error' do
+				expect { General::GOperations.split }.to raise_error
 			end
 		end
 
 		context 'with value of other type given' do
-			it 'raises TypeError' do
-				expect { General::GOperations.split @string4 }.to raise_error TypeError
+			it 'raises Error' do
+				expect { General::GOperations.split @string4 }.to raise_error
 			end
 		end
 	end
@@ -320,14 +320,14 @@ describe General::GOperations do
 		end
 
 		context 'with no string value given' do
-			it 'raises ArgumentError' do
-				expect { General::GOperations.splitwords }.to raise_error ArgumentError
+			it 'raises Error' do
+				expect { General::GOperations.splitwords }.to raise_error
 			end
 		end
 
 		context 'with value of other type given' do
-			it 'raises TypeError' do
-				expect { General::GOperations.splitwords @string3 }.to raise_error TypeError
+			it 'raises Error' do
+				expect { General::GOperations.splitwords @string3 }.to raise_error
 			end
 		end
 	end

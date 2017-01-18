@@ -35,20 +35,6 @@ module General
 		# The default time format
 		DEFAULT_TIME = "@I:@MM:@SS @A"
 
-		private
-
-		# Raises TypeError if the given value is not one of the given types
-		#
-		# Parameter: value - the value to check
-		# Parameter: types - the types to check for
-		#
-		# Raises: TypeError - if the given value is not one of the given types
-		def self.assert value, *types
-			unless types.any? {|type| value.is_a? type}
-				raise TypeError.new "Unexpected value type #{value.class.name}. Expected #{types.collect(&:name).join(",")}"
-			end
-		end
-
 		public
 
 		#-----------------------------------STRING OPERATIONS------------------------------------
@@ -58,11 +44,10 @@ module General
 		# Parameter: string - the string being capitalized
 		#
 		# Return: the capitalized string
-		def self.capitalize string, what="first"
-			assert string, String
+		def self.capitalize string, what='first'
 			case what
-			when "all" then string.split(' ').collect(&:capitalize).join(' ')
-			when "first" then string.capitalize
+			when 'all' then string.split(' ').collect(&:capitalize).join(' ')
+			when 'first' then string.capitalize
 			else raise TypeError.new "Undefined second argument for operation capitalize: #{what}"
 			end
 		end
@@ -73,7 +58,6 @@ module General
 		#
 		# Return: the uppercased string
 		def self.uppercase(string)
-			assert string, String
 			string.upcase
 		end
 
@@ -83,7 +67,6 @@ module General
 		#
 		# Return: the lowercased string
 		def self.lowercase(string)
-			assert string, String
 			string.downcase
 		end
 
@@ -96,11 +79,10 @@ module General
 		#
 		# Return: the formatted money amount
 		def self.money integer, type="USD"
-			assert integer, Integer
 			if MONEY_TYPES[type]
 				(integer < 0 ? "-" : "") + MONEY_TYPES[type] + (integer * 0.01).abs.to_s
 			else
-				raise TypeError.new("Money type: #{type} is not supported!")
+				raise TypeError.new "Money type: #{type} is not supported!"
 			end
 		end
 
@@ -111,7 +93,6 @@ module General
 		#
 		# Return: the time formatted with the given formatter
 		def self.time integer, format=DEFAULT_TIME
-			assert integer, Integer
 			General::GTimeFormat.new(format).apply(integer)
 		end
 
@@ -124,8 +105,6 @@ module General
 		#
 		# Return: the array containing hashes representing the split string chunks
 		def self.split string, delimeter="\r?\n"
-			assert string, String
-			assert delimeter, String
 			string.split(Regexp.new(delimeter))
 		end
 
@@ -136,9 +115,8 @@ module General
 		#
 		# Return: an array containing hashes representing the chunks of the string split by words
 		def self.splitwords string, words=10
-			# Assert arguments 
-			assert string, String
-			assert words,  Integer
+			# Convert words to integer
+			words = words.to_i
 
 			# Regex to match words
 			matcher = /\G[\w\',\.\?!\(\)\-\:\;\"\"]+\s*/
