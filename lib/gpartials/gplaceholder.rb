@@ -123,13 +123,13 @@ module General
 		# Default delimeter
 		DEFAULT_DELIMETER = " "
 
-		# Initializes the GPlaceholder with the given match
+		# Initializes the GArrayPlaceholder with the given match
 		#
 		# Parameter: match - the match data from the string being parsed
 		def initialize match
 			super
-			@delimeter = match[:delimeter] || DEFAULT_DELIMETER
 			@template = General::GTemplate.new match[:text]
+			@delimeter = match[:delimeter] || DEFAULT_DELIMETER
 		end
 
 		# Returns the value of the array placeholder in the given data
@@ -152,5 +152,46 @@ module General
 		#
 		# Return: the string representation of the array placeholder
 		def string(first=true); "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"; end
+	end
+
+	# Inserts the full data value passed into the template
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 1 - 19 - 2016
+	class GFullPlaceholder < GPartial
+		# Matches GFullPlaceholders
+		REGEX = /@/
+
+		# The string representation of the GFullPlaceholder
+		STRING = "@"
+
+		# The name of the GFullPlaceholder
+		NAME = :__full
+
+		# Initializes the GFullPlaceholder with the given match
+		#
+		# Parameter: match - the match data from the string being parsed
+		def initialize(match); super({name: :__full}); end
+
+		# Returns a string representation of the given data
+		#
+		# Parameter: data - the data being applied
+		#
+		# Returns: a string representation of the given data 
+		def apply(data); data.to_s; end
+
+		# Returns a string representation of the data
+		#
+		# Parameter: first - true if this is the first in a given template 
+		#
+		# Returns: a string representation of the data
+		def string(first=false); STRING; end
+
+		# Raises TypeError
+		#
+		# Parameter: first - true if this is the first in a given template 
+		#
+		# Raises: TypeError
+		def regex(first=false); raise TypeError.new("GFullPlaceholder cannot be matched"); end
 	end
 end
