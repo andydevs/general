@@ -29,7 +29,9 @@ RSpec::Core::RakeTask.new do |task|
 end
 
 # Gem Tasks
-Gem::Tasks.new
+namespace :gem do
+	Gem::Tasks.new
+end
 
 # Git Tasks
 namespace :git do
@@ -48,5 +50,5 @@ namespace :git do
 	task :reset do sh "git reset" end
 
 	desc "Hard git reset"
-	task :reset_hard do sh "git reset --hard HEAD" end
+	task :hardreset do sh "git reset --hard HEAD" end
 end
