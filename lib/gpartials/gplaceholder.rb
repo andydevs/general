@@ -51,7 +51,7 @@ module General
 		# Parameter: match    - the match data from the string being parsed
 		# Parameter: defaults - the hash of default data from the GTemplate
 		def initialize match, defaults
-			super match
+			super match, defaults
 			@operation = match[:operation]
 			if match[:arguments]
 				@arguments = match[:arguments].gsub(ARGUMENT).collect { |arg|

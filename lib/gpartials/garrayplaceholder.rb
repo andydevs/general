@@ -36,7 +36,8 @@ module General
 		# Initializes the GArrayPlaceholder with the given match
 		#
 		# Parameter: match - the match data from the string being parsed
-		def initialize match
+		# Parameter: defaults - the hash of default data from the GTemplate
+		def initialize match, defaults={}
 			super
 			@template = General::GTemplate.new match[:text]
 			@delimeter = match[:delimeter] || DEFAULT_DELIMETER

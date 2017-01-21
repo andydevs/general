@@ -16,7 +16,10 @@
 
 require_relative "gbasetemplate"
 require_relative "../gpartials/gtext"
+require_relative "../gpartials/gspecial"
 require_relative "../gpartials/gplaceholder"
+require_relative "../gpartials/garrayplaceholder"
+require_relative "../gpartials/gfullplaceholder"
 
 # General is a templating system in ruby
 #
@@ -38,11 +41,11 @@ module General
 			# The string gets split into partials by placeholder and array template
 			loop do
 				if match = General::GText::REGEX.match(string)
-					@partials << General::GText.new(match)
+					@partials << General::GText.new(match, @defaults)
 				elsif match = General::GSpecial::REGEX.match(string)
-					@partials << General::GSpecial.new(match)
+					@partials << General::GSpecial.new(match, @defaults)
 				elsif match = General::GArrayPlaceholder::REGEX.match(string)
-					@partials << General::GArrayPlaceholder.new(match)
+					@partials << General::GArrayPlaceholder.new(match, @defaults)
 				elsif match = General::GPlaceholder::REGEX.match(string)
 					@partials << General::GPlaceholder.new(match, @defaults)
 				else

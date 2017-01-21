@@ -30,13 +30,14 @@ module General
 		REGEX = /\A[^@]+?(?=(@|\\@|\z))/m
 
 		# The partial name of a text
-		PTNAME = :gpartialstring
+		PTNAME = :__text
 
 		# Initializes the GText with the given match
 		#
-		# Parameter: match - the match object of the GText
-		def initialize(match)
-			super name: PTNAME
+		# Parameter: match    - the match object of the GText
+		# Parameter: defaults - the hash of default data from the GTemplate
+		def initialize match, defaults={}
+			super({name: PTNAME}, defaults)
 			@text = match.to_s
 		end
 		
@@ -60,34 +61,5 @@ module General
 		#
 		# Returns: the text as a regex
 		def regex(first=true); @text.inspect[1...-1].gsub(/[\.\+\-\*]/) { |s| "\\#{s}" }; end
-	end
-
-	# Represents a special character in a GTemplate
-	#
-	# Author:  Anshul Kharbanda
-	# Created: 7 - 29 - 2016
-	class GSpecial < GText
-		# Regular expression that matches special partials
-		REGEX = /\A@(?<key>\w+)\;/
-
-		# Special character information
-		SPECIALS = {
-			at: "@",  pd: "#",
-			lt: "<",  gt: ">",
-			op: "(",  cp: ")",
-			ob: "[",  cb: "]",
-			oc: "{",  cc: "}",
-			ms: "-",  ps: "+", 
-			st: "*",  pc: "%",
-			bs: "\\", fs: "/",
-			dl: "$",
-		}
-
-		# Initializes the GSpecial with the given match
-		#
-		# Parameter: match - the match object of the GSpecial
-		def initialize(match)
-			super SPECIALS[match[:key].to_sym]
-		end
 	end
 end

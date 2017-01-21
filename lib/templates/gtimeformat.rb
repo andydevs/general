@@ -16,6 +16,7 @@
 
 require_relative "gbasetemplate"
 require_relative "../gpartials/gtext"
+require_relative "../gpartials/gspecial"
 require_relative "../gpartials/gtimeformatplaceholder"
 
 # General is a templating system in ruby
@@ -35,10 +36,12 @@ module General
 			super string
 
 			loop do
-				if match = General::GText::REGEX.match(string)
-					@partials << General::GText.new(match)
+				if match = General::GSpecial::REGEX.match(string)
+					@partials << General::GSpecial.new(match, @defaults)
+				elsif match = General::GText::REGEX.match(string)
+					@partials << General::GText.new(match, @defaults)
 				elsif match = General::GTimeFormatPlaceholder::REGEX.match(string)
-					@partials << General::GTimeFormatPlaceholder.new(match)
+					@partials << General::GTimeFormatPlaceholder.new(match, @defaults)
 				else
 					return
 				end
