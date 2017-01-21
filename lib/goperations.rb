@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "templates/gtimeformat"
+require_relative "gerror"
 
 # General is a templating system in ruby
 #
@@ -35,6 +36,23 @@ module General
 		# The default time format
 		DEFAULT_TIME = "@I:@MM:@SS @A"
 
+		private
+
+		# Asserts that the given argument for the given operation exists and is of the given types
+		#
+		# Parameter: operation - the name of the operation
+		# Parameter: argument  - the argument being checked
+		# Parameter: types     - the allowed types for the argument
+		#
+		# Raises: GOperationError if assertion fails
+		def self.assert operation, argument, *types
+			raise GOperationError.new "Requied argument not given for operation #{operation}" if argument.nil?
+			unless types.any? { |type| argument.is_a? type }
+				raise GOperationError.new "Argument for operation #{operation} " \
+				"must be of type(s): #{types.collect(&:to_s).join(", ")}. Got #{argument.class.name}"
+			end
+		end
+
 		public
 
 		#-----------------------------------STRING OPERATIONS------------------------------------
@@ -44,11 +62,13 @@ module General
 		# Parameter: string - the string being capitalized
 		#
 		# Return: the capitalized string
-		def self.capitalize string, what='first'
+		def self.capitalize string=nil, what='first'
+			assert 'capitalize', string, String
+
 			case what
 			when 'all' then string.split(' ').collect(&:capitalize).join(' ')
 			when 'first' then string.capitalize
-			else raise TypeError.new "Undefined second argument for operation capitalize: #{what}"
+			else raise GOperationError.new "Undefined second argument for operation capitalize: #{what}"
 			end
 		end
 
@@ -57,8 +77,9 @@ module General
 		# Parameter: string - the string being uppercased
 		#
 		# Return: the uppercased string
-		def self.uppercase(string)
-			string.upcase
+		def self.uppercase string=nil
+			assert 'uppercase', string, String
+			return string.upcase
 		end
 
 		# Converts every letter in the string to lowercase
@@ -66,8 +87,9 @@ module General
 		# Parameter: string - the string being lowercased
 		#
 		# Return: the lowercased string
-		def self.lowercase(string)
-			string.downcase
+		def self.lowercase string=nil
+			assert 'lowercase', string, String
+			return string.downcase
 		end
 
 		#-----------------------------------INTEGER OPERATIONS------------------------------------
@@ -78,11 +100,13 @@ module General
 		# Parameter: type    - the type of money (defaults to USD)
 		#
 		# Return: the formatted money amount
-		def self.money integer, type="USD"
+		def self.money integer=nil, type="USD"
+			assert 'money', integer, Integer
+
 			if MONEY_TYPES[type]
-				(integer < 0 ? "-" : "") + MONEY_TYPES[type] + (integer * 0.01).abs.to_s
+				return (integer < 0 ? "-" : "") + MONEY_TYPES[type] + (integer * 0.01).abs.to_s
 			else
-				raise TypeError.new "Money type: #{type} is not supported!"
+				raise GOperationError.new "Money type: #{type} is not supported!"
 			end
 		end
 
@@ -92,8 +116,9 @@ module General
 		# Parameter: format  - the format being used (defaults to DEFAULT_TIME)
 		#
 		# Return: the time formatted with the given formatter
-		def self.time integer, format=DEFAULT_TIME
-			General::GTimeFormat.new(format).apply(integer)
+		def self.time integer=nil, format=DEFAULT_TIME
+			assert 'time', integer, Integer
+			return General::GTimeFormat.new(format).apply(integer)
 		end
 
 		#---------------------------------TO ARRAY OPERATIONS-----------------------------------
@@ -104,8 +129,9 @@ module General
 		# Parameter: delimeter - the delimeter to split by (defaults to newline)
 		#
 		# Return: the array containing hashes representing the split string chunks
-		def self.split string, delimeter="\r?\n"
-			string.split(Regexp.new(delimeter))
+		def self.split string=nil, delimeter="\r?\n"
+			assert 'split', string, String
+			return string.split(Regexp.new(delimeter))
 		end
 
 		# Splits a sequence by a set number of words (defaults to 10)
@@ -114,7 +140,9 @@ module General
 		# Parameter: words  - the number of words to split by (defaults to 10)
 		#
 		# Return: an array containing hashes representing the chunks of the string split by words
-		def self.splitwords string, words=10
+		def self.splitwords string=nil, words=10
+			assert 'splitwords', string, String
+
 			# Convert words to integer
 			words = words.to_i
 
@@ -126,8 +154,8 @@ module General
 			buffer    = ""
 
 			# Initialize loop
-			matched   = matcher.match string
-			index     = 0
+			matched = matcher.match string
+			index   = 0
 
 			# While matched data exists
 			while matched
@@ -141,7 +169,7 @@ module General
 				buffer += matched.to_s
 
 				# Trim word from string
-				string  = string[matched.end(0)..-1]
+				string = string[matched.end(0)..-1]
 
 				# Iterate
 				matched = matcher.match string

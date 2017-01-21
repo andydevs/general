@@ -14,13 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "../lib/gdothash"
-require_relative "../lib/goperations"
-require_relative "../lib/gerror"
-require_relative "../lib/gpartials/gpartial"
-require_relative "../lib/gpartials/gtext"
-require_relative "../lib/gpartials/gplaceholder"
-require_relative "../lib/gpartials/gpartial"
-require_relative "../lib/templates/gtemplate"
-require_relative "../lib/templates/gio"
-require_relative "../lib/templates/gtimeformat"
+# General is a templating system in ruby
+#
+# Author: Anshul Kharbanda
+# Created: 3 - 4 - 2016
+module General
+	# Base class for errors in General
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 1 - 21 - 2017
+	class GeneralError < StandardError; end
+
+	# A General Operation Error
+	#
+	# Author:  Anshul Kharbanda
+	# Created: 1 - 21 - 2017
+	class GOperationError < GeneralError; end
+end

@@ -6,6 +6,6 @@
 
 @else
 
-@(name) walked thirty blocks uphil to the store to get some @(food)
+@(name) walked thirty blocks uphil to the store to get some @(food).
 
 @end
