@@ -21,31 +21,51 @@ require_relative "spec_require"
 # Author:  Anshul Kharbanda
 # Created: 1 - 19 - 2016
 describe General::GFullPlaceholder do
+	STRING = "@"
+
 	before :all do
 		@full = General::GFullPlaceholder.new({})
 		@data1 = "Hello World!"
 	end
 
+	# Creates a new GFullPlaceholder with the given match
+	#
+	# Parameter: match - the match data from the string being parsed
 	describe '::new' do
 		it 'creates a new GFullPlaceholder' do
 			expect(@full).to be_an_instance_of General::GFullPlaceholder
 		end
 	end
 
+	# Returns a string representation of the given data
+	# 
+	# Parameter: data - the data being applied
+	# 
+	# Returns: a string representation of the given data
 	describe '#apply' do
 		it 'returns a string representation of the entire data value given' do
 			expect(@full.apply @data1).to eql @data1
 		end
 	end
 
+	# Returns a string representation of the GFullPlaceholder
+	#
+	# Parameter: first - true if this is the first in a given template 
+	#
+	# Returns: a string representation of the GFullPlaceholder
 	describe '#string' do
 		it 'returns a string reprsentation of the GFullPlaceholder' do
-			expect(@full.string).to eql General::GFullPlaceholder::STRING
-			expect(@full.string true).to eql General::GFullPlaceholder::STRING
-			expect(@full.string false).to eql General::GFullPlaceholder::STRING
+			expect(@full.string).to eql STRING
+			expect(@full.string true).to eql STRING
+			expect(@full.string false).to eql STRING
 		end
 	end
 
+	# Raises TypeError
+	#
+	# Parameter: first - true if this is the first in a given template 
+	#
+	# Raises: TypeError
 	describe '#regex' do
 		it 'raises TypeError' do
 			expect{@full.regex}.to raise_error TypeError

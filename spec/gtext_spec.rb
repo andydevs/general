@@ -16,134 +16,99 @@
 
 require_relative "spec_require"
 
-# Describe General Text Partials
-#
-# Regular text parts of a General Template
+# Describe General::GText
+# 
+# Represents a plain text partial in a GTemplate
 #
 # Author:  Anshul Kharbanda
-# Created: 7 - 29 - 2016
-describe 'General Text Partials' do
-	# Describe General::GText
+# Created: 7 - 1 - 2016
+describe General::GText do
+	before :all do
+		@text = "foobar"
+		@regex = "foobar"
+		@partial = General::GText.new @text
+	end
+
+	# Describe General::GText::new
 	# 
-	# Represents a plain text partial in a GTemplate
+	# Creates the GText with the given match
 	#
-	# Author:  Anshul Kharbanda
-	# Created: 7 - 1 - 2016
-	describe General::GText do
-		before :all do
-			@text = "foobar"
-			@regex = "foobar"
-			@partial = General::GText.new @text
+	# Parameter: match - the match object of the GText
+	describe '::new' do
+		it 'creates the GText with the given to_s representable object' do
+			expect(@partial).to be_an_instance_of General::GText
+			expect(@partial.name).to eql General::GText::PTNAME
+			expect(@partial.instance_variable_get :@text).to eql @text
 		end
+	end
 
-		# Describe General::GText::new
-		# 
-		# Creates the GText with the given match
-		#
-		# Parameter: match - the match object of the GText
-		describe '::new' do
-			it 'creates the GText with the given to_s representable object' do
-				expect(@partial).to be_an_instance_of General::GText
-				expect(@partial.name).to eql General::GText::PTNAME
-				expect(@partial.instance_variable_get :@text).to eql @text
+	# Describe General::GText#apply
+	#
+	# Returns the text
+	#
+	# Parameter: data - the data to apply to the partial
+	#
+	# Returns: the text
+	describe '#apply' do
+		it 'returns the GText string, given a hash of data' do
+			expect(@partial.apply @hash).to eql @text
+		end
+	end
+
+	# Describe General::GText#string
+	#
+	# Returns the text as a string
+	#
+	# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+	#
+	# Returns: the text as a string
+	describe '#string' do
+		context 'with no first argument given' do
+			it 'returns the string' do
+				expect(@partial.string).to eql @text
 			end
 		end
 
-		# Describe General::GText#apply
-		#
-		# Returns the text
-		#
-		# Parameter: data - the data to apply to the partial
-		#
-		# Returns: the text
-		describe '#apply' do
-			it 'returns the GText string, given a hash of data' do
-				expect(@partial.apply @hash).to eql @text
-			end
-		end
-
-		# Describe General::GText#string
-		#
-		# Returns the text as a string
-		#
-		# Parameter: first - true if this partial is the first of it's kind in a GTemplate
-		#
-		# Returns: the text as a string
-		describe '#string' do
-			context 'with no first argument given' do
+		context 'with first argument given' do
+			context 'if first argument is true' do
 				it 'returns the string' do
-					expect(@partial.string).to eql @text
+					expect(@partial.string true).to eql @text
 				end
 			end
 
-			context 'with first argument given' do
-				context 'if first argument is true' do
-					it 'returns the string' do
-						expect(@partial.string true).to eql @text
-					end
-				end
-
-				context 'if first argument is false' do
-					it 'returns the string' do
-						expect(@partial.string false).to eql @text
-					end
-				end
-			end
-		end
-
-		# Describe General::GText#regex
-		# 
-		# Returns the text as a regex
-		#
-		# Parameter: first - true if this partial is the first of it's kind in a GTemplate
-		#
-		# Returns: the text as a regex
-		describe '#regex' do
-			context 'with no first argument given' do
-				it 'returns the regex' do
-					expect(@partial.regex).to eql @regex
-				end
-			end
-
-			context 'with first argument given' do
-				context 'if first argument is true' do
-					it 'returns the regex' do
-						expect(@partial.regex true).to eql @regex
-					end
-				end
-
-				context 'if first argument is false' do
-					it 'returns the regex' do
-						expect(@partial.regex false).to eql @regex
-					end
+			context 'if first argument is false' do
+				it 'returns the string' do
+					expect(@partial.string false).to eql @text
 				end
 			end
 		end
 	end
 
-	# Describe General::GSpecial
+	# Describe General::GText#regex
 	# 
-	# Represents a special character in a GTemplate
+	# Returns the text as a regex
 	#
-	# Author:  Anshul Kharbanda
-	# Created: 7 - 1 - 2016
-	describe General::GSpecial do
-		before :all do
-			@text    = "@"
-			@regex   = "@"
-			@partial = General::GSpecial.new key: "at"
+	# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+	#
+	# Returns: the text as a regex
+	describe '#regex' do
+		context 'with no first argument given' do
+			it 'returns the regex' do
+				expect(@partial.regex).to eql @regex
+			end
 		end
 
-		# Describe General::GSpecial::new
-		# 
-		# Creates the GSpecial with the given match
-		#
-		# Parameter: match - the match object of the GSpecial
-		describe '::new' do
-			it 'creates the GSpecial with the given match object' do
-				expect(@partial).to be_an_instance_of General::GSpecial
-				expect(@partial.name).to eql General::GSpecial::PTNAME
-				expect(@partial.instance_variable_get :@text).to eql @text
+		context 'with first argument given' do
+			context 'if first argument is true' do
+				it 'returns the regex' do
+					expect(@partial.regex true).to eql @regex
+				end
+			end
+
+			context 'if first argument is false' do
+				it 'returns the regex' do
+					expect(@partial.regex false).to eql @regex
+				end
 			end
 		end
 	end
