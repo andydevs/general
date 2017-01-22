@@ -33,20 +33,11 @@ module General
 		#
 		# Parameter: string - the template string
 		def initialize string
-			super string
-
-			loop do
-				if match = General::GSpecial::REGEX.match(string)
-					@partials << General::GSpecial.new(match, @defaults)
-				elsif match = General::GText::REGEX.match(string)
-					@partials << General::GText.new(match, @defaults)
-				elsif match = General::GTimeFormatPlaceholder::REGEX.match(string)
-					@partials << General::GTimeFormatPlaceholder.new(match, @defaults)
-				else
-					return
-				end
-				string = string[match.end(0)..-1]
-			end
+			super(string, [
+				General::GSpecial,
+				General::GText,
+				General::GTimeFormatPlaceholder
+			])
 		end
 
 		# Applies the given integer value to the template and returns the generated string

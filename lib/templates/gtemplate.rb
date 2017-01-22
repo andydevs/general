@@ -35,29 +35,17 @@ module General
 		#
 		# Parameter: string - the string being converted to a template
 		def initialize string
-			super(string)
-			@defaults = General::GDotHash.new
-
-			# The string gets split into partials by placeholder and array template
-			loop do
-				if match = General::GText::REGEX.match(string)
-					@partials << General::GText.new(match, @defaults)
-				elsif match = General::GSpecial::REGEX.match(string)
-					@partials << General::GSpecial.new(match, @defaults)
-				elsif match = General::GArrayPlaceholder::REGEX.match(string)
-					@partials << General::GArrayPlaceholder.new(match, @defaults)
-				elsif match = General::GPlaceholder::REGEX.match(string)
-					@partials << General::GPlaceholder.new(match, @defaults)
-				else
-					return
-				end
-				string = string[match.end(0)..-1]
-			end
+			super(string, [
+				General::GText,
+				General::GSpecial,
+				General::GArrayPlaceholder,
+				General::GPlaceholder
+			])
 		end
 
-		# Returns a string representation of the string
+		# Returns a string representation of the template
 		#
-		# Return: a string representation of the string
+		# Return: a string representation of the template
 		def to_s
 			first = Hash.new(true); str = ""
 			@partials.each do |part|

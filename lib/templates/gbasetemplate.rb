@@ -28,9 +28,30 @@ module General
 	class GBaseTemplate
 		# Initializes the GBaseTemplate with the given string
 		#
-		# Parameter: string - the string to initialize the GBaseTemplate with
-		def initialize string
+		# Parameter: string   - the string to initialize the GBaseTemplate with
+		# Parameter: partials - the partials used to parse the GBaseTemplate string
+		def initialize string, partials
 			@partials = []
+			@defaults = General::GDotHash.new
+
+			# Partial breakdown algorithm
+			m = nil
+			loop do
+				# Match the front of the string to a partial
+				partial = partials.find { |partial| m = partial::REGEX.match(string) }
+
+				# Raise error if no matching partial can be found
+				raise GError.new("Unmatched partial at #{string.length <= 5 ? string : string[0..5] + "..."}") if partial.nil?
+				
+				# Add the partial to the array
+				@partials << partial.new(m, @defaults)
+
+				# Trim the front of the string
+				string = string[m.end(0)..-1]
+
+				# End when string is empty
+				return if string.length == 0
+			end
 		end
 
 		# Applies the given data to the template and returns the generated string
