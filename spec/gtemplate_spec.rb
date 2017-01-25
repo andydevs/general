@@ -25,15 +25,16 @@ require "spec_require"
 describe General::GTemplate do
 	# Before all
 	before :all do
-		@template1 = General::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loved @(food: Cat Food)!"
-		@template2 = General::GTemplate.new "@(user)@at;@(domain)"
-		@template3 = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
-		@template4 = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
-		@template5 = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> money) last week."
-		@template6 = General::GTemplate.new "There once was a cat named @(name -> capitalize all)."
-		@template7 = General::GTemplate.new "The time is @(time -> time)"
-		@template8 = General::GTemplate.new "The time is @(time -> time '@SS <- @MM <- @HH')"
-		@template9 = General::GTemplate.new "The name's @(name.last)... @(name.first) @(name.last)."
+		@template1  = General::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loved @(food: Cat Food)!"
+		@template2  = General::GTemplate.new "@(user)@at;@(domain)"
+		@template3  = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
+		@template4  = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
+		@template5  = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> money) last week."
+		@template6  = General::GTemplate.new "There once was a cat named @(name -> capitalize all)."
+		@template7  = General::GTemplate.new "The time is @(time -> time)"
+		@template8  = General::GTemplate.new "The time is @(time -> time '@SS <- @MM <- @HH')"
+		@template9  = General::GTemplate.new "The name's @(name.last)... @(name.first) @(name.last)."
+		@template10 = General::GTemplate.new "My favorite color is @!"
 	end
 
 	# Describe General::GTemplate::new
@@ -43,9 +44,8 @@ describe General::GTemplate do
 	# Parameter: string - the string being converted to a template
 	describe "::new" do
 		it "creates a new GTemplate with the given template string" do
-			[@template1, @template2, @template3, 
-			 @template4, @template5, @template6, 
-			 @template7, @template8, @template9]
+			[@template1, @template2, @template3, @template4, @template5, 
+			 @template6, @template7, @template8, @template9, @template10]
 			.each do |template|
 				expect(template).to be_an_instance_of General::GTemplate
 			end
@@ -218,6 +218,23 @@ describe General::GTemplate do
 
 			it "returns the template with the given data applied appropriately" do 
 				expect(@template9.apply @data9).to eql @text9
+			end
+		end
+
+		# ----------------------------------FULL PLACEHOLDER----------------------------------
+
+		context 'with full placeholder' do
+			# --------------------------------DATA--------------------------------
+
+			before(:all) do
+			  	@data10 = "brown"
+			  	@text10 = "My favorite color is brown!"
+			end
+
+			# --------------------------------TEST--------------------------------
+
+			it "returns the template with the full data applied appropriately" do 
+				expect(@template10.apply @data10).to eql @text10
 			end
 		end
 	end

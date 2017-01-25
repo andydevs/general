@@ -24,9 +24,10 @@ require_relative "spec_require"
 # Created: 7 - 1 - 2016
 describe General::GSpecial do
 	before :all do
+		@key     = "at"
 		@text    = "@"
-		@regex   = "@"
-		@partial = General::GSpecial.new key: "at"
+		@regex   = /@/
+		@partial = General::GSpecial.new key: @key
 	end
 
 	# Describe General::GSpecial::new
@@ -39,6 +40,43 @@ describe General::GSpecial do
 			expect(@partial).to be_an_instance_of General::GSpecial
 			expect(@partial.name).to eql General::GSpecial::PTNAME
 			expect(@partial.instance_variable_get :@text).to eql @text
+		end
+	end
+
+	# Returns the special character
+	#
+	# Parameter: data - the data to apply to the partial
+	#
+	# Returns: the special character
+	describe '#apply' do
+		it 'returns the special character' do
+			expect(@partial.apply({})).to eql @text
+		end
+	end
+
+	# Returns the string representation of the GSpecial
+	#
+	# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+	#
+	# Returns: the string representation of the GSpecial
+	describe '#string' do
+		it 'returns the string representation of the GSpecial' do
+			expect(@partial.string).to eql "@#{@key};"
+			expect(@partial.string false).to eql "@#{@key};"
+			expect(@partial.string true).to eql "@#{@key};"
+		end
+	end
+
+	# Returns the GSpecial as a regex
+	#
+	# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+	#
+	# Returns: the GSpecial as a regex
+	describe '#regex' do
+		it 'returns the regex representation of the GSpecial' do
+			expect(@partial.regex).to eql @regex
+			expect(@partial.regex false).to eql @regex
+			expect(@partial.regex true).to eql @regex
 		end
 	end
 end

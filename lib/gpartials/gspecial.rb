@@ -39,7 +39,20 @@ module General
 			ms: "-",  ps: "+", 
 			st: "*",  pc: "%",
 			bs: "\\", fs: "/",
-			dl: "$",
+			dl: "$"
+		}
+
+		# Special regex information
+		REGEXES = {
+			at: /@/,   pd: /#/,
+			lt: /\</, gt: /\>/,
+			op: /\(/, cp: /\)/,
+			ob: /\[/, cb: /\]/,
+			oc: /\{/, cc: /\}/,
+			ms: /\-/, ps: /\+/, 
+			st: /\*/, pc: /\%/,
+			bs: /\\/, fs: /\//,
+			dl: /\$/
 		}
 
 		# Initializes the GSpecial with the given match
@@ -48,6 +61,21 @@ module General
 		# Parameter: defaults - the hash of default data from the GTemplate
 		def initialize(match, defaults={})
 			super SPECIALS[match[:key].to_sym], {}
+			@key = match[:key].to_sym
 		end
+		
+		# Returns the string representation of the GSpecial
+		#
+		# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+		#
+		# Returns: the string representation of the GSpecial
+		def string(first=true); "@#{@key.to_s};"; end
+
+		# Returns the GSpecial as a regex
+		#
+		# Parameter: first - true if this partial is the first of it's kind in a GTemplate
+		#
+		# Returns: the GSpecial as a regex
+		def regex(first=true); REGEXES[@key]; end
 	end
 end

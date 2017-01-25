@@ -39,7 +39,8 @@ module General
 				General::GText,
 				General::GSpecial,
 				General::GArrayPlaceholder,
-				General::GPlaceholder
+				General::GPlaceholder,
+				General::GFullPlaceholder
 			])
 		end
 
