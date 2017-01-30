@@ -108,7 +108,7 @@ string = template.apply crew: [
 
 #### To-Array Operations
 
-Certain operations can convert data values to arrays to be used by an array template. These can be applied to array placeholders as follows `@[text -> split] -general- @[]. These return pure data values, and they can be accessed by a special placeholder `@#` which applies the entire data value as is.
+Certain operations can convert data values to arrays to be used by an array template. These can be applied to array placeholders as follows `@[text -> split] -general- @[].` These return pure data values, and they can be accessed by a special placeholder `@#` which applies the entire data value as is.
 
 ```ruby
 template = General::GTemplate.new "@[text -> split] -> @# @[\n]"
