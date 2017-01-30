@@ -47,17 +47,24 @@ array = template.apply_all [{name: "Joe", food: "Joe Schmoes"}, {name: "Jane", f
 
 ### Placeholder Operations
 
-You can also specify operations to be performed on values passed to placeholders, akin to AngularJS's filters. For example: `@(name -> capitalize)` will capitalize whatever name is inputted before applying it to the text.
+You can also specify operations to be performed on values passed to placeholders, akin to AngularJS's filters. For example: `@(name -> capitalize)` will capitalize whatever name is inputted before applying it to the text. Placeholder operations also have arguments, which change behaviour. `@(name -> capitalize first)` will capitalize the first word of name, whereas `@(name -> capitalize all)` will capitalize all words in the name.
 
-The current placeholder operations are:
-
-| Operation  |                       Description                       |
-|:-----------|:--------------------------------------------------------|
-| capitalize | Capitalizes the first letter of each word in a string   |
-| uppercase  | Makes every letter in a string uppercase                |
-| lowercase  | Makes every letter in a string lowercase                |
-| dollars    | Formats an integer money amount (in cents) to dollars   |
-| time       | Formats an integer time (in seconds) to HH:MM:SS format |
+- capitalize: capitalizes the string
+	- Argument 1:
+		- 'first': only first word is capitalized
+		- 'all': all words are capitalized
+		- default: 'first'
+- uppercase: converts a string to uppercase
+- lowercase: converts a string to lowercase
+- money: converts an integer to a monetary amount in the given format
+	- Argument 1:
+		- 'USD': United States Dollar
+		- 'EUR': European Euro
+		- default: 'USD'
+- time: converts an integer to a formatted time in the given time format
+	- Argument 1:
+		- Time format to set to
+		- default: '@I:@MM:@SS @A'
 
 ### Array Templates
 
@@ -99,9 +106,32 @@ string = template.apply crew: [
 #		Michael Caine: Alfred Pennyworth"
 ```
 
+#### To-Array Operations
+
+Certain operations can convert data values to arrays to be used by an array template. These can be applied to array placeholders as follows `@[text -> split] -general- @[]. These return pure data values, and they can be accessed by a special placeholder `@#` which applies the entire data value as is.
+
+```ruby
+template = General::GTemplate.new "@[text -> split] -> @# @[\n]"
+string = template.apply text: "Good Afternoon World
+I am Chef Gordon Ramsay"
+
+# string now equals
+# "-> Good Afternoon World
+# -> I am Chef Gordon Ramsay"
+```
+
+- split: splits a string based on a given delimeter
+	- Argument 1:
+		- The delimeter regex to split the string by
+		- default: \r?\n
+- splitwords: splits a string at a given number of words
+	- Argument 1:
+		- The words at which to split the string
+		- default: 10
+
 ## General IO
 
-You can also write to files using io GIO, a general template capable of writing to files. You can create a GIO like a GTemplate:
+You can also write to files using GIO, a general template capable of writing to files. You can create a GIO like a GTemplate:
 
 ```ruby
 gio = General::GIO.new "Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"
