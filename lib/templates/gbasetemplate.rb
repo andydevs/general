@@ -59,7 +59,14 @@ module General
 		# Parameter: data - the data to be applied (as a hash. merges with defaults)
 		#
 		# Return: string of the template with the given data applied
-		def apply(data={}); @partials.collect { |partial| partial.apply(data) }.join; end
+		def apply(data={});
+			# Apply generalized data if can be generalized. Else apply regular data
+			if data.respond_to? :generalized
+				return apply(data.generalized)
+			else
+				return @partials.collect { |part| part.apply(data) }.join
+			end
+		end
 
 		# Applies each data structure in the array independently to the template
 		# and returns an array of the generated strings

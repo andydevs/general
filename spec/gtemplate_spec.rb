@@ -25,6 +25,17 @@ require "spec_require"
 describe General::GTemplate do
 	# Before all
 	before :all do
+		class Person
+			def initialize nam, food
+				@name = nam
+				@food = food
+			end
+			def generalized
+				{name: @name, 
+				food: @food}
+			end
+		end
+
 		@template1  = General::GTemplate.new "There once was a man named @(name: Gordon Ramsay). @(name) loved @(food: Cat Food)!"
 		@template2  = General::GTemplate.new "@(user)@at;@(domain)"
 		@template3  = General::GTemplate.new "@[greetings] Hello, @(name)! How is the @(pet)? @[\n]"
@@ -240,6 +251,8 @@ describe General::GTemplate do
 			end
 		end
 
+		# ---------------------------------TO-ARRAY OPERATION---------------------------------
+
 		context 'with to-array operation' do
 			# --------------------------------DATA--------------------------------
 
@@ -254,6 +267,23 @@ describe General::GTemplate do
 				expect(@template11.apply @data11).to eql @text11
 			end			
 		end
+
+		# --------------------------------GENERALIZED INTERFACE-------------------------------
+
+		context 'with generalized object' do
+			# --------------------------------DATA--------------------------------
+
+			before(:all) do
+			  	@data12 = Person.new "Joe", "Joe's Schmoes"
+			  	@text12 = "There once was a man named Joe. Joe loved Joe's Schmoes!"
+			end
+
+			# --------------------------------TEST--------------------------------
+
+			it "returns the template with the generalized data from the object applied appropriately" do 
+				expect(@template1.apply @data12).to eql @text12
+			end			
+		end		
 	end
 
 	# Describe General::GTemplate#apply_all
