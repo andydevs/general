@@ -161,10 +161,10 @@ You can also write to files using GIO, a general template capable of writing to 
 gio = General::GIO.new "Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"
 ```
 
-You can also load a GIO from a file. For example, here's how you create a template file from the file "example.txt.general"
+You can also load a GIO from a file. For example, here's how you create a template file from the file "example.general"
 
 ```ruby
-gio = General::GFile.load "example.txt.general"
+gio = General::GFile.load "example.general"
 ```
 
 To write to a file, simply call the write method, pass in the file and the data to apply (like in GTemplate#apply):
@@ -182,7 +182,7 @@ gio.write "example.txt", name: "Joe", food: "Joe's Schmoes"
 To get the original source filename of the GIO, just call `source`
 
 ```ruby
-gio.source # == "example.txt.general"
+gio.source # == "example.general"
 ```
 
 -------------------------------------------------------------------------------------------------------------------------------------

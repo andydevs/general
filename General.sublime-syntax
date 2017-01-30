@@ -6,6 +6,12 @@ file_extensions:
 scope: source.general
 contexts:
   main:
+    - comment: Preprocessor
+      match: '\@@\w+\s+(\w+)'
+      scope: keyword.control.general
+      captures:
+        1: constant.numeric.general
+
     - comment: Placeholder
       match: '\@\((\w+)\s*(\:\s*(.+?))?\s*(\-\>\s*(.+?))?\)'
       scope: keyword.control.general

@@ -15,6 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "gtemplate"
+require_relative "../gerror"
+require_relative "../gprepartials/ginclude"
+require_relative "../gprepartials/gpretext"
 
 # General is a templating system in ruby
 #
@@ -38,7 +41,46 @@ module General
 		#
 		# Return: GIO loaded from the file
 		def self.load path
-			self.new IO.read(path), path
+			# Get current working directory
+			cwd = Dir.getwd
+
+			# Change to path of file
+			Dir.chdir File.dirname(path)
+
+			# Read raw text
+			string = IO.read File.basename(path)
+
+			ptypes = [
+				General::GInclude,
+				General::GPretext
+			]
+			preparts = []
+			m = nil
+			loop do
+				# Match the front of the string to a preprocessor
+				prepart = ptypes.find { |ptype| m = ptype::REGEX.match(string) }
+
+				# Raise error if no matching prepart can be found
+				raise GError.new("Unmatched prepartial at #{(string.length <= 5 ? string : string[0..5] + "...").inspect}") if prepart.nil?
+
+				# Add the partial to the array
+				preparts << prepart.new(m)
+
+				# Trim the front of the string
+				string = string[m.end(0)..-1]
+
+				# End when string is empty
+				break if string.length == 0
+			end
+
+			# Combine text
+			text = preparts.collect{ |prepart| prepart.call }.join
+
+			# Change to current directory
+			Dir.chdir cwd
+
+			# Return new GIO
+			return self.new text, path
 		end
 
 		# Creates a GIO with the given template string and source filename

@@ -1,1 +1,1 @@
-There once was a chef name @(name: gordon ramsay -> capitalize all), and he loved eating @(food: carrots). He went to @(place -> capitalize).
+There once was a chef named @(name: gordon ramsay -> capitalize all), and he loved eating @(food: carrots). He went to @(place -> capitalize).
