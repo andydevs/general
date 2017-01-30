@@ -1,5 +1,15 @@
 # General
 
+## Table of Contents
+
+- [Overview](#overview)
+- [General Templates](#general-templates)
+	- [Basic Templates](#basic-templates)
+	- [Array Templates](#array-templates)
+	- [Placeholder Operations](#placeholder-operations)
+		- [To-Array Operations](#to-array-operations)
+- [General IO](#general-io)
+
 ## Overview
 
 General is a simple templating system in ruby that allows you to create templates from both pure strings and files (with the extension .general), as well as create new strings and files with these created objects.
@@ -45,27 +55,6 @@ array = template.apply_all [{name: "Joe", food: "Joe Schmoes"}, {name: "Jane", f
 #   - Hello, I am Denny and I like Denny's Fennies
 ```
 
-### Placeholder Operations
-
-You can also specify operations to be performed on values passed to placeholders, akin to AngularJS's filters. For example: `@(name -> capitalize)` will capitalize whatever name is inputted before applying it to the text. Placeholder operations also have arguments, which change behaviour. `@(name -> capitalize first)` will capitalize the first word of name, whereas `@(name -> capitalize all)` will capitalize all words in the name.
-
-- capitalize: capitalizes the string
-	- Argument 1:
-		- 'first': only first word is capitalized
-		- 'all': all words are capitalized
-		- default: 'first'
-- uppercase: converts a string to uppercase
-- lowercase: converts a string to lowercase
-- money: converts an integer to a monetary amount in the given format
-	- Argument 1:
-		- 'USD': United States Dollar
-		- 'EUR': European Euro
-		- default: 'USD'
-- time: converts an integer to a formatted time in the given time format
-	- Argument 1:
-		- Time format to set to
-		- default: '@I:@MM:@SS @A'
-
 ### Array Templates
 
 You can also make array templates within templates, which will format each value in an array of data according to a general template
@@ -106,6 +95,27 @@ string = template.apply crew: [
 #		Michael Caine: Alfred Pennyworth"
 ```
 
+### Placeholder Operations
+
+You can also specify operations to be performed on values passed to placeholders, akin to AngularJS's filters. For example: `@(name -> capitalize)` will capitalize whatever name is inputted before applying it to the text. Placeholder operations also have arguments, which change behaviour. `@(name -> capitalize first)` will capitalize the first word of name, whereas `@(name -> capitalize all)` will capitalize all words in the name.
+
+- capitalize: capitalizes the string
+	- Argument 1:
+		- 'first': only first word is capitalized
+		- 'all': all words are capitalized
+		- default: 'first'
+- uppercase: converts a string to uppercase
+- lowercase: converts a string to lowercase
+- money: converts an integer to a monetary amount in the given format
+	- Argument 1:
+		- 'USD': United States Dollar
+		- 'EUR': European Euro
+		- default: 'USD'
+- time: converts an integer to a formatted time in the given time format
+	- Argument 1:
+		- Time format to set to
+		- default: '@I:@MM:@SS @A'
+
 #### To-Array Operations
 
 Certain operations can convert data values to arrays to be used by an array template. These can be applied to array placeholders as follows `@[text -> split] -general- @[].` These return pure data values, and they can be accessed by a special placeholder `@#` which applies the entire data value as is.
@@ -128,6 +138,20 @@ I am Chef Gordon Ramsay"
 	- Argument 1:
 		- The words at which to split the string
 		- default: 10
+
+## General Time Format
+
+General offers a separate special template called a GTimeFormat used for formatting times. The GTimeFormat syntax is also used by the time operation. 
+
+Time format placeholders are written as an @ followed by one or more characters of the same letter: `@LL...` (except for `@A`) The letter indicates the part of time information to format and the number of letters indicates the number of zeros.
+
+| Letter |       Description       |
+|:-------|:------------------------|
+| @H...  | Hour (0 to 23)          |
+| @I...  | Time interval (1 to 12) |
+| @M...  | Minutes (0 to 59)       |
+| @S...  | Seconds (0 to 59)       |
+| @A     | AM/PM                   |
 
 ## General IO
 
