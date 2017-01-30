@@ -29,15 +29,6 @@ module General
 	class GPlaceholder < GPartial
 		private
 
-		# Regular expression that matches a single placeholder
-		ARGUMENT = /(?<text>\w+)|((?<qtat>'|")(?<text>.*)\k<qtat>)/
-
-		# Regular expression that matches placeholder arguments
-		ARGUMENTS = /(?<arguments>(#{ARGUMENT}\s*)*)/
-
-		# Regular expression that matches placeholder operations
-		OPERATION = /(->\s*(?<operation>\w+))/
-
 		# Regular expression that matches placeholder defaults
 		DEFAULT = /(\:\s*(?<default>[^(\-\>)]+))/
 

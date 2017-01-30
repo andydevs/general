@@ -1,11 +1,3 @@
 @@include sample
 
-@if(drives: true)
-
 @(name) drove to the store to get some @(food).
-
-@else
-
-@(name) walked thirty blocks uphil to the store to get some @(food).
-
-@end

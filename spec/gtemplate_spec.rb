@@ -34,7 +34,8 @@ describe General::GTemplate do
 		@template7  = General::GTemplate.new "The time is @(time -> time)"
 		@template8  = General::GTemplate.new "The time is @(time -> time '@SS <- @MM <- @HH')"
 		@template9  = General::GTemplate.new "The name's @(name.last)... @(name.first) @(name.last)."
-		@template10 = General::GTemplate.new "My favorite color is @!"
+		@template10 = General::GTemplate.new "My favorite color is @#!"
+		@template11 = General::GTemplate.new "@[list -> split] Need @#! @[\n]"
 	end
 
 	# Describe General::GTemplate::new
@@ -45,7 +46,8 @@ describe General::GTemplate do
 	describe "::new" do
 		it "creates a new GTemplate with the given template string" do
 			[@template1, @template2, @template3, @template4, @template5, 
-			 @template6, @template7, @template8, @template9, @template10]
+			 @template6, @template7, @template8, @template9, @template10,
+			 @template11]
 			.each do |template|
 				expect(template).to be_an_instance_of General::GTemplate
 			end
@@ -227,8 +229,8 @@ describe General::GTemplate do
 			# --------------------------------DATA--------------------------------
 
 			before(:all) do
-			  	@data10 = "brown"
-			  	@text10 = "My favorite color is brown!"
+			  	@data10 = "Gilbert"
+			  	@text10 = "My favorite color is Gilbert!"
 			end
 
 			# --------------------------------TEST--------------------------------
@@ -236,6 +238,21 @@ describe General::GTemplate do
 			it "returns the template with the full data applied appropriately" do 
 				expect(@template10.apply @data10).to eql @text10
 			end
+		end
+
+		context 'with to-array operation' do
+			# --------------------------------DATA--------------------------------
+
+			before(:all) do
+			  	@data11 = {list: "Butter\nMilk\nEggs"}
+			  	@text11 = "Need Butter!\nNeed Milk!\nNeed Eggs!"
+			end
+
+			# --------------------------------TEST--------------------------------
+
+			it "returns the template with the full data applied appropriately" do 
+				expect(@template11.apply @data11).to eql @text11
+			end			
 		end
 	end
 

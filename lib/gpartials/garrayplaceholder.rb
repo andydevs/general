@@ -28,7 +28,7 @@ module General
 	# Created: 7 - 1 - 2016
 	class GArrayPlaceholder < GPartial
 		# Regular expression that matches array placeholders
-		REGEX = /\A@\[#{NAME}\]( +|\n+)?(?<text>.*?)( +|\n+)?@\[(?<delimeter>.+)?\]/m
+		REGEX = /\A@\[#{NAME}\s*(#{OPERATION}\s*#{ARGUMENTS}?)?\]( +|\n+)?(?<text>.*?)( +|\n+)?@\[(?<delimeter>.+)?\]/m
 
 		# Default delimeter
 		DEFAULT_DELIMETER = " "
@@ -41,6 +41,14 @@ module General
 			super
 			@template = General::GTemplate.new match[:text]
 			@delimeter = match[:delimeter] || DEFAULT_DELIMETER
+			@operation = match[:operation]
+			if match[:arguments]
+				@arguments = match[:arguments].gsub(ARGUMENT).collect { |arg|
+					ARGUMENT.match(arg)[:text]
+				}
+			else
+				@arguments = []
+			end
 		end
 
 		# Returns the value of the array placeholder in the given data
@@ -50,7 +58,10 @@ module General
 		#
 		# Return: the value of the array placeholder in the given data
 		# 		  formatted by the given GTemplate and joined by the given delimeter
-		def apply(data); @template.apply_all(data[@name]).join(@delimeter); end
+		def apply(data)
+			array = (@operation ? General::GOperations.send(@operation, data[@name], *@arguments) : data[@name])
+			return @template.apply_all(array).join(@delimeter)
+		end
 
 		# Throws TypeError
 		# 
@@ -62,6 +73,15 @@ module General
 		# Parameter: first - true if the placeholder is the first of it's kind
 		#
 		# Return: the string representation of the array placeholder
-		def string(first=true); "@[#{@name}] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"; end
+		def string(first=true)
+			str = "@[#{@name}"
+			if @operation
+				str += " -> #{@operation}"
+				unless @arguments.empty?
+					str += @arguments.collect{|s| " \"#{s}\""}.join
+				end
+			end
+			return str + "] #{@template.to_s} @[#{@delimeter.inspect[1...-1]}]"
+		end
 	end
 end

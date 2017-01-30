@@ -48,7 +48,7 @@ module General
 		def self.assert operation, argument, *types
 			raise GOperationError.new "Requied argument not given for operation #{operation}" if argument.nil?
 			unless types.any? { |type| argument.is_a? type }
-				raise GOperationError.new "Argument for operation #{operation} " \
+				raise GOperationError.new "Argument #{argument} for operation #{operation} " \
 				"must be of type(s): #{types.collect(&:to_s).join(", ")}. Got #{argument.class.name}"
 			end
 		end

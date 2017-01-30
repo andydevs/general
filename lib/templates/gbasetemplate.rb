@@ -41,7 +41,7 @@ module General
 				partial = partials.find { |partial| m = partial::REGEX.match(string) }
 
 				# Raise error if no matching partial can be found
-				raise GError.new("Unmatched partial at #{string.length <= 5 ? string : string[0..5] + "..."}") if partial.nil?
+				raise GError.new("Unmatched partial at #{(string.length <= 5 ? string : string[0..5] + "...").inspect}") if partial.nil?
 				
 				# Add the partial to the array
 				@partials << partial.new(m, @defaults)

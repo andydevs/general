@@ -28,7 +28,10 @@ module General
 	# Created: 1 - 19 - 2016
 	class GFullPlaceholder < GPartial
 		# Matches GFullPlaceholders
-		REGEX = /@/
+		REGEX = /@#/
+
+		# String representation of GFullPlaceholder
+		STRING = "@#"
 
 		# Initializes the GFullPlaceholder with the given match
 		#
@@ -48,7 +51,7 @@ module General
 		# Parameter: first - true if this is the first in a given template 
 		#
 		# Returns: a string representation of the GFullPlaceholder
-		def string(first=false); "@"; end
+		def string(first=false); STRING; end
 
 		# Raises TypeError
 		#

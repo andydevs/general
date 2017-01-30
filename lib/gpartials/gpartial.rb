@@ -27,6 +27,15 @@ module General
 	class GPartial
 		protected
 
+		# Regular expression that matches a single placeholder
+		ARGUMENT = /(?<text>\w+)|((?<qtat>'|")(?<text>.*)\k<qtat>)/
+
+		# Regular expression that matches placeholder arguments
+		ARGUMENTS = /(?<arguments>(#{ARGUMENT}\s*)*)/
+
+		# Regular expression that matches placeholder operations
+		OPERATION = /(->\s*(?<operation>\w+))/
+
 		# Regular expression that matches placeholder names
 		NAME = /(?<name>[a-zA-Z]\w*(\.[a-zA-Z]\w*)*)/
 

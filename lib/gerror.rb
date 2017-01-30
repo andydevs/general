@@ -23,11 +23,11 @@ module General
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 1 - 21 - 2017
-	class GeneralError < StandardError; end
+	class GError < StandardError; end
 
 	# A General Operation Error
 	#
 	# Author:  Anshul Kharbanda
 	# Created: 1 - 21 - 2017
-	class GOperationError < GeneralError; end
+	class GOperationError < GError; end
 end

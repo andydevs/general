@@ -21,8 +21,6 @@ require_relative "spec_require"
 # Author:  Anshul Kharbanda
 # Created: 1 - 19 - 2016
 describe General::GFullPlaceholder do
-	STRING = "@"
-
 	before :all do
 		@full = General::GFullPlaceholder.new({})
 		@data1 = "Hello World!"
@@ -55,9 +53,9 @@ describe General::GFullPlaceholder do
 	# Returns: a string representation of the GFullPlaceholder
 	describe '#string' do
 		it 'returns a string reprsentation of the GFullPlaceholder' do
-			expect(@full.string).to eql STRING
-			expect(@full.string true).to eql STRING
-			expect(@full.string false).to eql STRING
+			expect(@full.string).to eql General::GFullPlaceholder::STRING
+			expect(@full.string true).to eql General::GFullPlaceholder::STRING
+			expect(@full.string false).to eql General::GFullPlaceholder::STRING
 		end
 	end
 
