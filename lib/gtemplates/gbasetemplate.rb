@@ -33,6 +33,7 @@ module General
 		# Parameter: string   - the string to initialize the GBaseTemplate with
 		# Parameter: partials - the partials used to parse the GBaseTemplate string
 		def initialize string, partials
+			# Variables
 			@partials = []
 			@defaults = General::GDotHash.new
 
@@ -61,7 +62,7 @@ module General
 		# Parameter: data - the data to be applied (as a hash. merges with defaults)
 		#
 		# Return: string of the template with the given data applied
-		def apply(data={});
+		def apply data={}
 			# Apply generalized data if can be generalized. Else apply regular data
 			if data.respond_to? :generalized
 				return apply(data.generalized)

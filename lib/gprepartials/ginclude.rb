@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "../templates/gio"
+require_relative "../gtemplates/gio"
 
 # General is a templating system in ruby
 #

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "templates/gtimeformat"
+require_relative "gtemplates/gtimeformat"
 require_relative "gerror"
 
 # General is a templating system in ruby
