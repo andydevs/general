@@ -32,9 +32,9 @@ module General
 		# Parameters: match - the match result returned from the parser
 		def initialize(match); @text = match.to_s; end
 
-		# Executes the GPretext
+		# Applies the GPretext
 		#
 		# Return: the value returned from the executed GPretext
-		def call; @text; end
+		def apply; @text; end
 	end
 end

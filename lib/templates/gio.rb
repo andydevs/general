@@ -50,10 +50,13 @@ module General
 			# Read raw text
 			string = IO.read File.basename(path)
 
+			# Prepartial types
 			ptypes = [
 				General::GInclude,
 				General::GPretext
 			]
+
+			# Breakdown algorithm
 			preparts = []
 			m = nil
 			loop do
@@ -74,7 +77,7 @@ module General
 			end
 
 			# Combine text
-			text = preparts.collect{ |prepart| prepart.call }.join
+			text = preparts.collect{ |prepart| prepart.apply }.join
 
 			# Change to current directory
 			Dir.chdir cwd

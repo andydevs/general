@@ -34,9 +34,9 @@ module General
 		# Parameters: match - the match result returned from the parser
 		def initialize(match); @filename = match[:filename]; end
 
-		# Executes the GInclude
+		# Applies the GInclude
 		#
 		# Return: the value returned from the executed GInclude
-		def call; IO.read(@filename+General::GIO::EXTENSION) + "\n"; end
+		def apply; IO.read(@filename+General::GIO::EXTENSION) + "\n"; end
 	end
 end
