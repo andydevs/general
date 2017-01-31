@@ -8,6 +8,7 @@
 	- [Array Templates](#array-templates)
 	- [Placeholder Operations](#placeholder-operations)
 		- [To-Array Operations](#to-array-operations)
+- [General Time Format](#general-time-format)
 - [General IO](#general-io)
 
 ## Overview
