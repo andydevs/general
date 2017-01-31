@@ -24,7 +24,7 @@ task :default => :spec
 
 # RSpec Tasks
 RSpec::Core::RakeTask.new do |task|
-	task.pattern    = "#{SPECDIR}/*_spec.rb"
+	task.pattern    = "#{SPECDIR}/*.spec.rb"
 	task.rspec_opts = "--format documentation --color"
 end
 
@@ -46,9 +46,18 @@ namespace :git do
 		sh "git commit -m #{args[:message].inspect}"
 	end
 
+	desc "Ammend recent commit"
+	task :ammend, [:messave] do |task, args|
+		sh "git commit --ammend"
+	end
+
 	desc "Soft git reset"
-	task :reset do sh "git reset" end
+	task :reset do
+		sh "git reset"
+	end
 
 	desc "Hard git reset"
-	task :hardreset do sh "git reset --hard HEAD" end
+	task :hardreset do
+		sh "git reset --hard HEAD"
+	end
 end
