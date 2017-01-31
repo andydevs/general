@@ -82,5 +82,17 @@ module General
 		def apply_all array
 			array.collect { |data| apply(data) }
 		end
+
+		# Returns a string representation of the template
+		#
+		# Return: a string representation of the template
+		def to_s
+			first = Hash.new(true); str = ""
+			@partials.each do |part|
+				str += part.string(first[part.name])
+				first[part.name] &&= false
+			end
+			return str
+		end
 	end
 end
