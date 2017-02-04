@@ -91,28 +91,11 @@ describe General::GArrayPlaceholder do
 	#
 	# Parameter: match - the match data from the string being parsed
 	describe '::new' do
-		context 'with the given name and text' do
-			it 'creates a new GArrayPlaceholder with the given name and text' do
-				expect(@partial1).to be_an_instance_of General::GArrayPlaceholder
-			end
-		end
-
-		context 'with the given name, text, and delimeter' do
-			it 'creates a new GArrayPlaceholder with the given name and text and delimeter' do
-				expect(@partial2).to be_an_instance_of General::GArrayPlaceholder
-			end
-		end
-
-		context 'with the given name, text, delimeter, and operation' do
-			it 'creates a new GArrayPlaceholder with the given name and text delimeter, and operation' do
-				expect(@partial3).to be_an_instance_of General::GArrayPlaceholder
-			end
-		end
-
-		context 'with the given name, text, delimeter, operation, and arguments' do
-			it 'creates a new GArrayPlaceholder with the given name and text delimeter, operation, and arguments' do
-				expect(@partial4).to be_an_instance_of General::GArrayPlaceholder
-			end
+		it 'creates a new GArrayPlaceholder with the given input data' do
+			expect(@partial1).to be_an_instance_of General::GArrayPlaceholder
+			expect(@partial2).to be_an_instance_of General::GArrayPlaceholder
+			expect(@partial3).to be_an_instance_of General::GArrayPlaceholder
+			expect(@partial4).to be_an_instance_of General::GArrayPlaceholder
 		end
 	end
 

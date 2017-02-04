@@ -116,55 +116,37 @@ describe General::GPlaceholder do
 	# 
 	# Parameter: match - the match data from the string being parsed
 	describe '::new' do
-		# -------------------------------------PLACEHOLDER---------------------------------------
-		context 'with name given' do
-			it 'creaes a GPlaceholder with the given name' do
-				expect(@partial1).to be_an_instance_of General::GPlaceholder
-				expect(@partial1.instance_variable_get :@name).to eql @placename1
-				expect(@partial1.instance_variable_get :@operation).to be_nil
-				expect(@partial1.instance_variable_get :@arguments).to be_empty
-			end
-		end
+		it 'creaes a GPlaceholder with the given data' do
+			# -------------------------------------PLACEHOLDER---------------------------------------
+			expect(@partial1).to be_an_instance_of General::GPlaceholder
+			expect(@partial1.instance_variable_get :@name).to eql @placename1
+			expect(@partial1.instance_variable_get :@operation).to be_nil
+			expect(@partial1.instance_variable_get :@arguments).to be_empty
 
-		# ---------------------------------------DEFAULT-----------------------------------------
-		context 'with name and default in match object' do
-			it 'creates a GPlaceholder with the given name and default' do
-				expect(@partial2).to be_an_instance_of General::GPlaceholder
-				expect(@partial2.instance_variable_get :@name).to eql @placename2
-				expect(@partial2.instance_variable_get :@operation).to be_nil
-				expect(@partial2.instance_variable_get :@arguments).to be_empty
-				expect(@defaults[@placename2]).to eql @default2
-			end
-		end
+			# ---------------------------------------DEFAULT-----------------------------------------
+			expect(@partial2).to be_an_instance_of General::GPlaceholder
+			expect(@partial2.instance_variable_get :@name).to eql @placename2
+			expect(@partial2.instance_variable_get :@operation).to be_nil
+			expect(@partial2.instance_variable_get :@arguments).to be_empty
+			expect(@defaults[@placename2]).to eql @default2
 
-		# --------------------------------------OPERATION----------------------------------------
-		context 'with name, default, and operation in match object' do
-			it 'creates a GPlaceholder with the given name and operation' do
-				expect(@partial3).to be_an_instance_of General::GPlaceholder
-				expect(@partial3.instance_variable_get :@name).to eql @placename3
-				expect(@partial3.instance_variable_get :@operation).to eql @operation3
-				expect(@partial3.instance_variable_get :@arguments).to be_empty
-			end
-		end
+			# --------------------------------------OPERATION----------------------------------------
+			expect(@partial3).to be_an_instance_of General::GPlaceholder
+			expect(@partial3.instance_variable_get :@name).to eql @placename3
+			expect(@partial3.instance_variable_get :@operation).to eql @operation3
+			expect(@partial3.instance_variable_get :@arguments).to be_empty
 
-		# --------------------------------------ARGUMENTS----------------------------------------
-		context 'with name, default, operation, and arguments in match object' do
-			it 'creates a GPlaceholder with the given name, operation, and arguments' do
-				expect(@partial4).to be_an_instance_of General::GPlaceholder
-				expect(@partial4.instance_variable_get :@name).to eql @placename4
-				expect(@partial4.instance_variable_get :@operation).to eql @operation4
-				expect(@partial4.instance_variable_get :@arguments).to eql @arguments4
-			end
-		end
+			# --------------------------------------ARGUMENTS----------------------------------------
+			expect(@partial4).to be_an_instance_of General::GPlaceholder
+			expect(@partial4.instance_variable_get :@name).to eql @placename4
+			expect(@partial4.instance_variable_get :@operation).to eql @operation4
+			expect(@partial4.instance_variable_get :@arguments).to eql @arguments4
 
-		# --------------------------------------ARGUMENTS----------------------------------------
-		context 'with dot notation name' do
-			it 'creates a GPlaceholder with the given dot notation name' do
-				expect(@partial5).to be_an_instance_of General::GPlaceholder
-				expect(@partial5.instance_variable_get :@name).to eql @placename5
-				expect(@partial5.instance_variable_get :@operation).to be_nil
-				expect(@partial5.instance_variable_get :@arguments).to be_empty
-			end
+			# -------------------------------------DOT NOTATION--------------------------------------
+			expect(@partial5).to be_an_instance_of General::GPlaceholder
+			expect(@partial5.instance_variable_get :@name).to eql @placename5
+			expect(@partial5.instance_variable_get :@operation).to be_nil
+			expect(@partial5.instance_variable_get :@arguments).to be_empty
 		end
 	end
 

@@ -63,24 +63,10 @@ describe General::GText do
 	#
 	# Returns: the text as a string
 	describe '#string' do
-		context 'with no first argument given' do
-			it 'returns the string' do
-				expect(@partial.string).to eql @text
-			end
-		end
-
-		context 'with first argument given' do
-			context 'if first argument is true' do
-				it 'returns the string' do
-					expect(@partial.string true).to eql @text
-				end
-			end
-
-			context 'if first argument is false' do
-				it 'returns the string' do
-					expect(@partial.string false).to eql @text
-				end
-			end
+		it 'returns the string representation of the GText' do
+			expect(@partial.string).to eql @text
+			expect(@partial.string true).to eql @text
+			expect(@partial.string false).to eql @text
 		end
 	end
 
@@ -92,24 +78,10 @@ describe General::GText do
 	#
 	# Returns: the text as a regex
 	describe '#regex' do
-		context 'with no first argument given' do
-			it 'returns the regex' do
-				expect(@partial.regex).to eql @regex
-			end
-		end
-
-		context 'with first argument given' do
-			context 'if first argument is true' do
-				it 'returns the regex' do
-					expect(@partial.regex true).to eql @regex
-				end
-			end
-
-			context 'if first argument is false' do
-				it 'returns the regex' do
-					expect(@partial.regex false).to eql @regex
-				end
-			end
+		it 'returns the regex representation of the GText' do
+			expect(@partial.regex).to eql @regex
+			expect(@partial.regex true).to eql @regex
+			expect(@partial.regex false).to eql @regex
 		end
 	end
 end

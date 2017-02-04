@@ -70,18 +70,14 @@ describe General::GDotHash do
 	# Parameter: key   - the key to set
 	# Parameter: value - the value to set
 	describe '#[]=' do
-		context 'if given position exists' do
-			it 'sets the position addressed by the given dot notation key to the given value' do
-				expect { @gdothash[@key1] = @newvalue1 }.not_to raise_error
-				expect(@gdothash[@key1]).to eql @newvalue1
-			end
+		it 'sets the position addressed by the given dot notation key (if it exists) to the given value' do
+			expect { @gdothash[@key1] = @newvalue1 }.not_to raise_error
+			expect(@gdothash[@key1]).to eql @newvalue1
 		end
 
-		context 'if given position does not exist' do
-			it 'creates position addressed by the given dot notation key in the given hash and sets it to the given value' do
-				expect { @gdothash[@key2] = @newvalue2 }.not_to raise_error
-				expect(@gdothash[@key2]).to eql @newvalue2
-			end
+		it 'creates position addressed by the given dot notation key (if it does not exist) and sets it to the given value' do
+			expect { @gdothash[@key2] = @newvalue2 }.not_to raise_error
+			expect(@gdothash[@key2]).to eql @newvalue2
 		end
 	end
 end

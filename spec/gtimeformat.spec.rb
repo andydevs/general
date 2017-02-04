@@ -62,20 +62,16 @@ describe General::GTimeFormat do
 	#
 	# Return: string of the template with the given value applied
 	describe "#apply" do
-		context "with integer time value given" do
-			it "returns the given value formatted according to the time format" do
-				expect(@format1.apply(@time)).to eql @applied1
-				expect(@format2.apply(@time)).to eql @applied2
-				expect(@format3.apply(@time)).to eql @applied3
-			end
+		it "returns the given integer time value value formatted according to the time format" do
+			expect(@format1.apply(@time)).to eql @applied1
+			expect(@format2.apply(@time)).to eql @applied2
+			expect(@format3.apply(@time)).to eql @applied3
 		end
 
-		context "if value given is not integer" do
-			it "raises TypeError" do
-				expect{ @format1.apply(@phony) }.to raise_error TypeError
-				expect{ @format2.apply(@phony) }.to raise_error TypeError
-				expect{ @format3.apply(@phony) }.to raise_error TypeError
-			end
+		it "raises TypeError if value given is not integer" do
+			expect{ @format1.apply(@phony) }.to raise_error TypeError
+			expect{ @format2.apply(@phony) }.to raise_error TypeError
+			expect{ @format3.apply(@phony) }.to raise_error TypeError
 		end
 	end
 end

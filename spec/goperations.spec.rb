@@ -39,41 +39,31 @@ describe General::GOperations do
 			@out_all   = "Joe Schmoe"
 		end
 
-		context 'with string argument given' do
+		context 'with no second argument given' do
 			it 'capitalizes the first letter in the string' do
 				expect(General::GOperations.capitalize(@input)).to eql @out_first
+			end
+
+			it 'raises GOperationError with no string argument' do
+				expect { General::GOperations.capitalize }.to raise_error General::GOperationError
+			end
+
+			it 'raises GOperationError with argument of another type' do
+				expect { General::GOperations.capitalize(0) }.to raise_error General::GOperationError
 			end
 		end
 
 		context 'with string argument and second string argument is given' do
-			context 'when the second argument is "first"' do
-				it 'capitalizes the first letter in the string' do
-					expect(General::GOperations.capitalize @input, "first").to eql @out_first
-				end
+			it 'capitalizes the first letter in the string when the second argument is "first"' do
+				expect(General::GOperations.capitalize @input, "first").to eql @out_first
 			end
 
-			context 'when the second argument is "all"' do
-				it 'capitalizes all words in the string' do
-					expect(General::GOperations.capitalize @input, "all").to eql @out_all
-				end
+			it 'capitalizes all words in the string when the second argument is "all"' do
+				expect(General::GOperations.capitalize @input, "all").to eql @out_all
 			end
 
-			context 'when the second argument is neither "first" or "all"' do
-				it 'raises GOperationError' do
-					expect{General::GOperations.capitalize @input, "foo"}.to raise_error General::GOperationError
-				end
-			end
-		end
-
-		context 'with no string argument' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.capitalize }.to raise_error General::GOperationError
-			end
-		end
-
-		context 'with argument of another type' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.capitalize(0) }.to raise_error General::GOperationError
+			it 'raises GOperationError when the second argument is neither "first" or "all"' do
+				expect{General::GOperations.capitalize @input, "foo"}.to raise_error General::GOperationError
 			end
 		end
 	end
@@ -91,22 +81,16 @@ describe General::GOperations do
 			@output = "JOE SCHMOE"
 		end
 
-		context 'with string argument given' do
-			it 'converts the string to uppercase' do
-				expect(General::GOperations.uppercase @input).to eql @output
-			end
+		it 'converts the string to uppercase' do
+			expect(General::GOperations.uppercase @input).to eql @output
 		end
 
-		context 'with no string argument' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.uppercase }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with no string argument' do
+			expect { General::GOperations.uppercase }.to raise_error General::GOperationError
 		end
 
-		context 'with argument of another type' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.capitalize(0) }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with argument of another type' do
+			expect { General::GOperations.capitalize(0) }.to raise_error General::GOperationError
 		end
 	end
 
@@ -123,22 +107,16 @@ describe General::GOperations do
 			@output = "joe schmoe"
 		end
 
-		context 'with string argument given' do
-			it 'converts the string to lowercase' do
-				expect(General::GOperations.lowercase @input).to eql @output
-			end
+		it 'converts the string to lowercase' do
+			expect(General::GOperations.lowercase @input).to eql @output
 		end
 
-		context 'with no string argument' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.lowercase }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with no string argument' do
+			expect { General::GOperations.lowercase }.to raise_error General::GOperationError
 		end
 
-		context 'with argument of another type' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.capitalize(0) }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with argument of another type' do
+			expect { General::GOperations.capitalize(0) }.to raise_error General::GOperationError
 		end
 	end
 
@@ -162,37 +140,29 @@ describe General::GOperations do
 			@output4 = "-€3.44"
 		end
 
-		context 'with an integer value given' do
+		context 'with no second string value given' do
 			it 'formats the monetary value into USD' do
 				expect(General::GOperations.money @money1).to eql @output1
 				expect(General::GOperations.money @money2).to eql @output2
 			end
+
+			it 'raises GOperationError with no integer value given' do
+				expect { General::GOperations.money }.to raise_error General::GOperationError
+			end
+
+			it 'raises GOperationError with argument of another type' do
+				expect { General::GOperations.money "" }.to raise_error General::GOperationError
+			end
 		end
 
 		context 'with an integer value given and another string value given' do
-			context 'if string money value is supported' do
-				it 'formats the monetary value according the the money type' do
-					expect(General::GOperations.money @money1, "EUR").to eql @output3
-					expect(General::GOperations.money @money2, "EUR").to eql @output4
-				end
+			it 'formats the monetary value according to the money type' do
+				expect(General::GOperations.money @money1, "EUR").to eql @output3
+				expect(General::GOperations.money @money2, "EUR").to eql @output4
 			end
 
-			context 'if string money value is not supported' do
-				it 'raises GOperationError' do
-					expect { General::GOperations.money(@money1, "RUE") }.to raise_error General::GOperationError
-				end
-			end
-		end
-
-		context 'with no integer value given' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.money }.to raise_error General::GOperationError
-			end
-		end
-
-		context 'with argument of another type' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.money "" }.to raise_error General::GOperationError
+			it 'raises GOperationError if the money type is not supported' do
+				expect { General::GOperations.money(@money1, "RUE") }.to raise_error General::GOperationError
 			end
 		end
 	end
@@ -219,28 +189,16 @@ describe General::GOperations do
 			@out2 = General::GTimeFormat.new(@formatter).apply(@time)
 		end
 
-		context 'with integer value given' do
-			it 'formats the given time value to the default time format' do
-				expect(General::GOperations.time(@time)).to eql @out1
-			end
+		it 'formats the given time value to the default time format' do
+			expect(General::GOperations.time(@time)).to eql @out1
 		end
 
-		context 'with integer value given and time format given' do
-			it 'formats the given time value to the given time format' do
-				expect(General::GOperations.time(@time, @formatter)).to eql @out2
-			end
+		it 'formats the given time value to the given time format' do
+			expect(General::GOperations.time(@time, @formatter)).to eql @out2
 		end
 
-		context 'with no integer value given' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.time }.to raise_error General::GOperationError
-			end
-		end
-
-		context 'with argument of another type' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.time "" }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with argument of another type' do
+			expect { General::GOperations.time "" }.to raise_error General::GOperationError
 		end
 	end
 
@@ -264,28 +222,20 @@ describe General::GOperations do
 			@string4 = 3
 		end
 
-		context 'with string value given' do
-			it 'splits the string by whitespace' do
-				expect(General::GOperations.split(@string1)).to eql @array1
-			end
+		it 'splits the string by whitespace if no delimeter is given' do
+			expect(General::GOperations.split(@string1)).to eql @array1
 		end
 
-		context 'with string and delimeter given' do
-			it 'splits the string using the given delimeter' do
-				expect(General::GOperations.split(@string2, @delim2)).to eql @array2
-			end
+		it 'splits the string using the given delimeter' do
+			expect(General::GOperations.split(@string2, @delim2)).to eql @array2
 		end
 
-		context 'with no string value given' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.split }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with no string value given' do
+			expect { General::GOperations.split }.to raise_error General::GOperationError
 		end
 
-		context 'with value of other type given' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.split @string4 }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with value of other type given' do
+			expect { General::GOperations.split @string4 }.to raise_error General::GOperationError
 		end
 	end
 
@@ -307,28 +257,20 @@ describe General::GOperations do
 			@string3 = 4
 		end
 
-		context 'with string value given' do
-			it 'splits the string by ten words' do
-				expect(General::GOperations.splitwords @string1).to eql @array1
-			end
+		it 'splits the string by ten words if no word count is given' do
+			expect(General::GOperations.splitwords @string1).to eql @array1
 		end
 
-		context 'with string and number of words given' do
-			it 'splits the string by the given number of words' do
-				expect(General::GOperations.splitwords @string2, @words2).to eql @array2
-			end
+		it 'splits the string by the given number of words' do
+			expect(General::GOperations.splitwords @string2, @words2).to eql @array2
 		end
 
-		context 'with no string value given' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.splitwords }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with no string value given' do
+			expect { General::GOperations.splitwords }.to raise_error General::GOperationError
 		end
 
-		context 'with value of other type given' do
-			it 'raises GOperationError' do
-				expect { General::GOperations.splitwords @string3 }.to raise_error General::GOperationError
-			end
+		it 'raises GOperationError with value of other type given' do
+			expect { General::GOperations.splitwords @string3 }.to raise_error General::GOperationError
 		end
 	end
 end
