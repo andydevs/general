@@ -16,18 +16,27 @@
 
 # Imports
 require_relative "gprepartial"
+require_relative "../gtemplates/gio"
 
 # General is a templating system in ruby
 #
 # Author: Anshul Kharbanda
 # Created: 3 - 4 - 2016
 module General
-	# Matches plain General Text
+	# Includes another file in the template
 	#
 	# Author: Anshul Kharbanda
 	# Created: 1 - 30 - 2017
-	class GPretext < GPrePartial
-		# Regular expression matches GPretext
-		REGEX = /\A(?<text>.*?)(?=@@|\z)/m
+	class GExtend < GPrePartial
+		# Regular expression matches GExtend
+		REGEX = /\A@@extend\s+(?<filename>\w+)\r?\n/
+
+		# Read filename
+		attr :filename
+
+		# Creates a new GExtend
+		#
+		# Parameters: match - the match result returned from the parser
+		def initialize(match); super; @filename = match[:filename]; end
 	end
 end

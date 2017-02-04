@@ -15,9 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "gtemplate"
+require_relative "gmeta"
 require_relative "../gerror"
-require_relative "../gprepartials/ginclude"
 require_relative "../gprepartials/gpretext"
+require_relative "../gprepartials/ginclude"
+require_relative "../gprepartials/gextend"
+require_relative "../gprepartials/gyield"
 
 # General is a templating system in ruby
 #
@@ -52,28 +55,49 @@ module General
 
 			# Prepartial types
 			ptypes = [
+				General::GExtend,
 				General::GInclude,
+				General::GYield,
 				General::GPretext
 			]
 
 			# Breakdown algorithm
 			preparts = []
 			m = nil
-			loop do
+			while string.length > 0
 				# Match the front of the string to a preprocessor
 				prepart = ptypes.find { |ptype| m = ptype::REGEX.match(string) }
 
 				# Raise error if no matching prepart can be found
-				raise GError.new("Unmatched prepartial at #{(string.length <= 5 ? string : string[0..5] + "...").inspect}") if prepart.nil?
+				if prepart.nil?
+					raise GError.new "Unmatched prepartial at #{(string.length <= 5 ? string : string[0..5] + "...").inspect}"
+				end
 
 				# Add the partial to the array
 				preparts << prepart.new(m)
 
 				# Trim the front of the string
 				string = string[m.end(0)..-1]
+			end
 
-				# End when string is empty
-				break if string.length == 0
+			# Find an extend
+			extindex = preparts.index{ |prepart| prepart.is_a? General::GExtend }
+
+			# Run extend algorithm (throw error if extend is found elsewhere)
+			if extindex == 0
+				puts preparts[1..-1].inspect
+				preparts = GMeta.load(preparts[extindex].filename+General::GIO::EXTENSION).gextend(preparts[1..-1])
+				puts preparts.inspect
+			elsif !extindex.nil?
+				raise GError.new "@@extend prepartial needs to be at beginning of template."
+			end
+
+			# Find a yield
+			yindex = preparts.index{ |prepart| prepart.is_a? General::GYield }
+
+			# Raise error if yield is found
+			unless yindex.nil?
+				raise GError.new "#{path} is a meta template and cannot be parsed. Must be extended by other GIO template"
 			end
 
 			# Combine text

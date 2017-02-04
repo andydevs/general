@@ -53,18 +53,24 @@ describe General::GArrayPlaceholder do
 		@out2 = @hash[@arrayname1]
 				.collect{|e| "Subarg: #{e[:subarg]}"}
 				.join(@delim)
-		@out3 = General::GOperations.split(@hash[@arrayname2])
+		@out3 = General::GOperations.send(@operation, @hash[@arrayname2])
 				.collect{|e| "# #{e}"}
 				.join(@delim)
-		@out4 = General::GOperations.split(@hash[@arrayname3], *@arguments)
+		@out4 = General::GOperations.send(@operation, @hash[@arrayname3], *@arguments)
 				.collect{|e| "# #{e}"}
 				.join(@delim)
 
 		# ------------------------------------------PARTIALS------------------------------------------
 
-		@partial1 = General::GArrayPlaceholder.new name: @arrayname1, text: @text1
-		@partial2 = General::GArrayPlaceholder.new name: @arrayname1, text: @text1, delimeter: @delim
-		@partial3 = General::GArrayPlaceholder.new name: @arrayname2, text: @text2, delimeter: @delim, operation: @operation
+		@partial1 = General::GArrayPlaceholder.new name: @arrayname1, 
+												   text: @text1
+		@partial2 = General::GArrayPlaceholder.new name: @arrayname1, 
+												   text: @text1, 
+												   delimeter: @delim
+		@partial3 = General::GArrayPlaceholder.new name: @arrayname2, 
+												   text: @text2, 
+												   delimeter: @delim, 
+												   operation: @operation
 		@partial4 = General::GArrayPlaceholder.new name: @arrayname3, 
 												   text: @text2, 
 												   delimeter: @delim, 

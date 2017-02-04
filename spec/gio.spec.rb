@@ -27,20 +27,22 @@ describe General::GIO do
 		@default_data = {place: "virginia"}
 		@applied_data = {name: "joe", food: "Joe's Schmoes", place: "kentucky"}
 
-		@gio1 = General::GIO.load("exp/sample" + General::GIO::EXTENSION)
-		@gio2 = General::GIO.load("exp/future" + General::GIO::EXTENSION)
+		@gio1 = General::GIO.load("exp/templates/sample1" + General::GIO::EXTENSION)
+		@gio2 = General::GIO.load("exp/templates/sample2" + General::GIO::EXTENSION)
+		@gio3 = General::GIO.load("exp/templates/sample3" + General::GIO::EXTENSION)
 
-		@out1 = "exp/sample.txt"
-		@out2 = "exp/future.txt"
+		@out1 = "exp/out/sample1.txt"
+		@out2 = "exp/out/sample2.txt"
+		@out3 = "exp/out/sample3.txt"
 		@phony = 3
 
-		@default_text1 = "There once was a chef named Gordon Ramsay, and he loved eating carrots. He went to Virginia."
-		@default_text2 = "There once was a chef named Gordon Ramsay, and he loved eating carrots. He went to Virginia.
-\r\nGordon Ramsay drove to the store to get some carrots."
+		@default_text1 = IO.read "exp/expected/default1.txt"
+		@default_text2 = IO.read "exp/expected/default2.txt"
+		@default_text3 = IO.read "exp/expected/default3.txt"
 
-		@applied_text1 = "There once was a chef named Joe, and he loved eating Joe's Schmoes. He went to Kentucky."
-		@applied_text2 = "There once was a chef named Joe, and he loved eating Joe's Schmoes. He went to Kentucky.
-\r\nJoe drove to the store to get some Joe's Schmoes."
+		@applied_text1 = IO.read "exp/expected/applied1.txt"
+		@applied_text2 = IO.read "exp/expected/applied2.txt"
+		@applied_text3 = IO.read "exp/expected/applied3.txt"		
 	end
 
 	# Describe General::GIO::load
@@ -54,6 +56,7 @@ describe General::GIO do
 		it "creates a new GIO with the given template string" do
 			expect(@gio1).to be_an_instance_of General::GIO
 			expect(@gio2).to be_an_instance_of General::GIO
+			expect(@gio3).to be_an_instance_of General::GIO
 		end
 	end
 
@@ -72,9 +75,11 @@ describe General::GIO do
 				it "writes the default data to the file with the given filename (the target string)" do
 					@gio1.write @out1, @default_data
 					@gio2.write @out2, @default_data
+					@gio3.write @out3, @default_data
 
 					expect(IO.read @out1).to eql @default_text1
 					expect(IO.read @out2).to eql @default_text2
+					expect(IO.read @out3).to eql @default_text3
 				end
 			end
 
@@ -82,9 +87,11 @@ describe General::GIO do
 				it "writes the default data to the target io" do
 					File.open(@out1, "w+") { |ios| @gio1.write ios, @default_data }
 					File.open(@out2, "w+") { |ios| @gio2.write ios, @default_data }
+					File.open(@out3, "w+") { |ios| @gio3.write ios, @default_data }
 
 					expect(IO.read @out1).to eql @default_text1
 					expect(IO.read @out2).to eql @default_text2
+					expect(IO.read @out3).to eql @default_text3
 				end
 			end
 
@@ -92,6 +99,7 @@ describe General::GIO do
 				it "raises TypeError" do
 					expect{ @gio1.write @phony, @default_data }.to raise_error TypeError
 					expect{ @gio2.write @phony, @default_data }.to raise_error TypeError
+					expect{ @gio3.write @phony, @default_data }.to raise_error TypeError
 				end
 			end
 		end
@@ -103,9 +111,11 @@ describe General::GIO do
 				it "writes the given data to the file with the given filename (the target string)" do
 					@gio1.write @out1, @applied_data
 					@gio2.write @out2, @applied_data
+					@gio3.write @out3, @applied_data
 
 					expect(IO.read @out1).to eql @applied_text1
 					expect(IO.read @out2).to eql @applied_text2
+					expect(IO.read @out3).to eql @applied_text3
 				end
 			end
 
@@ -113,9 +123,11 @@ describe General::GIO do
 				it "writes the given data to the target io" do
 					File.open(@out1, "w+") { |ios| @gio1.write ios, @applied_data }
 					File.open(@out2, "w+") { |ios| @gio2.write ios, @applied_data }
+					File.open(@out3, "w+") { |ios| @gio3.write ios, @applied_data }
 
 					expect(IO.read @out1).to eql @applied_text1
 					expect(IO.read @out2).to eql @applied_text2
+					expect(IO.read @out3).to eql @applied_text3
 				end
 			end
 
@@ -123,6 +135,7 @@ describe General::GIO do
 				it "raises TypeError" do
 					expect{ @gio1.write @phony, @applied_data }.to raise_error TypeError
 					expect{ @gio2.write @phony, @applied_data }.to raise_error TypeError
+					expect{ @gio3.write @phony, @applied_data }.to raise_error TypeError
 				end
 			end
 		end

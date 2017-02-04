@@ -1,0 +1,4 @@
+@@extend sample0
+@@include sample1
+
+@(name -> capitalize all) went to china to eat some @(exotic_food: crickets).

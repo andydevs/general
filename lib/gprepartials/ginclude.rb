@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Imports
+require_relative "gprepartial"
 require_relative "../gtemplates/gio"
 
 # General is a templating system in ruby
@@ -25,18 +27,21 @@ module General
 	#
 	# Author: Anshul Kharbanda
 	# Created: 1 - 30 - 2017
-	class GInclude
+	class GInclude < GPrePartial
 		# Regular expression matches GInclude
-		REGEX = /@@include\s+(?<filename>\w+)\r?\n/
+		REGEX = /\A@@include\s+(?<filename>\w+)\r?\n/
 
 		# Creates a new GInclude
 		#
 		# Parameters: match - the match result returned from the parser
-		def initialize(match); @filename = match[:filename]; end
+		def initialize(match)
+			super
+			@filename = match[:filename]
+		end
 
 		# Applies the GInclude
 		#
 		# Return: the value returned from the executed GInclude
-		def apply; IO.read(@filename+General::GIO::EXTENSION) + "\n"; end
+		def apply; IO.read(@filename+General::GIO::EXTENSION) + "\r\n"; end
 	end
 end

@@ -26,8 +26,8 @@ module General
 	#
 	# Author: Anshul Kharbanda
 	# Created: 1 - 30 - 2017
-	class GPretext < GPrePartial
-		# Regular expression matches GPretext
-		REGEX = /\A(?<text>.*?)(?=@@|\z)/m
+	class GYield < GPrePartial
+		# Regular expression matches GYield
+		REGEX = /\A@@yield\r?\n/
 	end
 end
