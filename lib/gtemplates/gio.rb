@@ -85,9 +85,7 @@ module General
 
 			# Run extend algorithm (throw error if extend is found elsewhere)
 			if extindex == 0
-				puts preparts[1..-1].inspect
 				preparts = GMeta.load(preparts[extindex].filename+General::GIO::EXTENSION).gextend(preparts[1..-1])
-				puts preparts.inspect
 			elsif !extindex.nil?
 				raise GError.new "@@extend prepartial needs to be at beginning of template."
 			end
