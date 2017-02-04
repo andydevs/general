@@ -70,6 +70,7 @@ module General
 
 				# Raise error if no matching prepart can be found
 				if prepart.nil?
+					Dir.chdir cwd # Make sure to change back to current directory
 					raise GError.new "Unmatched prepartial at #{(string.length <= 5 ? string : string[0..5] + "...").inspect}"
 				end
 
@@ -87,6 +88,7 @@ module General
 			if extindex == 0
 				preparts = GMeta.load(preparts[extindex].filename+General::GIO::EXTENSION).gextend(preparts[1..-1])
 			elsif !extindex.nil?
+				Dir.chdir cwd # Make sure to change back to current directory
 				raise GError.new "@@extend prepartial needs to be at beginning of template."
 			end
 
@@ -95,6 +97,7 @@ module General
 
 			# Raise error if yield is found
 			unless yindex.nil?
+				Dir.chdir cwd # Make sure to change back to current directory
 				raise GError.new "#{path} is a meta template and cannot be parsed. Must be extended by other GIO template"
 			end
 

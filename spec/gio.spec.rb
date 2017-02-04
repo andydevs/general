@@ -34,7 +34,7 @@ describe General::GIO do
 		@out1 = "exp/out/sample1.txt"
 		@out2 = "exp/out/sample2.txt"
 		@out3 = "exp/out/sample3.txt"
-		@phony = 3
+		@outF = 3
 
 		@default_text1 = IO.read "exp/expected/default1.txt"
 		@default_text2 = IO.read "exp/expected/default2.txt"
@@ -58,6 +58,10 @@ describe General::GIO do
 			expect(@gio2).to be_an_instance_of General::GIO
 			expect(@gio3).to be_an_instance_of General::GIO
 		end
+
+		it "throws GError if trying to open GMeta (with @@yield defined)" do
+			expect { General::GIO.load("exp/templates/sample0"+General::GIO::EXTENSION) }.to raise_error General::GError
+		end
 	end
 
 	# Describe General::GIO#write
@@ -71,72 +75,60 @@ describe General::GIO do
 		# -------------------------------------------DEFAULT-------------------------------------------
 
 		context "with target and default data" do
-			context 'if target is string' do
-				it "writes the default data to the file with the given filename (the target string)" do
-					@gio1.write @out1, @default_data
-					@gio2.write @out2, @default_data
-					@gio3.write @out3, @default_data
+			it "writes the default data to the file with the given filename" do
+				@gio1.write @out1, @default_data
+				@gio2.write @out2, @default_data
+				@gio3.write @out3, @default_data
 
-					expect(IO.read @out1).to eql @default_text1
-					expect(IO.read @out2).to eql @default_text2
-					expect(IO.read @out3).to eql @default_text3
-				end
+				expect(IO.read @out1).to eql @default_text1
+				expect(IO.read @out2).to eql @default_text2
+				expect(IO.read @out3).to eql @default_text3
 			end
 
-			context 'if target is io' do
-				it "writes the default data to the target io" do
-					File.open(@out1, "w+") { |ios| @gio1.write ios, @default_data }
-					File.open(@out2, "w+") { |ios| @gio2.write ios, @default_data }
-					File.open(@out3, "w+") { |ios| @gio3.write ios, @default_data }
+			it "writes the default data to the given file io" do
+				File.open(@out1, "w+") { |ios| @gio1.write ios, @default_data }
+				File.open(@out2, "w+") { |ios| @gio2.write ios, @default_data }
+				File.open(@out3, "w+") { |ios| @gio3.write ios, @default_data }
 
-					expect(IO.read @out1).to eql @default_text1
-					expect(IO.read @out2).to eql @default_text2
-					expect(IO.read @out3).to eql @default_text3
-				end
+				expect(IO.read @out1).to eql @default_text1
+				expect(IO.read @out2).to eql @default_text2
+				expect(IO.read @out3).to eql @default_text3
 			end
 
-			context 'if target is not string or io' do
-				it "raises TypeError" do
-					expect{ @gio1.write @phony, @default_data }.to raise_error TypeError
-					expect{ @gio2.write @phony, @default_data }.to raise_error TypeError
-					expect{ @gio3.write @phony, @default_data }.to raise_error TypeError
-				end
+			it "raises TypeError if target is not string or io" do
+				expect{ @gio1.write @outF, @default_data }.to raise_error TypeError
+				expect{ @gio2.write @outF, @default_data }.to raise_error TypeError
+				expect{ @gio3.write @outF, @default_data }.to raise_error TypeError
 			end
 		end
 
 		# --------------------------------------------DATA---------------------------------------------
 
 		context "with target and given data" do
-			context 'if target is string' do
-				it "writes the given data to the file with the given filename (the target string)" do
-					@gio1.write @out1, @applied_data
-					@gio2.write @out2, @applied_data
-					@gio3.write @out3, @applied_data
+			it "writes the given data to the file with the given filename" do
+				@gio1.write @out1, @applied_data
+				@gio2.write @out2, @applied_data
+				@gio3.write @out3, @applied_data
 
-					expect(IO.read @out1).to eql @applied_text1
-					expect(IO.read @out2).to eql @applied_text2
-					expect(IO.read @out3).to eql @applied_text3
-				end
+				expect(IO.read @out1).to eql @applied_text1
+				expect(IO.read @out2).to eql @applied_text2
+				expect(IO.read @out3).to eql @applied_text3
 			end
 
-			context 'if target is io' do
-				it "writes the given data to the target io" do
-					File.open(@out1, "w+") { |ios| @gio1.write ios, @applied_data }
-					File.open(@out2, "w+") { |ios| @gio2.write ios, @applied_data }
-					File.open(@out3, "w+") { |ios| @gio3.write ios, @applied_data }
+			it "writes the given data to the given file io" do
+				File.open(@out1, "w+") { |ios| @gio1.write ios, @applied_data }
+				File.open(@out2, "w+") { |ios| @gio2.write ios, @applied_data }
+				File.open(@out3, "w+") { |ios| @gio3.write ios, @applied_data }
 
-					expect(IO.read @out1).to eql @applied_text1
-					expect(IO.read @out2).to eql @applied_text2
-					expect(IO.read @out3).to eql @applied_text3
-				end
+				expect(IO.read @out1).to eql @applied_text1
+				expect(IO.read @out2).to eql @applied_text2
+				expect(IO.read @out3).to eql @applied_text3
 			end
 
-			context 'if target is not string or io' do
-				it "raises TypeError" do
-					expect{ @gio1.write @phony, @applied_data }.to raise_error TypeError
-					expect{ @gio2.write @phony, @applied_data }.to raise_error TypeError
-					expect{ @gio3.write @phony, @applied_data }.to raise_error TypeError
-				end
+			it "raises TypeError if target is not string or io" do
+				expect{ @gio1.write @outF, @applied_data }.to raise_error TypeError
+				expect{ @gio2.write @outF, @applied_data }.to raise_error TypeError
+				expect{ @gio3.write @outF, @applied_data }.to raise_error TypeError
 			end
 		end
 	end
