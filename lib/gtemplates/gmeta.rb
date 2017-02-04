@@ -71,10 +71,6 @@ module General
 			# Find the yield
 			yindex = preparts.index{ |prepart| prepart.is_a? General::GYield }
 
-			puts preparts.inspect
-			puts preparts[0...yindex].inspect
-			puts preparts[(yindex + 1)..-1].inspect
-
 			# Return a new meta file if yield is found. Else default is end.
 			unless yindex.nil?
 				return self.new preparts[0...yindex], preparts[(yindex + 1)..-1], filename
