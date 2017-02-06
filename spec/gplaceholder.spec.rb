@@ -160,39 +160,12 @@ describe General::GPlaceholder do
 	# Return: the value of the placeholder in the given data 
 	# 		  with the given operation performed on it
 	describe '#apply' do
-		# -------------------------------------PLACEHOLDER---------------------------------------
-		context 'when name is defined in given data' do
-			it 'returns the value in the data at the name' do
-				expect(@partial1.apply @hash).to eql @result1
-			end
-		end
-
-		# ---------------------------------------DEFAULT-----------------------------------------
-		context 'when name is not defined in given data, but defined in defaults' do
-			it 'returns the value in the default at the name' do
-				expect(@partial2.apply @hash).to eql @result2
-			end
-		end
-
-		# --------------------------------------OPERATION----------------------------------------
-		context 'when an operation is defined' do
-			it 'returns the value in the data/default at the name with the operation applied' do
-				expect(@partial3.apply @hash).to eql @result3
-			end
-		end
-
-		# --------------------------------------ARGUMENTS----------------------------------------
-		context 'when an operation and arguments are defined' do
-			it 'returns the value in the data/default at the name with the operation and arguments applied' do
-				expect(@partial4.apply @hash).to eql @result4
-			end
-		end
-
-		# -------------------------------------DOT NOTATION--------------------------------------
-		context 'when dot notation name is given' do
-			it 'returns the value in the data/default at the dot notation name' do
-				expect(@partial5.apply @hash).to eql @result5
-			end
+		it 'returns the value in the data/default at the name (with operation and arguments applied if given)' do
+			expect(@partial1.apply @hash).to eql @result1
+			expect(@partial2.apply @hash).to eql @result2
+			expect(@partial3.apply @hash).to eql @result3
+			expect(@partial4.apply @hash).to eql @result4
+			expect(@partial5.apply @hash).to eql @result5
 		end
 	end
 
@@ -205,36 +178,27 @@ describe General::GPlaceholder do
 	# Return: the string representation of the placeholder
 	describe '#string' do
 		# -------------------------------------NO FIRST---------------------------------------
-		context 'when no first argument specified' do
-			it 'returns the first string representation of the placeholder' do
-				expect(@partial1.string).to eql @string_first1
-				expect(@partial2.string).to eql @string_first2
-				expect(@partial3.string).to eql @string_first3
-				expect(@partial4.string).to eql @string_first4
-			end
+		it 'returns the first string representation of the placeholder by default' do
+			expect(@partial1.string).to eql @string_first1
+			expect(@partial2.string).to eql @string_first2
+			expect(@partial3.string).to eql @string_first3
+			expect(@partial4.string).to eql @string_first4
 		end
 
-		# --------------------------------------FIRST-----------------------------------------
-		context 'when first argument is specified' do
-			# --------------------------------TRUE--------------------------------
-			context 'when first is true' do
-				it 'returns the first string representation of the placeholder' do
-					expect(@partial1.string true).to eql @string_first1
-					expect(@partial2.string true).to eql @string_first2
-					expect(@partial3.string true).to eql @string_first3
-					expect(@partial4.string true).to eql @string_first4
-				end
-			end
+		# ------------------------------------TRUE FIRST--------------------------------------
+		it 'returns the first string representation of the placeholder when first is true' do
+			expect(@partial1.string true).to eql @string_first1
+			expect(@partial2.string true).to eql @string_first2
+			expect(@partial3.string true).to eql @string_first3
+			expect(@partial4.string true).to eql @string_first4
+		end
 
-			# --------------------------------FALSE-------------------------------
-			context 'when first is false' do
-				it 'returns the string representation of the placeholder' do
-					expect(@partial1.string false).to eql @string1
-					expect(@partial2.string false).to eql @string2
-					expect(@partial3.string false).to eql @string3
-					expect(@partial4.string false).to eql @string4
-				end
-			end
+		# -----------------------------------FALSE FIRST--------------------------------------
+		it 'returns the string representation of the placeholder when first is false' do
+			expect(@partial1.string false).to eql @string1
+			expect(@partial2.string false).to eql @string2
+			expect(@partial3.string false).to eql @string3
+			expect(@partial4.string false).to eql @string4
 		end
 	end
 
@@ -247,36 +211,27 @@ describe General::GPlaceholder do
 	# Returns: the string as a regex
 	describe '#regex' do
 		# -------------------------------------NO FIRST---------------------------------------
-		context 'when no first argument specified' do
-			it 'returns the first regex representation of the placeholder' do
-				expect(@partial1.regex).to eql @regex_first1
-				expect(@partial2.regex).to eql @regex_first2
-				expect(@partial3.regex).to eql @regex_first3
-				expect(@partial4.regex).to eql @regex_first4
-			end
+		it 'returns the first regex representation of the placeholder by default' do
+			expect(@partial1.regex).to eql @regex_first1
+			expect(@partial2.regex).to eql @regex_first2
+			expect(@partial3.regex).to eql @regex_first3
+			expect(@partial4.regex).to eql @regex_first4
 		end
 
-		# --------------------------------------FIRST-----------------------------------------
-		context 'when first argument is specified' do
-			# --------------------------------TRUE--------------------------------
-			context 'when first is true' do
-				it 'returns the first regex representation of the placeholder' do
-					expect(@partial1.regex true).to eql @regex_first1
-					expect(@partial2.regex true).to eql @regex_first2
-					expect(@partial3.regex true).to eql @regex_first3
-					expect(@partial4.regex true).to eql @regex_first4
-				end
-			end
+		# ------------------------------------TRUE FIRST--------------------------------------
+		it 'returns the first regex representation of the placeholder when first is true' do
+			expect(@partial1.regex true).to eql @regex_first1
+			expect(@partial2.regex true).to eql @regex_first2
+			expect(@partial3.regex true).to eql @regex_first3
+			expect(@partial4.regex true).to eql @regex_first4
+		end
 
-			# --------------------------------FALSE-------------------------------
-			context 'when first is false' do
-				it 'returns the regex representation of the placeholder' do
-					expect(@partial1.regex false).to eql @regex1
-					expect(@partial2.regex false).to eql @regex2
-					expect(@partial3.regex false).to eql @regex3
-					expect(@partial4.regex false).to eql @regex4
-				end
-			end
+		# -----------------------------------FALSE FIRST--------------------------------------
+		it 'returns the regex representation of the placeholder when first is false' do
+			expect(@partial1.regex false).to eql @regex1
+			expect(@partial2.regex false).to eql @regex2
+			expect(@partial3.regex false).to eql @regex3
+			expect(@partial4.regex false).to eql @regex4
 		end
 	end
 end

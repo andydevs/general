@@ -32,9 +32,14 @@ module General
 		# Parameters: match - the match result returned from the parser
 		def initialize(match); @text = match.to_s; end
 
-		# Applies the GPretext
+		# Applies the GPrePartial
 		#
-		# Return: the value returned from the executed GPretext
+		# Return: the value returned from the executed GPrePartial
 		def apply; @text; end
+
+		# Returns the string representation of the GPrePartial
+		#
+		# Return: the string representation of the GPrePartial
+		def to_s; @text; end
 	end
 end

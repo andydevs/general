@@ -28,6 +28,6 @@ module General
 	# Created: 1 - 30 - 2017
 	class GPretext < GPrePartial
 		# Regular expression matches GPretext
-		REGEX = /\A(?<text>.*?)(?=@@|\z)/m
+		REGEX = /\A(?<text>.+?)(?=@@|\z)/m
 	end
 end

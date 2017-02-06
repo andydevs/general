@@ -1,0 +1,7 @@
+This should not work
+
+@@yield
+
+Because it has two yields!
+
+@@yield

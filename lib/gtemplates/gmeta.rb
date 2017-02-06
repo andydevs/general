@@ -68,6 +68,10 @@ module General
 				raise GError.new "@@extend prepartial needs to be at beginning of template."
 			end
 
+			# Check for multiple yields
+			yields = preparts.find_all{ |prepart| prepart.is_a? General::GYield  }
+			raise GError.new "@@yield prepartial can only appear ONCE!" if yields.length > 1
+
 			# Find the yield
 			yindex = preparts.index{ |prepart| prepart.is_a? General::GYield }
 

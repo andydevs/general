@@ -42,11 +42,10 @@ describe General::GTemplate do
 		@template4  = General::GTemplate.new "@(film: The Dark Knight)\nCrew:\n@[crew] \t@(name): @(role) @[\n]\nScore: @(score)/10"
 		@template5  = General::GTemplate.new "There once was a dog named @(name: dog -> capitalize). @(name -> capitalize) earned @(amount -> money) last week."
 		@template6  = General::GTemplate.new "There once was a cat named @(name -> capitalize all)."
-		@template7  = General::GTemplate.new "The time is @(time -> time)"
-		@template8  = General::GTemplate.new "The time is @(time -> time '@SS <- @MM <- @HH')"
-		@template9  = General::GTemplate.new "The name's @(name.last)... @(name.first) @(name.last)."
-		@template10 = General::GTemplate.new "My favorite color is @#!"
-		@template11 = General::GTemplate.new "@[list -> split] Need @#! @[\n]"
+		@template7  = General::GTemplate.new "The time is @(time -> time). It may also be formatted as @(time -> time '@SS <- @MM <- @HH')"
+		@template8  = General::GTemplate.new "The name's @(name.last)... @(name.first) @(name.last)."
+		@template9  = General::GTemplate.new "My favorite color is @#!"
+		@template10 = General::GTemplate.new "@[list -> split] Need @#! @[\n]"
 	end
 
 	# Describe General::GTemplate::new
@@ -57,8 +56,7 @@ describe General::GTemplate do
 	describe "::new" do
 		it "creates a new GTemplate with the given template string" do
 			[@template1, @template2, @template3, @template4, @template5, 
-			 @template6, @template7, @template8, @template9, @template10,
-			 @template11]
+			 @template6, @template7, @template8, @template9, @template10]
 			.each do |template|
 				expect(template).to be_an_instance_of General::GTemplate
 			end
@@ -73,217 +71,121 @@ describe General::GTemplate do
 	#
 	# Return: string of the template with the given data applied
 	describe "#apply" do
-		# ------------------------------------BASIC PLACEHOLDER------------------------------------
+		# ---------------------------------------------DATA----------------------------------------------
+		before :all do
+			# -------------------------------------BASIC PLACEHOLDER-------------------------------------
+			@data1 = {name: "Joe", food: "Joe's Shmoes"}
+			@name  = "Dog"
+			@food  = "Denny's Fennies"
 
-		# Test basic @(name: default) placeholder
-		context 'with a general template' do
-			# --------------------------------DATA--------------------------------
+			@default_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Cat Food!"
+			@name_text = "There once was a man named Dog. Dog loved Cat Food!"
+			@food_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Denny's Fennies!"
+			@all_text = "There once was a man named Joe. Joe loved Joe's Shmoes!"
 
-			before :all do
-				@data1 = {name: "Joe", food: "Joe's Shmoes"}
-				@name  = "Dog"
-				@food  = "Denny's Fennies"
+			# ------------------------------------SPECIAL CHARACTERS------------------------------------
+			@data2 = { user: "hillary", domain: "clinton.org" }
+			@text2 = "hillary@clinton.org"
 
-				@default_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Cat Food!"
-				@name_text = "There once was a man named Dog. Dog loved Cat Food!"
-				@food_text = "There once was a man named Gordon Ramsay. Gordon Ramsay loved Denny's Fennies!"
-				@all_text = "There once was a man named Joe. Joe loved Joe's Shmoes!"
-			end
+			# --------------------------------------ARRAY TEMPLATE--------------------------------------
+			@data3 = {
+				greetings: [
+					{name: "Ben", pet: "dog"}, 
+					{name: "Jen", pet: "cat"},
+					{name: "Ken", pet: "plant"}
+				]
+			}
+			@text3 = "Hello, Ben! How is the dog?\nHello, Jen! How is the cat?\nHello, Ken! How is the plant?"
 
-			# --------------------------------TEST--------------------------------
+			@data4 = {
+				film: 'Batman Begins',
+				crew: [
+					{name: 'David S. Goyer', role: 'Writer'},
+					{name: 'Chris Nolan',    role: 'Director'},
+					{name: 'Wally Pfister',  role: 'Director of Photography'},
+					{name: 'Michael Caine',  role: 'Alfred Pennyworth'},
+					{name: 'Christian Bale', role: 'Bruce Wayne/Batman'}
+				],
+				score: 10
+			}
+			@text4 = "Batman Begins\nCrew:\n\tDavid S. Goyer: Writer\n\tChris Nolan: Director\n\tWally Pfister: Director of Photography" \
+							 "\n\tMichael Caine: Alfred Pennyworth\n\tChristian Bale: Bruce Wayne/Batman\nScore: 10/10"
 
-			context "with no data" do
-				it "returns the template with the default data applied" do
-					expect(@template1.apply).to eql @default_text
-				end
-			end
+			# ---------------------------------------OPERATIONS-----------------------------------------
+			@data5 = {name: "cat", amount: 19999}
+			@text5 = "There once was a dog named Cat. Cat earned $199.99 last week."
 
-			context "with partial data" do
-				it "returns the template with the given data applied to corresponding placeholders and default data applied to the rest" do
-					expect(@template1.apply name: @name).to eql @name_text
-					expect(@template1.apply food: @food).to eql @food_text
-				end
-			end
+			@data6 = {name: "joe schmoe"}
+			@text6 = "There once was a cat named Joe Schmoe."
 
-			context "with all data" do
-				it "returns the template with the given data applied" do
-					expect(@template1.apply @data1).to eql @all_text
-				end
-			end
+			hrs = 3
+			min = 14
+			sec = 12
+			pm = true
+
+			@data7 = {
+				time: ( ((pm ? 11 : 0) + hrs)*3600 + min*60 + sec )
+			}
+
+			@text7 = "The time is #{hrs}:#{min.to_s.rjust(2,'0')}:#{sec.to_s.rjust(2,'0')} #{pm ? 'PM' : 'AM'}. " \
+					"It may also be formatted as #{sec.to_s.rjust(2,'0')} <- #{min.to_s.rjust(2,'0')} <- #{((pm ? 11 : 0) + hrs).to_s.rjust(2,'0')}"
+
+			# --------------------------------------DOT NOTATION----------------------------------------
+			@data9 = General::GDotHash.new name: {first: "Gordon", last: "Ramsay"}
+			@text9 = "The name's Ramsay... Gordon Ramsay."
+
+			# ------------------------------------FULL PLACEHOLDER--------------------------------------
+			@data10 = "Gilbert"
+			@text10 = "My favorite color is Gilbert!"
+
+			# -----------------------------------TO-ARRAY OPERATION-------------------------------------
+			@data11 = {list: "Butter\nMilk\nEggs"}
+			@text11 = "Need Butter!\nNeed Milk!\nNeed Eggs!"
+
+			# ----------------------------------GENERALIZED INTERFACE-----------------------------------
+			@data12 = Person.new "Joe", "Joe's Schmoes"
+			@text12 = "There once was a man named Joe. Joe loved Joe's Schmoes!"
 		end
 
-		# ------------------------------------SPECIAL CHARACTERS------------------------------------
+		# ---------------------------------------------TEST----------------------------------------------
 
-		# Test special characters
-		context 'with general special characters' do
-			# --------------------------------DATA--------------------------------
-
-			before :all do
-				@data2 = { user: "hillary", domain: "clinton.org" }
-				@text2 = "hillary@clinton.org"
-			end
-
-			# --------------------------------TEST--------------------------------
-
-			it 'returns the templae with the given data applied (including the @ character)' do
-				expect(@template2.apply @data2).to eql @text2
-			end
+		it "returns the template with data/defaults applied to corresponding placeholders" do
+			expect(@template1.apply).to eql @default_text
+			expect(@template1.apply name: @name).to eql @name_text
+			expect(@template1.apply food: @food).to eql @food_text
+			expect(@template1.apply @data1).to eql @all_text
 		end
 
-		# ------------------------------------ARRAY TEMPLATE------------------------------------
-
-		# Test array template
-		context "with array template" do
-			# --------------------------------DATA--------------------------------
-			before :all do
-				@data3 = {
-					greetings: [
-						{name: "Ben", pet: "dog"}, 
-						{name: "Jen", pet: "cat"},
-						{name: "Ken", pet: "plant"}
-					]
-				}
-				@text3 = "Hello, Ben! How is the dog?\nHello, Jen! How is the cat?\nHello, Ken! How is the plant?"
-
-				@data4 = {
-					film: 'Batman Begins',
-					crew: [
-						{name: 'David S. Goyer', role: 'Writer'},
-						{name: 'Chris Nolan',    role: 'Director'},
-						{name: 'Wally Pfister',  role: 'Director of Photography'},
-						{name: 'Michael Caine',  role: 'Alfred Pennyworth'},
-						{name: 'Christian Bale', role: 'Bruce Wayne/Batman'}
-					],
-					score: 10
-				}
-				@text4 = "Batman Begins\nCrew:\n\tDavid S. Goyer: Writer\n\tChris Nolan: Director\n\tWally Pfister: Director of Photography" \
-								 "\n\tMichael Caine: Alfred Pennyworth\n\tChristian Bale: Bruce Wayne/Batman\nScore: 10/10"
-			end
-
-			# --------------------------------TEST--------------------------------
-
-			context 'with no placeholder' do
-				it "returns the template with the given array data applied and formatted according to the template" do
-					expect(@template3.apply @data3).to eql @text3
-				end
-			end
-
-			context 'with regular placeholder' do
-				it "returns the template with the given data applied (including array data) and formatted according to the template" do
-					expect(@template4.apply @data4).to eql @text4
-				end
-			end
+		it 'formats special @; characters appropriately' do
+			expect(@template2.apply @data2).to eql @text2
 		end
 
-		# ------------------------------------OPERATIONS------------------------------------
-
-		context "with placeholder operation" do
-			# --------------------------------DATA--------------------------------
-
-			before :all do
-				@data5 = {name: "cat", amount: 19999}
-				@text5 = "There once was a dog named Cat. Cat earned $199.99 last week."
-
-				@data6 = {name: "joe schmoe"}
-				@text6 = "There once was a cat named Joe Schmoe."
-
-				hrs = 3
-				min = 14
-				sec = 12
-				pm = true
-
-				@data78 = {
-					time: ( ((pm ? 11 : 0) + hrs)*3600 + min*60 + sec )
-				}
-
-				@text7 = "The time is #{hrs}:#{min.to_s.rjust(2,'0')}:#{sec.to_s.rjust(2,'0')} #{pm ? 'PM' : 'AM'}"
-				@text8 = "The time is #{sec.to_s.rjust(2,'0')} <- #{min.to_s.rjust(2,'0')} <- #{((pm ? 11 : 0) + hrs).to_s.rjust(2,'0')}"
-			end
-
-			# --------------------------------TEST--------------------------------
-
-			context 'with no arguments' do
-				it "returns the template with the given data applied and formatted according to the format operations" do 
-					expect(@template5.apply @data5).to eql @text5
-					expect(@template7.apply @data78).to eql @text7
-				end
-			end
-
-			context 'with arguments' do
-				it 'returns the template with the given data applied and formatted according to the format operations and arguments' do
-					expect(@template6.apply @data6).to eql @text6
-					expect(@template8.apply @data78).to eql @text8
-				end
-			end
+		it "formatts array data according to array templates" do
+			expect(@template3.apply @data3).to eql @text3
+			expect(@template4.apply @data4).to eql @text4
 		end
 
-		# ------------------------------------DOT NOTATION------------------------------------
-
-		context "with dot notation" do
-			# --------------------------------DATA--------------------------------
-
-			before :all do
-				@data9 = General::GDotHash.new name: {first: "Gordon", last: "Ramsay"}
-				@text9 = "The name's Ramsay... Gordon Ramsay."
-			end
-
-			# --------------------------------TEST--------------------------------
-
-			it "returns the template with the given data applied appropriately" do 
-				expect(@template9.apply @data9).to eql @text9
-			end
+		it 'formats data according to given placeholder operations and arguments (if given)' do
+			expect(@template5.apply @data5).to eql @text5
+			expect(@template6.apply @data6).to eql @text6
+			expect(@template7.apply @data7).to eql @text7
 		end
 
-		# ----------------------------------FULL PLACEHOLDER----------------------------------
-
-		context 'with full placeholder' do
-			# --------------------------------DATA--------------------------------
-
-			before(:all) do
-			  	@data10 = "Gilbert"
-			  	@text10 = "My favorite color is Gilbert!"
-			end
-
-			# --------------------------------TEST--------------------------------
-
-			it "returns the template with the full data applied appropriately" do 
-				expect(@template10.apply @data10).to eql @text10
-			end
+		it "applies data appropriately to dot notation placeholders" do 
+			expect(@template8.apply @data9).to eql @text9
 		end
 
-		# ---------------------------------TO-ARRAY OPERATION---------------------------------
-
-		context 'with to-array operation' do
-			# --------------------------------DATA--------------------------------
-
-			before(:all) do
-			  	@data11 = {list: "Butter\nMilk\nEggs"}
-			  	@text11 = "Need Butter!\nNeed Milk!\nNeed Eggs!"
-			end
-
-			# --------------------------------TEST--------------------------------
-
-			it "returns the template with the full data applied appropriately" do 
-				expect(@template11.apply @data11).to eql @text11
-			end			
+		it "applies full data to full placeholders" do 
+			expect(@template9.apply @data10).to eql @text10
 		end
 
-		# --------------------------------GENERALIZED INTERFACE-------------------------------
+		it "formats array data generated by to-array operations according to array template" do 
+			expect(@template10.apply @data11).to eql @text11
+		end
 
-		context 'with generalized object' do
-			# --------------------------------DATA--------------------------------
-
-			before(:all) do
-			  	@data12 = Person.new "Joe", "Joe's Schmoes"
-			  	@text12 = "There once was a man named Joe. Joe loved Joe's Schmoes!"
-			end
-
-			# --------------------------------TEST--------------------------------
-
-			it "returns the template with the generalized data from the object applied appropriately" do 
-				expect(@template1.apply @data12).to eql @text12
-			end			
-		end		
+		it "returns the template with the generalized data from object applied appropriately" do 
+			expect(@template1.apply @data12).to eql @text12
+		end
 	end
 
 	# Describe General::GTemplate#apply_all
@@ -329,16 +231,12 @@ describe General::GTemplate do
 			@sub_regex1 = "There once was a man named (?<name>.*)\\. \\k<name> loved (?<food>.*)!"
 		end
 
-		context 'if template is not part of array template' do
-			it 'returns the regex created from the GTemplate' do
-				expect(@template1.regex).to eql @regex1
-			end
+		it 'returns the regex created from the GTemplate if template is not part of array template' do
+			expect(@template1.regex).to eql @regex1
 		end
 
-		context 'if template is part of array template' do
-			it 'returns the sub regex string created from the GTemplate' do
-				expect(@template1.regex true).to eql @sub_regex1
-			end
+		it 'returns the sub regex string created from the GTemplate if template is part of array template' do
+			expect(@template1.regex true).to eql @sub_regex1
 		end
 	end
 
@@ -359,26 +257,20 @@ describe General::GTemplate do
 	# 
 	# Return: Information matched from the string or nil
 	describe '#match' do
-		context 'when the given string matches the template regex' do
-			it 'returns the data generated from the string' do
-				expect(@template1.match @all_text).to eql @data1
-			end
+		it 'returns the data generated from the string when the given string matches the template regex' do
+			expect(@template1.match @all_text).to eql @data1
 		end
 
-		context 'when the given string does not match the template regex' do
-			it 'returns nil' do
-				expect(@template1.match "").to be_nil
-			end
+		it 'returns nil when the given string does not match the template regex' do
+			expect(@template1.match "").to be_nil
 		end
 
-		context 'with a block given' do
-			it 'passes the hash to the given block' do
-				expect { 
-					@template1.match @all_text do |hash|
-						expect(hash).to eql @data1
-					end
-				}.not_to raise_error
-			end
+		it 'passes the hash to a block if given' do
+			expect { 
+				@template1.match @all_text do |hash|
+					expect(hash).to eql @data1
+				end
+			}.not_to raise_error
 		end
 	end
 end

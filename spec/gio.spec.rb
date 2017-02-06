@@ -59,8 +59,20 @@ describe General::GIO do
 			expect(@gio3).to be_an_instance_of General::GIO
 		end
 
-		it "throws GError if trying to open GMeta (with @@yield defined)" do
+		it "cannot load GMeta file (with @@yield defined)" do
 			expect { General::GIO.load("exp/templates/sample0"+General::GIO::EXTENSION) }.to raise_error General::GError
+		end
+
+		it "cannot load GMeta file with multiple @@yield statements" do
+			expect { General::GIO.load("exp/templates/sampleE1"+General::GIO::EXTENSION) }.to raise_error General::GError
+		end
+
+		it "cannot load GIO in which @@extend statement is not at the beginning of the template" do
+			expect { General::GIO.load("exp/templates/sampleE2"+General::GIO::EXTENSION) }.to raise_error General::GError
+		end
+
+		it "cannot load GIO with multiple @@extend statements" do
+			expect { General::GIO.load("exp/templates/sampleE3"+General::GIO::EXTENSION) }.to raise_error General::GError
 		end
 	end
 

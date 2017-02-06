@@ -86,7 +86,12 @@ module General
 
 			# Run extend algorithm (throw error if extend is found elsewhere)
 			if extindex == 0
-				preparts = GMeta.load(preparts[extindex].filename+General::GIO::EXTENSION).gextend(preparts[1..-1])
+				begin
+					preparts = GMeta.load(preparts[extindex].filename+General::GIO::EXTENSION).gextend(preparts[1..-1])
+				rescue GError => e
+					Dir.chdir cwd # Make sure to change back to current directory
+					raise e
+				end
 			elsif !extindex.nil?
 				Dir.chdir cwd # Make sure to change back to current directory
 				raise GError.new "@@extend prepartial needs to be at beginning of template."
