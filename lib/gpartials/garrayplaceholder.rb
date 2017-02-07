@@ -28,10 +28,10 @@ module General
 	# Created: 7 - 1 - 2016
 	class GArrayPlaceholder < GPartial
 		# Regular expression that matches array placeholders
-		REGEX = /\A@\[#{NAME}\s*(#{OPERATION}\s*#{ARGUMENTS}?)?\]( +|\n+)?(?<text>.*?)( +|\n+)?@\[(?<delimeter>.+)?\]/m
+		REGEX = /\A@\[#{NAME}\s*(#{OPERATION}\s*#{ARGUMENTS}?)?\]( +|(\r?\n)+)?(?<text>.*?)( +|(\r?\n)+)?@\[(?<delimeter>.+)?\]/m
 
 		# Default delimeter
-		DEFAULT_DELIMETER = " "
+		DEFAULT_DELIMETER = "\n"
 
 		# Initializes the GArrayPlaceholder with the given match
 		#
