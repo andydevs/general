@@ -24,7 +24,7 @@ task :default => :spec
 
 # RSpec Tasks
 RSpec::Core::RakeTask.new do |task|
-	task.pattern    = "#{SPECDIR}/*.spec.rb"
+	task.pattern    = "#{SPECDIR}/*_spec.rb"
 	task.rspec_opts = "--format documentation --color"
 end
 
