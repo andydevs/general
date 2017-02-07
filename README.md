@@ -16,6 +16,7 @@ General is a simple templating system in ruby that allows you to create template
 	- [PrePartials](#prepartials)
 		- [Including Other Templates](#including-other-templates)
 		- [Extending Templates](#extending-templates)
+- [Special Characters](#special-characters)
 
 ## General Templates
 
@@ -276,8 +277,6 @@ The extending file should define a `@@yield` where the file will be extended fro
 ## Special Characters
 
 Special characters can be entered into general using the format `@[code];`. The table of codes are below:
-
-### Character Codes
 
 | Code | Character |
 |:----:|:---------:|
