@@ -1,8 +1,11 @@
 # General
 
+	Hello, I am @(name: gordon ramsay -> capitalize all) and I like @(food: cat food)!
+
+General is a simple templating system in ruby that allows you to create templates from both pure strings and files (with the extension .general), as well as create new strings and files with these created objects.
+
 ## Table of Contents
 
-- [Overview](#overview)
 - [General Templates](#general-templates)
 	- [Basic Templates](#basic-templates)
 	- [Array Templates](#array-templates)
@@ -10,14 +13,15 @@
 		- [To-Array Operations](#to-array-operations)
 - [General Time Format](#general-time-format)
 - [General IO](#general-io)
-
-## Overview
-
-General is a simple templating system in ruby that allows you to create templates from both pure strings and files (with the extension .general), as well as create new strings and files with these created objects.
+	- [PrePartials](#prepartials)
+		- [Including Other Templates](#including-other-templates)
+		- [Extending Templates](#extending-templates)
 
 ## General Templates
 
 ### Basic Templates
+
+	"Hello, I am @(name: Gordon Ramsay) and I like @(food: cat food)!"
 
 A general template consists of regular text along with placeholders, which are defined as follows: `@(-name-)`. You can also specify default text as well like so: `@(-name-: -default text-)`.
 
@@ -58,7 +62,11 @@ array = template.apply_all [{name: "Joe", food: "Joe Schmoes"}, {name: "Jane", f
 
 ### Array Templates
 
-You can also make array templates within templates, which will format each value in an array of data according to a general template
+	@[people]
+		Hello, @(name)! How's the @(pet)?
+	@[\n]
+
+Array templates will format each value in an array of data according to a general template
 
 A general array template is as follows: `@[-name-] -general template for each value- @[]`. You can also specify the delimeter, which will be appended to the end of each element. The delimeter should be added in the end tag, like so: `@[-name-] -general template for each value- @[-delimeter-]`. If no delimeter is given, the default is a space. The start and end tags are invariant with atleast 1 whitespace or newline. So you can also define the template like such: 
 
@@ -98,6 +106,8 @@ string = template.apply crew: [
 
 ### Placeholder Operations
 
+	@(name -> capitalize all)
+
 You can also specify operations to be performed on values passed to placeholders, akin to AngularJS's filters. For example: `@(name -> capitalize)` will capitalize whatever name is inputted before applying it to the text. Placeholder operations also have arguments, which change behaviour. `@(name -> capitalize first)` will capitalize the first word of name, whereas `@(name -> capitalize all)` will capitalize all words in the name.
 
 - capitalize: capitalizes the string
@@ -118,6 +128,10 @@ You can also specify operations to be performed on values passed to placeholders
 		- default: '@I:@MM:@SS @A'
 
 #### To-Array Operations
+
+	@[groceries -> split]
+		I need to get some @#!
+	@[\n].
 
 Certain operations can convert data values to arrays to be used by an array template. These can be applied to array placeholders as follows `@[text -> split] -general- @[].` These return pure data values, and they can be accessed by a special placeholder `@#` which applies the entire data value as is.
 
@@ -185,6 +199,79 @@ To get the original source filename of the GIO, just call `source`
 ```ruby
 gio.source # == "example.general"
 ```
+
+### PrePartials
+
+	@@extend basic_layout
+	@@include header
+
+	<p>I am a subtemplate! My name is @(name -> capitalize all)</p>
+
+PrePartials are parsed before the general template is parsed, and perform file template manipulation like including or extending another template.
+
+#### Including Other Templates
+
+File to include
+
+	@(title)
+	@(author)
+	@(subject)
+	@(date)
+
+Including file
+
+	@@include file
+
+	@(content)
+
+Resulting File
+
+	@(title)
+	@(author)
+	@(subject)
+	@(date)
+
+	@(content)
+
+To include another template file in your file, you use `@@include [name of template]` (excluding the suffix). This will read the corresponding template file and append the content in place of the `@@include`.
+
+NOTE: `@@include` requires a new line or carriage return to be parsed (it takes up one entire line). It also appends a newline at the end of the included template.
+
+#### Extending Templates
+
+File to Extend
+	
+	<!doctype html>
+	<html>
+	<title>@(title -> capitalize all)</title>
+	<body>
+	@@yield
+	</body>
+	</html>
+
+Extending File
+
+	@@extend file
+
+	<h1>@(name)'s Profile!</h1>
+	<p>Favorite Color: @(color)</p>
+	<p>Favorite Sport: @(sport)</p>
+
+Resulting File
+
+	<!doctype html>
+	<html>
+	<title>@(title -> capitalize all)</title>
+	<body>
+	<h1>@(name)'s Profile!</h1>
+	<p>Favorite Color: @(color)</p>
+	<p>Favorite Sport: @(sport)</p>
+	</body>
+	</html>
+
+Extending a file wraps the contents of the file around the current template. This is good when many templates will share a single common layout. Extend prepartials are as follows `@@extend [name of template]` (also excluding extension). The `@@extend` must be defined at the beginning of the template, and there can be only one `@@extend` in any template.
+
+The extending file should define a `@@yield` where the file will be extended from. This is by default at the end of the file. Note that if `@@yield` is defined in a template, the template is considered a meta-template and cannot be parsed. Also, like extend, only one `@@yield` statement can be defined in a single file.
 
 -------------------------------------------------------------------------------------------------------------------------------------
 Anshul Kharbanda
