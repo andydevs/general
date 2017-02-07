@@ -273,6 +273,33 @@ Extending a file wraps the contents of the file around the current template. Thi
 
 The extending file should define a `@@yield` where the file will be extended from. This is by default at the end of the file. Note that if `@@yield` is defined in a template, the template is considered a meta-template and cannot be parsed. Also, like extend, only one `@@yield` statement can be defined in a single file.
 
+## Special Characters
+
+Special characters can be entered into general using the format `@[code];`. The table of codes are below:
+
+### Character Codes
+
+| Code | Character |
+|:----:|:---------:|
+|  at  |     @     |
+|  pd  |     #     |
+|  lt  |     <     |
+|  gt  |     >     |
+|  op  |     (     |
+|  cp  |     )     |
+|  ob  |     [     |
+|  cb  |     ]     |
+|  oc  |     {     |
+|  cc  |     }     |
+|  ms  |     -     |
+|  ps  |     +     |
+|  st  |     *     |
+|  pc  |     %     |
+|  bs  |     \     |
+|  fs  |     /     |
+|  dl  |     $     |
+
+
 ## Notes
 
 Regex and matching have now been officially depricated, and will be removed in General 2.1.0.
