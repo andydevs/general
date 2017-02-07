@@ -1,0 +1,8 @@
+title: General
+description: General is a simple templating system in ruby that allows you to create templates from both pure strings and files (with the extension .general), as well as create new strings and files with these created objects.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
