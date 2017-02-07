@@ -29,9 +29,7 @@ RSpec::Core::RakeTask.new do |task|
 end
 
 # Gem Tasks
-namespace :gem do
-	Gem::Tasks.new
-end
+Gem::Tasks.new
 
 # Git Tasks
 namespace :git do
