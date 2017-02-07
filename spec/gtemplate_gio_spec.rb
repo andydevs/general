@@ -30,19 +30,23 @@ describe General::GIO do
 		@gio1 = General::GIO.load("exp/templates/sample1" + General::GIO::EXTENSION)
 		@gio2 = General::GIO.load("exp/templates/sample2" + General::GIO::EXTENSION)
 		@gio3 = General::GIO.load("exp/templates/sample3" + General::GIO::EXTENSION)
+		@gio4 = General::GIO.load("exp/templates/sample4" + General::GIO::EXTENSION)
 
 		@out1 = "exp/out/sample1.txt"
 		@out2 = "exp/out/sample2.txt"
 		@out3 = "exp/out/sample3.txt"
+		@out4 = "exp/out/sample4.txt"
 		@outF = 3
 
 		@default_text1 = IO.read "exp/expected/default1.txt"
 		@default_text2 = IO.read "exp/expected/default2.txt"
 		@default_text3 = IO.read "exp/expected/default3.txt"
+		@default_text4 = IO.read "exp/expected/default4.txt"
 
 		@applied_text1 = IO.read "exp/expected/applied1.txt"
 		@applied_text2 = IO.read "exp/expected/applied2.txt"
-		@applied_text3 = IO.read "exp/expected/applied3.txt"		
+		@applied_text3 = IO.read "exp/expected/applied3.txt"
+		@applied_text4 = IO.read "exp/expected/applied4.txt"
 	end
 
 	# Describe General::GIO::load
@@ -57,6 +61,7 @@ describe General::GIO do
 			expect(@gio1).to be_an_instance_of General::GIO
 			expect(@gio2).to be_an_instance_of General::GIO
 			expect(@gio3).to be_an_instance_of General::GIO
+			expect(@gio4).to be_an_instance_of General::GIO
 		end
 
 		it "cannot load GMeta file (with @@yield defined)" do
@@ -91,26 +96,31 @@ describe General::GIO do
 				@gio1.write @out1, @default_data
 				@gio2.write @out2, @default_data
 				@gio3.write @out3, @default_data
+				@gio4.write @out4, @default_data
 
 				expect(IO.read @out1).to eql @default_text1
 				expect(IO.read @out2).to eql @default_text2
 				expect(IO.read @out3).to eql @default_text3
+				expect(IO.read @out4).to eql @default_text4
 			end
 
 			it "writes the default data to the given file io" do
 				File.open(@out1, "w+") { |ios| @gio1.write ios, @default_data }
 				File.open(@out2, "w+") { |ios| @gio2.write ios, @default_data }
 				File.open(@out3, "w+") { |ios| @gio3.write ios, @default_data }
+				File.open(@out4, "w+") { |ios| @gio4.write ios, @default_data }
 
 				expect(IO.read @out1).to eql @default_text1
 				expect(IO.read @out2).to eql @default_text2
 				expect(IO.read @out3).to eql @default_text3
+				expect(IO.read @out4).to eql @default_text4
 			end
 
 			it "raises TypeError if target is not string or io" do
 				expect{ @gio1.write @outF, @default_data }.to raise_error TypeError
 				expect{ @gio2.write @outF, @default_data }.to raise_error TypeError
 				expect{ @gio3.write @outF, @default_data }.to raise_error TypeError
+				expect{ @gio4.write @outF, @default_data }.to raise_error TypeError
 			end
 		end
 
@@ -121,26 +131,31 @@ describe General::GIO do
 				@gio1.write @out1, @applied_data
 				@gio2.write @out2, @applied_data
 				@gio3.write @out3, @applied_data
+				@gio4.write @out4, @applied_data
 
 				expect(IO.read @out1).to eql @applied_text1
 				expect(IO.read @out2).to eql @applied_text2
 				expect(IO.read @out3).to eql @applied_text3
+				expect(IO.read @out4).to eql @applied_text4
 			end
 
 			it "writes the given data to the given file io" do
 				File.open(@out1, "w+") { |ios| @gio1.write ios, @applied_data }
 				File.open(@out2, "w+") { |ios| @gio2.write ios, @applied_data }
 				File.open(@out3, "w+") { |ios| @gio3.write ios, @applied_data }
+				File.open(@out4, "w+") { |ios| @gio4.write ios, @applied_data }
 
 				expect(IO.read @out1).to eql @applied_text1
 				expect(IO.read @out2).to eql @applied_text2
 				expect(IO.read @out3).to eql @applied_text3
+				expect(IO.read @out4).to eql @applied_text4
 			end
 
 			it "raises TypeError if target is not string or io" do
 				expect{ @gio1.write @outF, @applied_data }.to raise_error TypeError
 				expect{ @gio2.write @outF, @applied_data }.to raise_error TypeError
 				expect{ @gio3.write @outF, @applied_data }.to raise_error TypeError
+				expect{ @gio4.write @outF, @applied_data }.to raise_error TypeError
 			end
 		end
 	end

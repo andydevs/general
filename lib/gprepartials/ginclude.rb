@@ -29,7 +29,7 @@ module General
 	# Created: 1 - 30 - 2017
 	class GInclude < GPrePartial
 		# Regular expression matches GInclude
-		REGEX = /\A@@include\s+(?<filename>\w+)\r?\n/
+		REGEX = /\A@@include\s+(?<filename>\w+(\/\w+)*?)\r?\n/
 
 		# Creates a new GInclude
 		#
