@@ -113,7 +113,11 @@ module General
 			Dir.chdir cwd
 
 			# Return new GIO
-			return self.new text, path
+			begin
+				return self.new text, path
+			rescue GError => e
+				raise GError.new "Error when parsing template file #{path}"
+			end
 		end
 
 		# Creates a GIO with the given template string and source filename

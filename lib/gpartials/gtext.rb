@@ -27,7 +27,7 @@ module General
 	# Created: 7 - 1 - 2016
 	class GText < GPartial
 		# Regular expression that matches text partials
-		REGEX = /\A[^@]+?(?=(@|\\@|\z))/m
+		REGEX = /\A[^@]+?(?=(@|\z))/m
 
 		# The partial name of a text
 		PTNAME = :__text
