@@ -57,9 +57,7 @@ describe General::GTemplate do
 		it "creates a new GTemplate with the given template string" do
 			[@template1, @template2, @template3, @template4, @template5, 
 			 @template6, @template7, @template8, @template9, @template10]
-			.each do |template|
-				expect(template).to be_an_instance_of General::GTemplate
-			end
+			.each{ |template| expect(template).to be_an_instance_of General::GTemplate }
 		end
 	end
 
@@ -118,11 +116,7 @@ describe General::GTemplate do
 			@data6 = {name: "joe schmoe"}
 			@text6 = "There once was a cat named Joe Schmoe."
 
-			hrs = 3
-			min = 14
-			sec = 12
-			pm = true
-
+			hrs = 3; min = 14; sec = 12; pm = true
 			@data7 = {
 				time: ( ((pm ? 11 : 0) + hrs)*3600 + min*60 + sec )
 			}
@@ -218,14 +212,14 @@ describe General::GTemplate do
 		end
 	end
 
-	# Describe General::GTemplate#regex
+	# Describe General::GTemplate#regex (depricated)
 	# 
 	# Returns the string as a regex
 	#
 	# Parameter: sub - true if the template is part of array template
 	#
 	# Returns: the string as a regex
-	describe '#regex' do
+	describe '#regex (depricated)' do
 		before :all do
 			@regex1 = /\AThere once was a man named (?<name>.*)\. \k<name> loved (?<food>.*)!\z/
 			@sub_regex1 = "There once was a man named (?<name>.*)\\. \\k<name> loved (?<food>.*)!"
@@ -240,7 +234,7 @@ describe General::GTemplate do
 		end
 	end
 
-	# Describe General::GTemplate#match
+	# Describe General::GTemplate#match (depricated)
 	#
 	# Matches the given string against the template and returns the 
 	# collected information. Returns nil if the given string does 
@@ -256,7 +250,7 @@ describe General::GTemplate do
 	# Parameter: string the string to match
 	# 
 	# Return: Information matched from the string or nil
-	describe '#match' do
+	describe '#match (depricated)' do
 		it 'returns the data generated from the string when the given string matches the template regex' do
 			expect(@template1.match @all_text).to eql @data1
 		end
@@ -266,11 +260,7 @@ describe General::GTemplate do
 		end
 
 		it 'passes the hash to a block if given' do
-			expect { 
-				@template1.match @all_text do |hash|
-					expect(hash).to eql @data1
-				end
-			}.not_to raise_error
+			expect{ @template1.match(@all_text) { |hash| expect(hash).to eql @data1 } }.not_to raise_error
 		end
 	end
 end

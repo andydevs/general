@@ -26,6 +26,8 @@ describe General::GFullPlaceholder do
 		@data1 = "Hello World!"
 	end
 
+	# Describing General::GFullPlaceholder#new
+	#
 	# Creates a new GFullPlaceholder with the given match
 	#
 	# Parameter: match - the match data from the string being parsed
@@ -35,6 +37,8 @@ describe General::GFullPlaceholder do
 		end
 	end
 
+	# Describing General::GFullPlaceholder#apply
+	#
 	# Returns a string representation of the given data
 	# 
 	# Parameter: data - the data being applied
@@ -46,6 +50,8 @@ describe General::GFullPlaceholder do
 		end
 	end
 
+	# Describing General::GFullPlaceholder#string
+	#
 	# Returns a string representation of the GFullPlaceholder
 	#
 	# Parameter: first - true if this is the first in a given template 
@@ -59,12 +65,14 @@ describe General::GFullPlaceholder do
 		end
 	end
 
+	# Describing General::GFullPlaceholder#regex (depricated)
+	#
 	# Raises TypeError
 	#
 	# Parameter: first - true if this is the first in a given template 
 	#
 	# Raises: TypeError
-	describe '#regex' do
+	describe '#regex (depricated)' do
 		it 'raises TypeError' do
 			expect{@full.regex}.to raise_error TypeError
 			expect{@full.regex true}.to raise_error TypeError

@@ -43,6 +43,8 @@ describe General::GSpecial do
 		end
 	end
 
+	# Describe General::GSpecial#regex
+	# 
 	# Returns the special character
 	#
 	# Parameter: data - the data to apply to the partial
@@ -54,6 +56,8 @@ describe General::GSpecial do
 		end
 	end
 
+	# Describe General::GSpecial#string
+	#
 	# Returns the string representation of the GSpecial
 	#
 	# Parameter: first - true if this partial is the first of it's kind in a GTemplate
@@ -67,12 +71,14 @@ describe General::GSpecial do
 		end
 	end
 
+	# Describe General::GSpecial#regex (depricated)
+	#
 	# Returns the GSpecial as a regex
 	#
 	# Parameter: first - true if this partial is the first of it's kind in a GTemplate
 	#
 	# Returns: the GSpecial as a regex
-	describe '#regex' do
+	describe '#regex (depricated)' do
 		it 'returns the regex representation of the GSpecial' do
 			expect(@partial.regex).to eql @regex
 			expect(@partial.regex false).to eql @regex

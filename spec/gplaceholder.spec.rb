@@ -202,14 +202,14 @@ describe General::GPlaceholder do
 		end
 	end
 
-	# Describe General::GTemplate#regex
+	# Describe General::GTemplate#regex (depricated)
 	#
 	# Returns the string as a regex
 	#
 	# Parameter: first - true if the placeholder is the first of its kind in the GTemplate
 	#
 	# Returns: the string as a regex
-	describe '#regex' do
+	describe '#regex (depricated)' do
 		# -------------------------------------NO FIRST---------------------------------------
 		it 'returns the first regex representation of the placeholder by default' do
 			expect(@partial1.regex).to eql @regex_first1

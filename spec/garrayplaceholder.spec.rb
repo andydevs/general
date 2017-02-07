@@ -141,12 +141,12 @@ describe General::GArrayPlaceholder do
 		end
 	end
 
-	# Describe General::GArrayPlaceholder#regex
+	# Describe General::GArrayPlaceholder#regex (depricated)
 	#
 	# Throws TypeError
 	# 
 	# Parameter: first - true if the placeholder is the first of it's kind
-	describe '#regex' do
+	describe '#regex (depricated)' do
 		it 'raises TypeError' do
 			expect { @partial1.regex }.to raise_error TypeError
 			expect { @partial2.regex }.to raise_error TypeError

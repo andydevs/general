@@ -70,14 +70,14 @@ describe General::GText do
 		end
 	end
 
-	# Describe General::GText#regex
+	# Describe General::GText#regex (depricated)
 	# 
 	# Returns the text as a regex
 	#
 	# Parameter: first - true if this partial is the first of it's kind in a GTemplate
 	#
 	# Returns: the text as a regex
-	describe '#regex' do
+	describe '#regex (depricated)' do
 		it 'returns the regex representation of the GText' do
 			expect(@partial.regex).to eql @regex
 			expect(@partial.regex true).to eql @regex
