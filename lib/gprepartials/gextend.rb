@@ -29,7 +29,7 @@ module General
 	# Created: 1 - 30 - 2017
 	class GExtend < GPrePartial
 		# Regular expression matches GExtend
-		REGEX = /\A@@extend\s+(?<filename>\w+(\/\w+)*?)\r?\n/
+		REGEX = /\A@@extend\s+(?<filename>\w+(\/\w+)*?)(\r?\n)+/
 
 		# Read filename
 		attr :filename

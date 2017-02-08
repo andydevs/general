@@ -1,0 +1,7 @@
+@@extend sample0
+
+Sublayout
+
+@@yield
+
+End of Sublayout

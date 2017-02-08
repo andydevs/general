@@ -26,9 +26,9 @@ module General
 	# Author: Anshul Kharbanda
 	# Created: 1 - 31 - 2016
 	class GMeta < GTemplate
-		def self.load filename
+		def self.load path
 			# Read file
-			string = IO.read filename
+			string = IO.read path
 
 			# Prepartial types
 			ptypes = [
@@ -46,7 +46,9 @@ module General
 				prepart = ptypes.find { |ptype| m = ptype::REGEX.match(string) }
 
 				# Raise error if no matching prepart can be found
-				raise GError.new("Unmatched prepartial at #{(string.length <= 5 ? string : string[0..5] + "...").inspect}") if prepart.nil?
+				if prepart.nil?
+					raise GError.new "Unmatched prepartial at #{(string.length <= 5 ? string : string[0..5] + "...").inspect}"
+				end
 
 				# Add the partial to the array
 				preparts << prepart.new(m)
@@ -63,23 +65,25 @@ module General
 
 			# Run extend algorithm (throw error if extend is found elsewhere)
 			if extindex == 0
-				GMeta.load(extindex.filename).gextend(preparts)
+				preparts = GMeta.load(preparts[extindex].filename+General::GIO::EXTENSION).gextend(preparts[1..-1])
 			elsif !extindex.nil? && extindex > 0
 				raise GError.new "@@extend prepartial needs to be at beginning of template."
 			end
 
 			# Check for multiple yields
 			yields = preparts.find_all{ |prepart| prepart.is_a? General::GYield  }
-			raise GError.new "@@yield prepartial can only appear ONCE!" if yields.length > 1
+			if yields.length > 1
+				raise GError.new "@@yield prepartial can only appear ONCE!"
+			end
 
 			# Find the yield
 			yindex = preparts.index{ |prepart| prepart.is_a? General::GYield }
 
 			# Return a new meta file if yield is found. Else default is end.
 			unless yindex.nil?
-				return self.new preparts[0...yindex], preparts[(yindex + 1)..-1], filename
+				return self.new preparts[0...yindex], preparts[(yindex + 1)..-1], path
 			else
-				return self.new preparts, [], filename
+				return self.new preparts, [], path
 			end
 		end
 
