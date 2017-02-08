@@ -180,7 +180,7 @@ gio = General::GIO.new "Hello, I am @(name: Gordon Ramsay) and I like @(food: ca
 You can also load a GIO from a file. For example, here's how you create a template file from the file "example.general"
 
 ```ruby
-gio = General::GFile.load "example.general"
+gio = General::GIO.load "example.general"
 ```
 
 To write to a file, simply call the write method, pass in the file and the data to apply (like in GTemplate#apply):
