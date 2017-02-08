@@ -16,16 +16,19 @@
 
 Gem::Specification.new do |spec|
 	spec.name        = "general"
-	spec.version     = "2.0.3"
+	spec.version     = "2.0.4"
 	spec.license     = "GPL-3.0"
 	spec.summary     = "A templating system for ruby."
 	spec.authors     = ["Anshul Kharbanda"]
 	spec.email       = "akanshul97@gmail.com"
 	spec.homepage    = "https://andydevs.github.io/general"
 
-	spec.description = "General is a simple templating system in ruby that allows you to create templates from both" \
-					   "pure strings and files (with the extension .general), as well as create new strings and files" \
-					   "with these created objects. For more information, visit the homepage"
+	spec.description = "General is a simple templating system in ruby" \
+					   " that allows you to create templates from both" \
+					   " pure strings and files (with the extension .general)," \
+					   " as well as create new strings and files" \
+					   " with these created objects. For more information," \
+					   " visit the homepage"
 	
 	spec.add_development_dependency "rspec", "~> 3.4"
 

@@ -28,6 +28,6 @@ module General
 	# Created: 1 - 30 - 2017
 	class GYield < GPrePartial
 		# Regular expression matches GYield
-		REGEX = /\A@@yield\r?\n/
+		REGEX = /\A@@yield((\r?\n)|\z)/
 	end
 end

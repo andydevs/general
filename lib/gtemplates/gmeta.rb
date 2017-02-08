@@ -61,7 +61,7 @@ module General
 			end
 
 			# Find an extend
-			extindex = preparts.index{ |prepart| prepart.is_a? General::GExtend }
+			extindex = preparts.index { |prepart| prepart.is_a? General::GExtend }
 
 			# Run extend algorithm (throw error if extend is found elsewhere)
 			if extindex == 0
