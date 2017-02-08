@@ -65,11 +65,11 @@ array = template.apply_all [{name: "Joe", food: "Joe Schmoes"}, {name: "Jane", f
 
 	@[people]
 		Hello, @(name)! How's the @(pet)?
-	@[\n]
+	@[]
 
 Array templates will format each value in an array of data according to a general template
 
-A general array template is as follows: `@[-name-] -general template for each value- @[]`. You can also specify the delimeter, which will be appended to the end of each element. The delimeter should be added in the end tag, like so: `@[-name-] -general template for each value- @[-delimeter-]`. If no delimeter is given, the default is a space. The start and end tags are invariant with atleast 1 whitespace or newline. So you can also define the template like such: 
+A general array template is as follows: `@[-name-] -general template for each value- @[]`. You can also specify the delimeter, which will be appended to the end of each element. The delimeter should be added in the end tag, like so: `@[-name-] -general template for each value- @[-delimeter-]`. If no delimeter is given, the default is a newline. The start and end tags are invariant with atleast 1 whitespace or newline. So you can also define the template like such: 
 
 ```
 @[-name-]
@@ -84,7 +84,7 @@ template = General::GTemplate.new \
 "List of Film Crew:
 @[crew] 
 	@(name): @(role)
-@[\n]"
+@[]"
 ```
 
 You can now specify an array of values for "crew" in template, and it will format the data accordingly:
