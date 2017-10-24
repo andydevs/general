@@ -5,5 +5,5 @@
 
 ## General 2.1
 - Implement GShortTemplate (2-way application)
-  - Implement GShortPartial
+    - Implement GShortPartial
 - Remove GTemplate match functionality
