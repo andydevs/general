@@ -1,0 +1,11 @@
+general-file: [frontmatter] (general preprocessor)* [general]
+frontmatter: '---' NEWLINE YAML NEWLINE '---'
+preprocessor: '@@' WORD STRING+ NEWLINE
+general: ([TEXT] (placeholder | array-template | special-char | full))* [TEXT]
+placeholder: '@(' expression ')'
+array-template: '@[' expression ']' [NEWLINE] general [NEWLINE] '@[' [STRING] ']'
+special-char: '@' WORD ';'
+full: '@#'
+expression: WORD ( '->' operation )*
+operation: WORD arg*
+arg: WORD | '\'' STRING '\'' | '"' STRING '"'
