@@ -6,6 +6,7 @@ placeholder: '@(' expression ')'
 array-template: '@[' expression ']' [NEWLINE] general [NEWLINE] '@[' [STRING] ']'
 special-char: '@' WORD ';'
 full: '@#'
-expression: WORD ( '->' operation )*
+expression: WORD [':' (STRING | quoted-string)] ( '->' operation )*
 operation: WORD arg*
-arg: WORD | '\'' STRING '\'' | '"' STRING '"'
+arg: WORD | quoted-string
+quoted-string: '\'' STRING '\'' | '"' STRING '"'
