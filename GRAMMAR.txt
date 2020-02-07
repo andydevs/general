@@ -1,5 +1,4 @@
 general-file: [frontmatter] (general preprocessor)* [general]
-frontmatter: '---' YAML '---'
 preprocessor: '@@' WORD STRING+ NEWLINE
 general: ([TEXT] (placeholder | array-template | special-char | full))* [TEXT]
 placeholder: '@(' expression ')'
